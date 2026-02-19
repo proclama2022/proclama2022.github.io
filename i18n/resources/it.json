@@ -1,0 +1,77 @@
+{
+  "common": {
+    "appName": "Plantid",
+    "ok": "OK",
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "retry": "Riprova",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "close": "Chiudi"
+  },
+  "camera": {
+    "title": "Identifica Pianta",
+    "takePhoto": "Scatta Foto",
+    "fromGallery": "Dalla Galleria",
+    "selectOrgan": "Seleziona Parte della Pianta",
+    "organ_leaf": "Foglia",
+    "organ_flower": "Fiore",
+    "organ_fruit": "Frutto",
+    "organ_bark": "Corteccia",
+    "organ_auto": "Rilevamento Automatico",
+    "retake": "Riprendi",
+    "usePhoto": "Usa Foto"
+  },
+  "results": {
+    "title": "Risultati Identificazione",
+    "confidence": "Confidenza",
+    "scientificName": "Nome Scientifico",
+    "family": "Famiglia",
+    "commonNames": "Nomi Comuni",
+    "viewCare": "Vedi Info Cura",
+    "addToCollection": "Aggiungi alla Collezione",
+    "lowConfidenceWarning": "Risultato a bassa confidenza. Prova una foto più chiara per maggiore precisione.",
+    "careComingSoon": "Info sulla cura disponibili presto per questa specie."
+  },
+  "collection": {
+    "title": "Le Mie Piante",
+    "empty": "Non hai ancora salvato nessuna pianta.",
+    "emptyCTA": "Identifica la tua prima pianta!",
+    "gridView": "Vista Griglia",
+    "listView": "Vista Elenco",
+    "plantAdded": "Pianta aggiunta alla collezione",
+    "plantDeleted": "Pianta rimossa dalla collezione"
+  },
+  "detail": {
+    "title": "Dettagli Pianta",
+    "addedOn": "Aggiunta il {{date}}",
+    "location": "Posizione",
+    "nickname": "Soprannome",
+    "notes": "Note",
+    "watering": "Annaffiatura",
+    "sunlight": "Luce Solare",
+    "temperature": "Temperatura",
+    "soil": "Terreno",
+    "difficulty": "Difficoltà",
+    "toxicPets": "Tossica per Animali"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "language": "Lingua",
+    "about": "Informazioni",
+    "privacy": "Privacy Policy",
+    "attribution": "Grazie a Pl@ntNet"
+  },
+  "rateLimit": {
+    "title": "Limite Giornaliero Raggiunto",
+    "message": "Hai usato tutte le {{limit}} identificazioni per oggi. Torna domani!",
+    "remaining": "{{remaining}} rimaste oggi"
+  },
+  "errors": {
+    "networkError": "Errore di rete. Controlla la tua connessione.",
+    "cameraPermission": "Il permesso della fotocamera è necessario per scattare foto.",
+    "apiError": "Impossibile identificare la pianta. Riprova.",
+    "invalidImage": "Impossibile elaborare questa immagine."
+  }
+}

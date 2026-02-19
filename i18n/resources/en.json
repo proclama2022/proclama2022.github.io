@@ -1,0 +1,77 @@
+{
+  "common": {
+    "appName": "Plantid",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "retry": "Retry",
+    "loading": "Loading...",
+    "error": "Error",
+    "close": "Close"
+  },
+  "camera": {
+    "title": "Identify Plant",
+    "takePhoto": "Take Photo",
+    "fromGallery": "From Gallery",
+    "selectOrgan": "Select Plant Part",
+    "organ_leaf": "Leaf",
+    "organ_flower": "Flower",
+    "organ_fruit": "Fruit",
+    "organ_bark": "Bark",
+    "organ_auto": "Auto-detect",
+    "retake": "Retake",
+    "usePhoto": "Use Photo"
+  },
+  "results": {
+    "title": "Identification Results",
+    "confidence": "Confidence",
+    "scientificName": "Scientific Name",
+    "family": "Family",
+    "commonNames": "Common Names",
+    "viewCare": "View Care Info",
+    "addToCollection": "Add to Collection",
+    "lowConfidenceWarning": "Low confidence result. Try a clearer photo for better accuracy.",
+    "careComingSoon": "Care info coming soon for this species."
+  },
+  "collection": {
+    "title": "My Plants",
+    "empty": "You haven't saved any plants yet.",
+    "emptyCTA": "Identify your first plant!",
+    "gridView": "Grid View",
+    "listView": "List View",
+    "plantAdded": "Plant added to collection",
+    "plantDeleted": "Plant removed from collection"
+  },
+  "detail": {
+    "title": "Plant Details",
+    "addedOn": "Added on {{date}}",
+    "location": "Location",
+    "nickname": "Nickname",
+    "notes": "Notes",
+    "watering": "Watering",
+    "sunlight": "Sunlight",
+    "temperature": "Temperature",
+    "soil": "Soil",
+    "difficulty": "Difficulty",
+    "toxicPets": "Toxic to Pets"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "about": "About",
+    "privacy": "Privacy Policy",
+    "attribution": "Powered by Pl@ntNet"
+  },
+  "rateLimit": {
+    "title": "Daily Limit Reached",
+    "message": "You've used all {{limit}} identifications for today. Come back tomorrow!",
+    "remaining": "{{remaining}} remaining today"
+  },
+  "errors": {
+    "networkError": "Network error. Please check your connection.",
+    "cameraPermission": "Camera permission is required to take photos.",
+    "apiError": "Unable to identify plant. Please try again.",
+    "invalidImage": "Unable to process this image."
+  }
+}
