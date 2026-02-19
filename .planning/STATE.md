@@ -10,30 +10,31 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 3 (Foundation and Core Loop)
-Plan: 05 of 11
-Status: Plan 05 completed — Settings screen, i18n init, language switcher, privacy policy
-Last activity: 2026-02-19 — Completed Settings screen and i18n initialization
+Plan: 06 of 11
+Status: Plan 06 completed — Onboarding flow with 3-screen carousel and first-launch detection
+Last activity: 2026-02-19 — Completed onboarding flow
 
-Progress: [█████░░░░░░] 45% (5/11 plans)
+Progress: [██████░░░░░] 55% (6/11 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 144s
-- Total execution time: 721s
+- Total plans completed: 6
+- Average duration: 132s
+- Total execution time: 792s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 5 | 721s | 144s |
+| 01 | 6 | 792s | 132s |
 
 **Recent Trend:**
-- Last 5 plans: 160s (01-05), 313s (01-04), 100s (01-03), 86s (01-02), 61s (01-01)
-- Trend: stable
+- Last 5 plans: 71s (01-06), 160s (01-05), 313s (01-04), 100s (01-03), 86s (01-02)
+- Trend: fast
 
 *Updated after each plan completion*
+| Phase 01-foundation-and-core-loop P06 | 71 | 1 task | 4 files |
 | Phase 01-foundation-and-core-loop P05 | 160 | 1 task | 7 files |
 | Phase 01-foundation-and-core-loop P04 | 313 | 1 task | 1 file |
 | Phase 01-foundation-and-core-loop P03 | 100 | 1 task | 5 files |
@@ -63,6 +64,8 @@ Recent decisions affecting current work:
 - [Phase 01-05]: Use TouchableOpacity buttons for language switcher — SegmentedControl not installed
 - [Phase 01-05]: Gate splash screen on both fonts loaded AND i18n ready to avoid untranslated flash
 - [Phase 01-05]: Register privacy as Stack.Screen in root layout for proper back-button navigation
+- [Phase 01-06]: Use ScrollView pagingEnabled instead of react-native-swiper for onboarding carousel (not installed, unnecessary dependency)
+- [Phase 01-06]: Onboarding guard at HomeScreen level — conditional render !hasSeenOnboarding, avoids router-level navigation complexity
 
 ### Pending Todos
 
@@ -76,5 +79,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-05 (Settings screen + i18n init) — ready for 01-06
-Resume file: .planning/phases/01-foundation-and-core-loop/01-05-SUMMARY.md
+Stopped at: Completed 01-06 (Onboarding flow) — ready for 01-07
+Resume file: .planning/phases/01-foundation-and-core-loop/01-06-SUMMARY.md

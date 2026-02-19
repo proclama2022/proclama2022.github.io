@@ -69,8 +69,8 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### User Interface & Navigation
 
-- [ ] **UI-01**: Home screen shows "My Plants" grid + "Water Today" list + FAB camera button
-- [ ] **UI-02**: Camera screen shows live preview + organ selector + take photo/gallery buttons
+- [x] **UI-01**: Home screen shows "My Plants" grid + "Water Today" list + FAB camera button
+- [x] **UI-02**: Camera screen shows live preview + organ selector + take photo/gallery buttons
 - [ ] **UI-03**: Result screen shows identified plant + confidence + care summary + "Add to Collection" button
 - [ ] **UI-04**: Plant detail screen shows full care info + watering history + "Mark Watered" button
 - [x] **UI-05**: Settings screen shows language, notification time, stats, Pro unlock button, credits
@@ -162,8 +162,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | I18N-02 | Phase 1 | Complete |
 | I18N-03 | Phase 1 | Complete |
 | I18N-04 | Phase 1 | Complete |
-| UI-01 | Phase 1 | Pending |
-| UI-02 | Phase 1 | Pending |
+| UI-01 | Phase 1 | Complete |
+| UI-02 | Phase 1 | Complete |
 | UI-03 | Phase 1 | Pending |
 | UI-04 | Phase 1 | Pending |
 | UI-05 | Phase 1 | Complete |
