@@ -19,12 +19,12 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Plant Collection & Persistence
 
-- [ ] **COLL-01**: User can save identified plant to "My Plants" collection
-- [ ] **COLL-02**: Each saved plant stores: photo, species name, common name, date added, location nickname
+- [x] **COLL-01**: User can save identified plant to "My Plants" collection
+- [x] **COLL-02**: Each saved plant stores: photo, species name, common name, date added, location nickname
 - [ ] **COLL-03**: User can view list of all saved plants with thumbnail grid
 - [ ] **COLL-04**: User can view detailed plant profile (species, family, photo, added date)
 - [ ] **COLL-05**: User can delete plants from collection
-- [ ] **COLL-06**: Plant collection persists across app restarts (AsyncStorage)
+- [x] **COLL-06**: Plant collection persists across app restarts (AsyncStorage)
 
 ### Care Information
 

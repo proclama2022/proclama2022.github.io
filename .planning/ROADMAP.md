@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plan List:**
 - [x] 01-01-PLAN.md — Fix service bugs (cache LRU, rate limiter mutex, API proxy)
 - [x] 01-02-PLAN.md — i18n setup with IT/EN translations
-- [ ] 01-03-PLAN.md — Zustand stores with AsyncStorage persist
+- [x] 01-03-PLAN.md — Zustand stores with AsyncStorage persist
 - [ ] 01-04-PLAN.md — Care database (100 species)
 - [ ] 01-05-PLAN.md — Settings screen with language switcher
 - [ ] 01-06-PLAN.md — Onboarding screens (first launch)
@@ -72,6 +72,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Core Loop | 2/11 | In progress | 2026-02-19 |
+| 1. Foundation and Core Loop | 3/11 | In progress | 2026-02-19 |
 | 2. Care Features and Notifications | 0/TBD | Not started | - |
 | 3. Monetization | 0/TBD | Not started | - |
