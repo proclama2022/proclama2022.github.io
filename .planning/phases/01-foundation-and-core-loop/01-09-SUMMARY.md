@@ -79,7 +79,7 @@ completed: 2026-02-19
 
 1. **Task 1: Build home screen with collection grid/list and empty state** - `7cc16ff` (feat)
 
-**Plan metadata:** pending final docs commit
+**Plan metadata:** `21d2ca1` (docs: complete plan)
 
 ## Files Created/Modified
 - `app/(tabs)/index.tsx` - Home screen: onboarding gate, empty state with CTA, collection view with FAB

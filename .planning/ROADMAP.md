@@ -12,7 +12,7 @@ Plantid ships in three phases that follow the hard dependency graph of the archi
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation and Core Loop** - Fix existing service bugs, build missing services and data layer, implement all five screens, deliver the complete identify-save-view workflow
+- [x] **Phase 1: Foundation and Core Loop** - Fix existing service bugs, build missing services and data layer, implement all five screens, deliver the complete identify-save-view workflow (completed 2026-02-19)
 - [ ] **Phase 2: Care Features and Notifications** - Add watering reminders via expo-notifications, watering history tracking, compliance stats, expanded care DB to 300-500 species
 - [ ] **Phase 3: Monetization** - AdMob banner ads, Pro one-time IAP (€4.99), Pro unlock removes ads and raises limits
 
@@ -34,14 +34,14 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-01-PLAN.md — Fix service bugs (cache LRU, rate limiter mutex, API proxy)
 - [x] 01-02-PLAN.md — i18n setup with IT/EN translations
 - [x] 01-03-PLAN.md — Zustand stores with AsyncStorage persist
-- [ ] 01-04-PLAN.md — Care database (100 species)
-- [ ] 01-05-PLAN.md — Settings screen with language switcher
-- [ ] 01-06-PLAN.md — Onboarding screens (first launch)
-- [ ] 01-07-PLAN.md — Camera screen with organ selector
-- [ ] 01-08-PLAN.md — Results screen with carousel and care info
-- [ ] 01-09-PLAN.md — Home/collection screen with grid/list
-- [ ] 01-10-PLAN.md — Plant detail screen
-- [ ] 01-11-PLAN.md — Rate limiting with modal
+- [x] 01-04-PLAN.md — Care database (100 species)
+- [x] 01-05-PLAN.md — Settings screen with language switcher
+- [x] 01-06-PLAN.md — Onboarding screens (first launch)
+- [x] 01-07-PLAN.md — Camera screen with organ selector
+- [x] 01-08-PLAN.md — Results screen with carousel and care info
+- [x] 01-09-PLAN.md — Home/collection screen with grid/list
+- [x] 01-10-PLAN.md — Plant detail screen
+- [x] 01-11-PLAN.md — Rate limiting with modal
 
 ### Phase 2: Care Features and Notifications
 **Goal**: Users can schedule watering reminders for each saved plant, receive a daily 08:00 notification listing plants due for watering, mark plants as watered, and view their watering history and compliance rate
@@ -72,6 +72,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Core Loop | 10/11 | In Progress|  |
+| 1. Foundation and Core Loop | 11/11 | Complete   | 2026-02-19 |
 | 2. Care Features and Notifications | 0/TBD | Not started | - |
 | 3. Monetization | 0/TBD | Not started | - |
