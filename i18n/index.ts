@@ -24,7 +24,7 @@ export const initI18n = async () => {
     },
     lng: savedLang,
     fallbackLng: 'en',
-    compatibilityJSON: 'v3',
+    compatibilityJSON: 'v4',
     interpolation: {
       escapeValue: false, // React Native already escapes
     },

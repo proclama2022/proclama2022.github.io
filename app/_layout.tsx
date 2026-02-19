@@ -3,10 +3,11 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { initI18n } from '@/i18n';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -26,6 +27,17 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+  const [i18nReady, setI18nReady] = useState(false);
+
+  // Initialize i18n
+  useEffect(() => {
+    initI18n()
+      .then(() => setI18nReady(true))
+      .catch((err) => {
+        console.error('Failed to initialize i18n:', err);
+        setI18nReady(true); // Continue even if i18n fails to avoid blocking app
+      });
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -33,12 +45,12 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && i18nReady) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, i18nReady]);
 
-  if (!loaded) {
+  if (!loaded || !i18nReady) {
     return null;
   }
 
@@ -53,6 +65,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="privacy" options={{ title: 'Privacy Policy' }} />
       </Stack>
     </ThemeProvider>
   );
