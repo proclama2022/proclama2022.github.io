@@ -35,6 +35,7 @@ Progress: [███░░░░░░░░] 27% (3/11 plans)
 
 *Updated after each plan completion*
 | Phase 01-foundation-and-core-loop P03 | 100 | 1 task | 5 files |
+| Phase 01-foundation-and-core-loop P01 | 180 | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -52,6 +53,10 @@ Recent decisions affecting current work:
 - [I18n]: Use expo-localization for device language detection with i18next
 - [I18n]: AsyncStorage key '@plantid_language' for language preference persistence
 - [I18n]: Formal Italian 'Lei' form for UI text, fallback to English
+- [Phase 01]: Use expo-crypto for SHA-256 hashing (React Native compatible)
+- [Phase 01]: Use async-mutex for atomic rate limit operations
+- [Phase 01]: Route API calls through Cloudflare Workers proxy (hide API key from client bundle)
+- [Phase 01]: Use LRUCache named import (not default) based on lru-cache library export
 
 ### Pending Todos
 

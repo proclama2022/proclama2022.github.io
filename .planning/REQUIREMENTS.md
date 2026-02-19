@@ -13,8 +13,8 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 - [ ] **ID-02**: User can select photo from gallery instead of camera
 - [ ] **ID-03**: App sends image to PlantNet API and retrieves identification results
 - [ ] **ID-04**: Results display species name (scientific + common), family, confidence score
-- [ ] **ID-05**: Results show alternative matches ranked by confidence (top 5)
-- [ ] **ID-06**: App caches identification results locally by image hash to avoid duplicate API calls
+- [x] **ID-05**: Results show alternative matches ranked by confidence (top 5)
+- [x] **ID-06**: App caches identification results locally by image hash to avoid duplicate API calls
 - [ ] **ID-07**: Confidence score visualized as percentage bar
 
 ### Plant Collection & Persistence
@@ -45,11 +45,11 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Rate Limiting & Usage Tracking
 
-- [ ] **RATE-01**: Free users limited to 5 identifications per calendar day
+- [x] **RATE-01**: Free users limited to 5 identifications per calendar day
 - [ ] **RATE-02**: Pro users (€4.99 unlock) limited to 15 identifications per calendar day
-- [ ] **RATE-03**: When limit reached, show friendly message "Limit reached. Return tomorrow or upgrade to Pro."
-- [ ] **RATE-04**: Usage counter persists across app restarts
-- [ ] **RATE-05**: Usage resets at midnight (user's local timezone)
+- [x] **RATE-03**: When limit reached, show friendly message "Limit reached. Return tomorrow or upgrade to Pro."
+- [x] **RATE-04**: Usage counter persists across app restarts
+- [x] **RATE-05**: Usage resets at midnight (user's local timezone)
 
 ### Monetization: Ads & Pro
 
@@ -79,7 +79,7 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 - [ ] **LEGAL-01**: "Powered by Pl@ntNet" logo displayed in app (Settings or Info screen)
 - [ ] **LEGAL-02**: Privacy notice: "Your photos are not stored by PlantNet"
-- [ ] **LEGAL-03**: Rate limit compliance: max 500 API calls/day across all users via free tier
+- [x] **LEGAL-03**: Rate limit compliance: max 500 API calls/day across all users via free tier
 
 ## v2 Requirements
 
@@ -127,8 +127,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ID-02 | Phase 1 | Pending |
 | ID-03 | Phase 1 | Pending |
 | ID-04 | Phase 1 | Pending |
-| ID-05 | Phase 1 | Pending |
-| ID-06 | Phase 1 | Pending |
+| ID-05 | Phase 1 | Complete |
+| ID-06 | Phase 1 | Complete |
 | ID-07 | Phase 1 | Pending |
 | COLL-01 | Phase 1 | Pending |
 | COLL-02 | Phase 1 | Pending |
@@ -147,11 +147,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WATER-04 | Phase 2 | Pending |
 | WATER-05 | Phase 2 | Pending |
 | WATER-06 | Phase 2 | Pending |
-| RATE-01 | Phase 1 | Pending |
+| RATE-01 | Phase 1 | Complete |
 | RATE-02 | Phase 3 | Pending |
-| RATE-03 | Phase 1 | Pending |
-| RATE-04 | Phase 1 | Pending |
-| RATE-05 | Phase 1 | Pending |
+| RATE-03 | Phase 1 | Complete |
+| RATE-04 | Phase 1 | Complete |
+| RATE-05 | Phase 1 | Complete |
 | AD-01 | Phase 3 | Pending |
 | AD-02 | Phase 3 | Pending |
 | AD-03 | Phase 3 | Pending |
@@ -169,7 +169,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-05 | Phase 1 | Pending |
 | LEGAL-01 | Phase 1 | Pending |
 | LEGAL-02 | Phase 1 | Pending |
-| LEGAL-03 | Phase 1 | Pending |
+| LEGAL-03 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 42 total
