@@ -68,6 +68,23 @@
     "message": "Hai usato tutte le {{limit}} identificazioni per oggi. Torna domani!",
     "remaining": "{{remaining}} rimaste oggi"
   },
+  "onboarding": {
+    "screen1": {
+      "title": "Benvenuto su Plantid",
+      "description": "Identifichi qualsiasi pianta istantaneamente con la fotocamera — completamente gratuito, senza abbonamento."
+    },
+    "screen2": {
+      "title": "Fotografa e Identifica",
+      "description": "Scatti una foto di qualsiasi foglia, fiore, frutto o corteccia. La nostra IA identifica la specie in pochi secondi."
+    },
+    "screen3": {
+      "title": "Costruisca la Sua Collezione",
+      "description": "Salvi le sue piante, tenga traccia degli annaffiamenti e acceda a consigli di cura specifici per ogni specie."
+    },
+    "getStarted": "Inizia",
+    "next": "Avanti",
+    "skip": "Salta"
+  },
   "errors": {
     "networkError": "Errore di rete. Controlla la tua connessione.",
     "cameraPermission": "Il permesso della fotocamera è necessario per scattare foto.",

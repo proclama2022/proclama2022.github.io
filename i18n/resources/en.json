@@ -68,6 +68,23 @@
     "message": "You've used all {{limit}} identifications for today. Come back tomorrow!",
     "remaining": "{{remaining}} remaining today"
   },
+  "onboarding": {
+    "screen1": {
+      "title": "Welcome to Plantid",
+      "description": "Identify any plant instantly with your camera — completely free, no subscription needed."
+    },
+    "screen2": {
+      "title": "Snap & Identify",
+      "description": "Take a photo of any leaf, flower, fruit, or bark. Our AI identifies the species in seconds."
+    },
+    "screen3": {
+      "title": "Build Your Collection",
+      "description": "Save your plants, track watering schedules, and access care tips tailored to each species."
+    },
+    "getStarted": "Get Started",
+    "next": "Next",
+    "skip": "Skip"
+  },
   "errors": {
     "networkError": "Network error. Please check your connection.",
     "cameraPermission": "Camera permission is required to take photos.",
