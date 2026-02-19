@@ -174,8 +174,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 **Coverage:**
 - v1 requirements: 42 total
 - Mapped to phases: 42
-- Unmapped: 0 ✓
+- Unmapped: 0
+
+**Phase distribution:**
+- Phase 1 (Foundation and Core Loop): 33 requirements
+- Phase 2 (Care Features and Notifications): 6 requirements
+- Phase 3 (Monetization): 7 requirements (RATE-02 + AD-01..03 + PRO-01..03)
 
 ---
 *Requirements defined: 2026-02-19*
-*Last updated: 2026-02-19 after research completion*
+*Last updated: 2026-02-19 after roadmap creation*
