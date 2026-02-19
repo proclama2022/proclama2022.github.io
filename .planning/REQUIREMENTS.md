@@ -62,10 +62,10 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Multi-Language Support
 
-- [ ] **I18N-01**: App fully translated to Italian and English
-- [ ] **I18N-02**: Language selection in Settings persists across restarts
-- [ ] **I18N-03**: PlantNet results (common names) returned in selected language
-- [ ] **I18N-04**: Fallback to English if species has no translation for selected language
+- [x] **I18N-01**: App fully translated to Italian and English
+- [x] **I18N-02**: Language selection in Settings persists across restarts
+- [x] **I18N-03**: PlantNet results (common names) returned in selected language
+- [x] **I18N-04**: Fallback to English if species has no translation for selected language
 
 ### User Interface & Navigation
 
@@ -158,10 +158,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PRO-01 | Phase 3 | Pending |
 | PRO-02 | Phase 3 | Pending |
 | PRO-03 | Phase 3 | Pending |
-| I18N-01 | Phase 1 | Pending |
-| I18N-02 | Phase 1 | Pending |
-| I18N-03 | Phase 1 | Pending |
-| I18N-04 | Phase 1 | Pending |
+| I18N-01 | Phase 1 | Complete |
+| I18N-02 | Phase 1 | Complete |
+| I18N-03 | Phase 1 | Complete |
+| I18N-04 | Phase 1 | Complete |
 | UI-01 | Phase 1 | Pending |
 | UI-02 | Phase 1 | Pending |
 | UI-03 | Phase 1 | Pending |
