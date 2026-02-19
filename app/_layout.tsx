@@ -67,6 +67,7 @@ function RootLayoutNav() {
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         <Stack.Screen name="privacy" options={{ title: 'Privacy Policy' }} />
         <Stack.Screen name="results" options={{ headerShown: false }} />
+        <Stack.Screen name="plant/[id]" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
