@@ -28,7 +28,20 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can save an identified plant to "My Plants" with a photo and location nickname, view it in a thumbnail grid, open its full detail screen, and delete it — and the collection is still there after restarting the app
   4. When a free user reaches 5 identifications in a calendar day, the app shows a friendly limit message and blocks further scans until midnight in the user's local timezone
   5. The "Powered by Pl@ntNet" attribution is visible in the app and all user-visible text is available in both Italian and English, switchable from Settings
-**Plans**: TBD
+**Plans**: 11 plans
+
+**Plan List:**
+- [ ] 01-01-PLAN.md — Fix service bugs (cache LRU, rate limiter mutex, API proxy)
+- [ ] 01-02-PLAN.md — i18n setup with IT/EN translations
+- [ ] 01-03-PLAN.md — Zustand stores with AsyncStorage persist
+- [ ] 01-04-PLAN.md — Care database (100 species)
+- [ ] 01-05-PLAN.md — Settings screen with language switcher
+- [ ] 01-06-PLAN.md — Onboarding screens (first launch)
+- [ ] 01-07-PLAN.md — Camera screen with organ selector
+- [ ] 01-08-PLAN.md — Results screen with carousel and care info
+- [ ] 01-09-PLAN.md — Home/collection screen with grid/list
+- [ ] 01-10-PLAN.md — Plant detail screen
+- [ ] 01-11-PLAN.md — Rate limiting with modal
 
 ### Phase 2: Care Features and Notifications
 **Goal**: Users can schedule watering reminders for each saved plant, receive a daily 08:00 notification listing plants due for watering, mark plants as watered, and view their watering history and compliance rate
@@ -59,6 +72,6 @@ Phases execute in numeric order: 1 → 2 → 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation and Core Loop | 0/TBD | Not started | - |
+| 1. Foundation and Core Loop | 0/11 | Ready to execute | - |
 | 2. Care Features and Notifications | 0/TBD | Not started | - |
 | 3. Monetization | 0/TBD | Not started | - |
