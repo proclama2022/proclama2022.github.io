@@ -12,13 +12,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/components/Themed';
 import OrganSelector from '@/components/OrganSelector';
 import PreviewConfirm from '@/components/PreviewConfirm';
+import { RateLimitModal } from '@/components/RateLimitModal';
 import { OrganType } from '@/types';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { identifyPlant } from '@/services/plantnet';
+import { useRateLimit } from '@/hooks/useRateLimit';
 
 // ---------------------------------------------------------------------------
 // Permission screen shown when camera access is denied or not yet granted
@@ -64,9 +67,12 @@ export default function CameraScreen() {
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
   const [screenState, setScreenState] = useState<ScreenState>('camera');
   const [isCapturing, setIsCapturing] = useState(false);
+  const [showRateLimitModal, setShowRateLimitModal] = useState(false);
   const cameraRef = useRef<CameraView>(null);
   const router = useRouter();
   const { language } = useSettingsStore();
+  const { t } = useTranslation();
+  const { allowed, remaining, limit, useScan } = useRateLimit();
 
   // ------------------------------------------------------------------
   // Permission states
@@ -94,6 +100,12 @@ export default function CameraScreen() {
   const takePicture = async () => {
     if (!cameraRef.current || isCapturing) return;
 
+    // Enforce rate limit before capturing
+    if (!allowed) {
+      setShowRateLimitModal(true);
+      return;
+    }
+
     setIsCapturing(true);
     try {
       const photo = await cameraRef.current.takePictureAsync({
@@ -112,6 +124,12 @@ export default function CameraScreen() {
   };
 
   const pickFromGallery = async () => {
+    // Enforce rate limit before opening gallery
+    if (!allowed) {
+      setShowRateLimitModal(true);
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
       allowsEditing: false,
@@ -137,10 +155,19 @@ export default function CameraScreen() {
   const handleOrganSelect = async (organ: OrganType) => {
     if (!capturedUri) return;
 
+    // Consume a scan slot before calling the API
+    const scanAllowed = await useScan();
+    if (!scanAllowed) {
+      setShowRateLimitModal(true);
+      setScreenState('camera');
+      setCapturedUri(null);
+      return;
+    }
+
     setScreenState('identifying');
     const lang = language ?? 'en';
 
-    // Call PlantNet API — identifyPlant handles rate limiting, caching, and proxying
+    // Call PlantNet API — identifyPlant handles caching and proxying
     const result = await identifyPlant({ imageUri: capturedUri, organ, lang });
 
     setScreenState('camera');
@@ -247,25 +274,56 @@ export default function CameraScreen() {
           <View style={styles.bottomBar}>
             {/* Gallery button */}
             <TouchableOpacity
-              style={styles.galleryButton}
+              style={[styles.galleryButton, !allowed && styles.disabledButton]}
               onPress={pickFromGallery}
               accessibilityRole="button"
               accessibilityLabel="Choose from gallery"
             >
-              <Ionicons name="images-outline" size={28} color="#fff" />
-              <Text style={styles.galleryLabel}>Gallery</Text>
+              <Ionicons
+                name="images-outline"
+                size={28}
+                color={allowed ? '#fff' : 'rgba(255,255,255,0.4)'}
+              />
+              <Text style={[styles.galleryLabel, !allowed && styles.disabledLabel]}>
+                Gallery
+              </Text>
             </TouchableOpacity>
 
             {/* Shutter button */}
-            <TouchableOpacity
-              style={[styles.shutterOuter, isCapturing && styles.shutterCapturing]}
-              onPress={takePicture}
-              disabled={isCapturing}
-              accessibilityRole="button"
-              accessibilityLabel="Take photo"
-            >
-              <View style={styles.shutterInner} />
-            </TouchableOpacity>
+            <View style={styles.shutterWrapper}>
+              <TouchableOpacity
+                style={[
+                  styles.shutterOuter,
+                  (isCapturing || !allowed) && styles.shutterCapturing,
+                ]}
+                onPress={takePicture}
+                disabled={isCapturing}
+                accessibilityRole="button"
+                accessibilityLabel="Take photo"
+              >
+                <View
+                  style={[
+                    styles.shutterInner,
+                    !allowed && styles.shutterInnerDisabled,
+                  ]}
+                />
+              </TouchableOpacity>
+              {/* Remaining scans badge */}
+              {allowed && (
+                <View style={styles.remainingBadge}>
+                  <Text style={styles.remainingText}>
+                    {t('rateLimit.remaining', { remaining })}
+                  </Text>
+                </View>
+              )}
+              {!allowed && (
+                <View style={styles.remainingBadge}>
+                  <Text style={styles.limitReachedText}>
+                    {t('rateLimit.title')}
+                  </Text>
+                </View>
+              )}
+            </View>
 
             {/* Spacer to balance layout */}
             <View style={styles.bottomSpacer} />
@@ -278,6 +336,13 @@ export default function CameraScreen() {
         visible={screenState === 'organ'}
         onSelect={handleOrganSelect}
         onDismiss={handleOrganDismiss}
+      />
+
+      {/* Rate limit modal — shown when daily limit reached */}
+      <RateLimitModal
+        visible={showRateLimitModal}
+        limit={limit}
+        onClose={() => setShowRateLimitModal(false)}
       />
     </View>
   );
@@ -393,6 +458,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
   },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  disabledLabel: {
+    color: 'rgba(255,255,255,0.4)',
+  },
+  shutterWrapper: {
+    alignItems: 'center',
+    gap: 8,
+  },
   shutterOuter: {
     width: 72,
     height: 72,
@@ -410,6 +485,23 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     backgroundColor: '#fff',
+  },
+  shutterInnerDisabled: {
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  remainingBadge: {
+    alignItems: 'center',
+  },
+  remainingText: {
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: 11,
+    textAlign: 'center',
+  },
+  limitReachedText: {
+    color: 'rgba(255,100,100,0.9)',
+    fontSize: 11,
+    textAlign: 'center',
+    fontWeight: '600',
   },
   bottomSpacer: {
     width: 64,
