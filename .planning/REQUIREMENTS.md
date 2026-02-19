@@ -9,9 +9,9 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Identification & Detection
 
-- [ ] **ID-01**: User can open camera and take photo of plant part (leaf, flower, fruit, bark, auto)
-- [ ] **ID-02**: User can select photo from gallery instead of camera
-- [ ] **ID-03**: App sends image to PlantNet API and retrieves identification results
+- [x] **ID-01**: User can open camera and take photo of plant part (leaf, flower, fruit, bark, auto)
+- [x] **ID-02**: User can select photo from gallery instead of camera
+- [x] **ID-03**: App sends image to PlantNet API and retrieves identification results
 - [ ] **ID-04**: Results display species name (scientific + common), family, confidence score
 - [x] **ID-05**: Results show alternative matches ranked by confidence (top 5)
 - [x] **ID-06**: App caches identification results locally by image hash to avoid duplicate API calls
@@ -71,7 +71,7 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 - [x] **UI-01**: Home screen shows "My Plants" grid + "Water Today" list + FAB camera button
 - [x] **UI-02**: Camera screen shows live preview + organ selector + take photo/gallery buttons
-- [ ] **UI-03**: Result screen shows identified plant + confidence + care summary + "Add to Collection" button
+- [x] **UI-03**: Result screen shows identified plant + confidence + care summary + "Add to Collection" button
 - [ ] **UI-04**: Plant detail screen shows full care info + watering history + "Mark Watered" button
 - [x] **UI-05**: Settings screen shows language, notification time, stats, Pro unlock button, credits
 
@@ -123,9 +123,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| ID-01 | Phase 1 | Pending |
-| ID-02 | Phase 1 | Pending |
-| ID-03 | Phase 1 | Pending |
+| ID-01 | Phase 1 | Complete |
+| ID-02 | Phase 1 | Complete |
+| ID-03 | Phase 1 | Complete |
 | ID-04 | Phase 1 | Pending |
 | ID-05 | Phase 1 | Complete |
 | ID-06 | Phase 1 | Complete |
@@ -164,7 +164,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | I18N-04 | Phase 1 | Complete |
 | UI-01 | Phase 1 | Complete |
 | UI-02 | Phase 1 | Complete |
-| UI-03 | Phase 1 | Pending |
+| UI-03 | Phase 1 | Complete |
 | UI-04 | Phase 1 | Pending |
 | UI-05 | Phase 1 | Complete |
 | LEGAL-01 | Phase 1 | Pending |

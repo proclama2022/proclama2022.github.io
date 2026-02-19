@@ -10,28 +10,28 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 3 (Foundation and Core Loop)
-Plan: 06 of 11
-Status: Plan 06 completed — Onboarding flow with 3-screen carousel and first-launch detection
-Last activity: 2026-02-19 — Completed onboarding flow
+Plan: 07 of 11
+Status: Plan 07 completed — Tab layout + full-screen camera with organ selector and preview-confirm
+Last activity: 2026-02-19 — Completed camera flow
 
-Progress: [██████░░░░░] 55% (6/11 plans)
+Progress: [███████░░░░] 64% (7/11 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 132s
-- Total execution time: 792s
+- Total plans completed: 7
+- Average duration: 146s
+- Total execution time: 1024s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 6 | 792s | 132s |
+| 01 | 7 | 1024s | 146s |
 
 **Recent Trend:**
-- Last 5 plans: 71s (01-06), 160s (01-05), 313s (01-04), 100s (01-03), 86s (01-02)
-- Trend: fast
+- Last 5 plans: 232s (01-07), 71s (01-06), 160s (01-05), 313s (01-04), 100s (01-03)
+- Trend: steady
 
 *Updated after each plan completion*
 | Phase 01-foundation-and-core-loop P06 | 71 | 1 task | 4 files |
@@ -39,6 +39,7 @@ Progress: [██████░░░░░] 55% (6/11 plans)
 | Phase 01-foundation-and-core-loop P04 | 313 | 1 task | 1 file |
 | Phase 01-foundation-and-core-loop P03 | 100 | 1 task | 5 files |
 | Phase 01-foundation-and-core-loop P01 | 180 | 3 tasks | 3 files |
+| Phase 01-foundation-and-core-loop P07 | 232 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,9 @@ Recent decisions affecting current work:
 - [Phase 01-05]: Register privacy as Stack.Screen in root layout for proper back-button navigation
 - [Phase 01-06]: Use ScrollView pagingEnabled instead of react-native-swiper for onboarding carousel (not installed, unnecessary dependency)
 - [Phase 01-06]: Onboarding guard at HomeScreen level — conditional render !hasSeenOnboarding, avoids router-level navigation complexity
+- [Phase 01-07]: Camera screen calls identifyPlant directly; passes serialised response to /results via router params
+- [Phase 01-07]: useRef<CameraView> (not CameraViewRef) is the correct ref type for expo-camera CameraView class component
+- [Phase 01-07]: OrganSelector shown after PreviewConfirm — user reviews image before selecting organ type
 
 ### Pending Todos
 
@@ -79,5 +83,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-06 (Onboarding flow) — ready for 01-07
-Resume file: .planning/phases/01-foundation-and-core-loop/01-06-SUMMARY.md
+Stopped at: Completed 01-07 (Camera + Tab Layout) — ready for 01-08
+Resume file: .planning/phases/01-foundation-and-core-loop/01-07-SUMMARY.md
