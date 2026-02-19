@@ -43,6 +43,7 @@ Progress: [███████████] 100% (11/11 plans)
 | Phase 01-foundation-and-core-loop P08 | 294 | 1 tasks | 4 files |
 | Phase 01-foundation-and-core-loop P10 | 133 | 1 tasks | 3 files |
 | Phase 01 P11 | 124 | 1 tasks | 3 files |
+| Phase 01-foundation-and-core-loop P09 | 119 | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,9 @@ Recent decisions affecting current work:
 - [Phase 01-foundation-and-core-loop]: CareInfo component receives PlantCareInfo | null — null triggers coming soon state, component is fully self-contained
 - [Phase 01-foundation-and-core-loop]: Delete confirmation via Modal not Alert.alert — consistent visual design across platforms
 - [Phase 01]: Rate limit enforced at both capture entry (takePicture/gallery) and scan consumption (handleOrganSelect) — prevents wasting a captured image when limit expires mid-flow
+- [Phase 01-09]: PlantCard display name priority: nickname > commonName > scientificName > species
+- [Phase 01-09]: FlatList key={viewMode} used to force remount when switching grid/list column count
+- [Phase 01-09]: Sort applied inside PlantGrid via spread copy to avoid mutating store state
 
 ### Pending Todos
 
