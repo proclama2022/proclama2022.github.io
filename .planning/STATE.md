@@ -10,27 +10,27 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 1 of 3 (Foundation and Core Loop)
-Plan: 07 of 11
-Status: Plan 07 completed — Tab layout + full-screen camera with organ selector and preview-confirm
-Last activity: 2026-02-19 — Completed camera flow
+Plan: 08 of 11
+Status: Plan 08 completed — Results screen with swipeable carousel, confidence bars, care info, and Add to Collection
+Last activity: 2026-02-19 — Completed results screen
 
-Progress: [███████░░░░] 64% (7/11 plans)
+Progress: [████████░░░] 73% (8/11 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 146s
-- Total execution time: 1024s
+- Total plans completed: 8
+- Average duration: 165s
+- Total execution time: 1318s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 7 | 1024s | 146s |
+| 01 | 8 | 1318s | 165s |
 
 **Recent Trend:**
-- Last 5 plans: 232s (01-07), 71s (01-06), 160s (01-05), 313s (01-04), 100s (01-03)
+- Last 5 plans: 294s (01-08), 232s (01-07), 71s (01-06), 160s (01-05), 313s (01-04)
 - Trend: steady
 
 *Updated after each plan completion*
@@ -40,6 +40,7 @@ Progress: [███████░░░░] 64% (7/11 plans)
 | Phase 01-foundation-and-core-loop P03 | 100 | 1 task | 5 files |
 | Phase 01-foundation-and-core-loop P01 | 180 | 3 tasks | 3 files |
 | Phase 01-foundation-and-core-loop P07 | 232 | 1 tasks | 4 files |
+| Phase 01-foundation-and-core-loop P08 | 294 | 1 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,8 @@ Recent decisions affecting current work:
 - [Phase 01-07]: Camera screen calls identifyPlant directly; passes serialised response to /results via router params
 - [Phase 01-07]: useRef<CameraView> (not CameraViewRef) is the correct ref type for expo-camera CameraView class component
 - [Phase 01-07]: OrganSelector shown after PreviewConfirm — user reviews image before selecting organ type
+- [Phase 01-foundation-and-core-loop]: Phase 01-08: Use FlatList pagingEnabled for results carousel — react-native-snap-carousel@3.9.1 incompatible with RN 0.81 New Architecture
+- [Phase 01-foundation-and-core-loop]: Phase 01-08: Results screen bootstrapped from camera params then cache then API — avoids duplicate API call
 
 ### Pending Todos
 
@@ -83,5 +86,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-19
-Stopped at: Completed 01-07 (Camera + Tab Layout) — ready for 01-08
-Resume file: .planning/phases/01-foundation-and-core-loop/01-07-SUMMARY.md
+Stopped at: Completed 01-08 (Results Screen) — ready for 01-09
+Resume file: .planning/phases/01-foundation-and-core-loop/01-08-SUMMARY.md
