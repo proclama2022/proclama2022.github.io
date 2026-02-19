@@ -22,8 +22,8 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 - [x] **COLL-01**: User can save identified plant to "My Plants" collection
 - [x] **COLL-02**: Each saved plant stores: photo, species name, common name, date added, location nickname
 - [ ] **COLL-03**: User can view list of all saved plants with thumbnail grid
-- [ ] **COLL-04**: User can view detailed plant profile (species, family, photo, added date)
-- [ ] **COLL-05**: User can delete plants from collection
+- [x] **COLL-04**: User can view detailed plant profile (species, family, photo, added date)
+- [x] **COLL-05**: User can delete plants from collection
 - [x] **COLL-06**: Plant collection persists across app restarts (AsyncStorage)
 
 ### Care Information
@@ -133,8 +133,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COLL-01 | Phase 1 | Pending |
 | COLL-02 | Phase 1 | Pending |
 | COLL-03 | Phase 1 | Pending |
-| COLL-04 | Phase 1 | Pending |
-| COLL-05 | Phase 1 | Pending |
+| COLL-04 | Phase 1 | Complete |
+| COLL-05 | Phase 1 | Complete |
 | COLL-06 | Phase 1 | Pending |
 | CARE-01 | Phase 1 | Complete |
 | CARE-02 | Phase 1 | Complete |
