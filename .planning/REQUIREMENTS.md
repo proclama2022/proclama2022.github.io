@@ -73,12 +73,12 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 - [ ] **UI-02**: Camera screen shows live preview + organ selector + take photo/gallery buttons
 - [ ] **UI-03**: Result screen shows identified plant + confidence + care summary + "Add to Collection" button
 - [ ] **UI-04**: Plant detail screen shows full care info + watering history + "Mark Watered" button
-- [ ] **UI-05**: Settings screen shows language, notification time, stats, Pro unlock button, credits
+- [x] **UI-05**: Settings screen shows language, notification time, stats, Pro unlock button, credits
 
 ### Attribution & Compliance
 
 - [ ] **LEGAL-01**: "Powered by Pl@ntNet" logo displayed in app (Settings or Info screen)
-- [ ] **LEGAL-02**: Privacy notice: "Your photos are not stored by PlantNet"
+- [x] **LEGAL-02**: Privacy notice: "Your photos are not stored by PlantNet"
 - [x] **LEGAL-03**: Rate limit compliance: max 500 API calls/day across all users via free tier
 
 ## v2 Requirements
@@ -166,9 +166,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UI-02 | Phase 1 | Pending |
 | UI-03 | Phase 1 | Pending |
 | UI-04 | Phase 1 | Pending |
-| UI-05 | Phase 1 | Pending |
+| UI-05 | Phase 1 | Complete |
 | LEGAL-01 | Phase 1 | Pending |
-| LEGAL-02 | Phase 1 | Pending |
+| LEGAL-02 | Phase 1 | Complete |
 | LEGAL-03 | Phase 1 | Complete |
 
 **Coverage:**
