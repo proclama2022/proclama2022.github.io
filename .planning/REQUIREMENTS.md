@@ -28,11 +28,11 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Care Information
 
-- [ ] **CARE-01**: App shows care instructions for identified plant (water frequency, sunlight, temperature, soil)
-- [ ] **CARE-02**: Care database includes 100 most common species for MVP (extensible to 500)
-- [ ] **CARE-03**: If species not in care DB, app shows "Care info coming soon" fallback
-- [ ] **CARE-04**: Care info includes: watering days, sunlight type, temp range, soil type, difficulty, pet toxicity
-- [ ] **CARE-05**: Watering frequency stored as integer days (e.g., 7 = water every 7 days)
+- [x] **CARE-01**: App shows care instructions for identified plant (water frequency, sunlight, temperature, soil)
+- [x] **CARE-02**: Care database includes 100 most common species for MVP (extensible to 500)
+- [x] **CARE-03**: If species not in care DB, app shows "Care info coming soon" fallback
+- [x] **CARE-04**: Care info includes: watering days, sunlight type, temp range, soil type, difficulty, pet toxicity
+- [x] **CARE-05**: Watering frequency stored as integer days (e.g., 7 = water every 7 days)
 
 ### Watering Reminders & Tracking
 
@@ -136,11 +136,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | COLL-04 | Phase 1 | Pending |
 | COLL-05 | Phase 1 | Pending |
 | COLL-06 | Phase 1 | Pending |
-| CARE-01 | Phase 1 | Pending |
-| CARE-02 | Phase 1 | Pending |
-| CARE-03 | Phase 1 | Pending |
-| CARE-04 | Phase 1 | Pending |
-| CARE-05 | Phase 1 | Pending |
+| CARE-01 | Phase 1 | Complete |
+| CARE-02 | Phase 1 | Complete |
+| CARE-03 | Phase 1 | Complete |
+| CARE-04 | Phase 1 | Complete |
+| CARE-05 | Phase 1 | Complete |
 | WATER-01 | Phase 2 | Pending |
 | WATER-02 | Phase 2 | Pending |
 | WATER-03 | Phase 2 | Pending |
