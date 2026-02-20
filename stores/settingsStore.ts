@@ -4,11 +4,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { changeLanguage } from '@/i18n';
 
 type Language = 'en' | 'it';
+type NotificationPermissionStatus = 'granted' | 'denied' | 'undetermined';
 
 interface SettingsState {
   language: Language;
   setLanguage: (language: Language) => void;
   syncI18n: () => Promise<void>;
+  notificationEnabled: boolean;
+  setNotificationEnabled: (enabled: boolean) => void;
+  notificationTime: string;
+  setNotificationTime: (time: string) => void;
+  notificationPermission: NotificationPermissionStatus;
+  setNotificationPermission: (status: NotificationPermissionStatus) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -20,6 +27,12 @@ export const useSettingsStore = create<SettingsState>()(
         const { language } = get();
         await changeLanguage(language);
       },
+      notificationEnabled: false,
+      setNotificationEnabled: (enabled) => set({ notificationEnabled: enabled }),
+      notificationTime: '08:00',
+      setNotificationTime: (time) => set({ notificationTime: time }),
+      notificationPermission: 'undetermined',
+      setNotificationPermission: (status) => set({ notificationPermission: status }),
     }),
     {
       name: 'plantid-settings-storage',
