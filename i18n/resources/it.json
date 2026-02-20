@@ -90,5 +90,22 @@
     "cameraPermission": "Il permesso della fotocamera è necessario per scattare foto.",
     "apiError": "Impossibile identificare la pianta. Riprova.",
     "invalidImage": "Impossibile elaborare questa immagine."
+  },
+  "watering": {
+    "markWatered": "Registra Annaffiatura",
+    "markedAsWatered": "Annaffiatura registrata!",
+    "undo": "Annulla",
+    "wateringHistory": "Storico Annaffiature",
+    "nextWatering": "Prossima annaffiatura",
+    "complianceThisWeek": "{{rate}}% conformità questa settimana",
+    "dayStreak": "Streak di {{count}} giorni!",
+    "addNote": "Aggiungi Nota",
+    "notesPlaceholder": "Fertilizzante, potatura, ecc.",
+    "notificationsEnabled": "Notifiche Attivate",
+    "enableNotifications": "Attiva Notifiche",
+    "notificationsDenied": "Notifiche Disattivate",
+    "notificationTime": "Orario Notifiche",
+    "plantsNeedWater": "{{plants}} hanno bisogno di acqua oggi",
+    "notesFor": "Note per {{date}}"
   }
 }

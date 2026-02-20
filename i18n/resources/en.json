@@ -90,5 +90,22 @@
     "cameraPermission": "Camera permission is required to take photos.",
     "apiError": "Unable to identify plant. Please try again.",
     "invalidImage": "Unable to process this image."
+  },
+  "watering": {
+    "markWatered": "Mark Watered",
+    "markedAsWatered": "Marked as watered!",
+    "undo": "Undo",
+    "wateringHistory": "Watering History",
+    "nextWatering": "Next watering",
+    "complianceThisWeek": "{{rate}}% compliance this week",
+    "dayStreak": "{{count}}-day watering streak!",
+    "addNote": "Add Note",
+    "notesPlaceholder": "Fertilizer, pruning, etc.",
+    "notificationsEnabled": "Notifications Enabled",
+    "enableNotifications": "Enable Notifications",
+    "notificationsDenied": "Notifications Disabled",
+    "notificationTime": "Notification Time",
+    "plantsNeedWater": "{{plants}} need water today",
+    "notesFor": "Notes for {{date}}"
   }
 }
