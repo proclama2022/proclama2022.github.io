@@ -68,6 +68,11 @@
     "message": "Hai usato tutte le {{limit}} identificazioni per oggi. Torna domani!",
     "remaining": "{{remaining}} rimaste oggi"
   },
+  "pro": {
+    "collectionFull": "Gli utenti gratuiti possono salvare fino a 10 piante. Passa a Pro per una collezione illimitata.",
+    "scanLimitPro": "Gli utenti Pro hanno 15 scansioni al giorno. Hai usato {{used}} di {{limit}}.",
+    "upgradeForMore": "Passa a Pro"
+  },
   "onboarding": {
     "screen1": {
       "title": "Benvenuto su Plantid",

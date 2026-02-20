@@ -68,6 +68,11 @@
     "message": "You've used all {{limit}} identifications for today. Come back tomorrow!",
     "remaining": "{{remaining}} remaining today"
   },
+  "pro": {
+    "collectionFull": "Free users can save up to 10 plants. Upgrade to Pro for unlimited collection.",
+    "scanLimitPro": "Pro users get 15 scans per day. You've used {{used}} of {{limit}}.",
+    "upgradeForMore": "Upgrade to Pro"
+  },
   "onboarding": {
     "screen1": {
       "title": "Welcome to Plantid",
