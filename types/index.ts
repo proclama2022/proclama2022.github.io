@@ -115,3 +115,16 @@ export interface ComplianceData {
   expected: number;
   streak: number;
 }
+
+// Pro/In-App Purchase Types
+export interface ProStatus {
+  isPro: boolean;
+  lastVerified: string | null; // ISO timestamp of last RevenueCat verification
+}
+
+export type PurchaseError =
+  | { type: 'user_cancelled' }
+  | { type: 'network_error'; message: string }
+  | { type: 'product_not_available' }
+  | { type: 'verification_failed'; message: string }
+  | { type: 'unknown'; message: string };
