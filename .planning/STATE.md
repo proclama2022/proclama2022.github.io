@@ -10,31 +10,32 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 3 (Care Features and Notifications)
-Plan: 1 of 3
-Status: Plan 01 completed — Mark Watered business logic, notification scheduling, watering translations
-Last activity: 2026-02-20 — Completed watering service and notification service — Phase 02 Plan 01 complete
+Plan: 2 of 3
+Status: Plan 02 completed — Watering history calendar, compliance bar, Mark Watered button with toast undo
+Last activity: 2026-02-20 — Built UI components for watering visualization and compliance tracking — Phase 02 Plan 02 complete
 
-Progress: [███░░░░░░░] 33% (1/3 plans)
+Progress: [██████░░░░] 67% (2/3 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
-- Average duration: 150s
-- Total execution time: 1787s
+- Total plans completed: 13
+- Average duration: 178s
+- Total execution time: 2290s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 11 | 1575s | 143s |
-| 02 | 1 | 212s | 212s |
+| 02 | 2 | 715s | 358s |
 
 **Recent Trend:**
-- Last 5 plans: 212s (02-01), 124s (01-11), 133s (01-10), 294s (01-08), 232s (01-07)
+- Last 5 plans: 503s (02-02), 212s (02-01), 124s (01-11), 133s (01-10), 294s (01-08)
 - Trend: steady
 
 *Updated after each plan completion*
+| Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
 | Phase 02-care-features-and-notifications P01 | 212 | 2 tasks | 7 files |
 | Phase 01-foundation-and-core-loop P06 | 71 | 1 task | 4 files |
 | Phase 01-foundation-and-core-loop P05 | 160 | 1 task | 7 files |
@@ -47,6 +48,7 @@ Progress: [███░░░░░░░] 33% (1/3 plans)
 | Phase 01 P11 | 124 | 1 tasks | 3 files |
 | Phase 01-foundation-and-core-loop P09 | 119 | 1 tasks | 3 files |
 | Phase 02 P01 | 212 | 4 tasks | 7 files |
+| Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -94,6 +96,10 @@ Recent decisions affecting current work:
 - [Phase 02]: Platform-specific notification triggers: Android DailyNotificationTrigger, iOS CalendarNotificationTrigger with repeats
 - [Phase 02]: Rolling 7-day compliance window instead of 30-day for user-friendly motivation
 - [Phase 02]: 50% margin in streak calculation allows realistic watering schedules
+- [Phase 02-02]: Custom Toast component with haptic feedback instead of third-party library
+- [Phase 02-02]: Calendar dots color coding: green (#2e7d32) for watered, red (#c62828) for missed, gray (#e0e0e0) for future
+- [Phase 02-02]: Streak badge shows only for 7+ day streaks with yellow background (#fff9c4)
+- [Phase 02-02]: Compliance bar shows positive progress only, no shaming for missed days
 
 ### Pending Todos
 
@@ -107,5 +113,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 02-01 (Mark Watered and Notification Scheduling) — Phase 02 care-features-and-notifications Plan 01 complete
-Resume file: .planning/phases/02-care-features-and-notifications/02-01-SUMMARY.md
+Stopped at: Completed 02-02 (Watering History and Compliance UI) — Phase 02 care-features-and-notifications Plan 02 complete
+Resume file: .planning/phases/02-care-features-and-notifications/02-02-SUMMARY.md
