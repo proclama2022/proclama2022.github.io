@@ -71,7 +71,24 @@
   "pro": {
     "collectionFull": "Free users can save up to 10 plants. Upgrade to Pro for unlimited collection.",
     "scanLimitPro": "Pro users get 15 scans per day. You've used {{used}} of {{limit}}.",
-    "upgradeForMore": "Upgrade to Pro"
+    "upgradeForMore": "Upgrade to Pro",
+    "upgradeTitle": "Unlock Pro",
+    "upgradeSubtitle": "Get more from Plantid",
+    "benefit15Scans": "15 plant identifications per day",
+    "benefitUnlimited": "Unlimited plant collection",
+    "benefitNoAds": "No ads, ever",
+    "benefitOneTime": "One-time purchase",
+    "noSubscription": "No subscription, ever",
+    "priceTag": "€4.99",
+    "oneTimePayment": "One-time payment",
+    "ctaButton": "Remove Ads & Unlock All — €4.99",
+    "proThankYou": "Thank you for being a Pro user!",
+    "restorePurchases": "Restore Purchases",
+    "restoreSuccess": "Your Pro purchase has been restored!",
+    "restoreFailed": "No previous purchases found",
+    "restoreError": "Could not restore purchases. Check your connection.",
+    "purchaseError": "Purchase failed. Please try again.",
+    "termsNote": "Payment charged to App Store account. Managed by Apple."
   },
   "onboarding": {
     "screen1": {

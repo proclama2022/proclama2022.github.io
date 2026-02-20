@@ -71,7 +71,24 @@
   "pro": {
     "collectionFull": "Gli utenti gratuiti possono salvare fino a 10 piante. Passa a Pro per una collezione illimitata.",
     "scanLimitPro": "Gli utenti Pro hanno 15 scansioni al giorno. Hai usato {{used}} di {{limit}}.",
-    "upgradeForMore": "Passa a Pro"
+    "upgradeForMore": "Passa a Pro",
+    "upgradeTitle": "Sblocca Pro",
+    "upgradeSubtitle": "Ottieni di più da Plantid",
+    "benefit15Scans": "15 identificazioni piante al giorno",
+    "benefitUnlimited": "Collezione piante illimitata",
+    "benefitNoAds": "Nessuna pubblicità, mai",
+    "benefitOneTime": "Acquisto unico",
+    "noSubscription": "Nessun abbonamento, mai",
+    "priceTag": "€4.99",
+    "oneTimePayment": "Pagamento una tantum",
+    "ctaButton": "Rimuovi Annunci e Sblocca Tutto — €4.99",
+    "proThankYou": "Grazie per essere un utente Pro!",
+    "restorePurchases": "Ripristina Acquisti",
+    "restoreSuccess": "Il tuo acquisto Pro è stato ripristinato!",
+    "restoreFailed": "Nessun acquisto precedente trovato",
+    "restoreError": "Impossibile ripristinare gli acquisti. Verifica la connessione.",
+    "purchaseError": "Acquisto fallito. Riprova.",
+    "termsNote": "Pagamento addebitato sull'account App Store. Gestito da Apple."
   },
   "onboarding": {
     "screen1": {
