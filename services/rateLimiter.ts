@@ -1,9 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Mutex } from 'async-mutex';
 import { RateLimitState } from '@/types';
+import { useProStore } from '@/stores/proStore';
 
 const RATE_LIMIT_KEY = '@plantid_rate_limit';
-const DAILY_LIMIT = 5;
+
+/**
+ * Get daily limit based on Pro status
+ * Free users: 5 identifications per day
+ * Pro users: 15 identifications per day
+ * Resets at midnight in user's local timezone
+ */
+function getDailyLimit(): number {
+  const { isPro } = useProStore.getState();
+  return isPro ? 15 : 5;
+}
 
 // Create mutex for atomic rate limit operations
 const mutex = new Mutex();
@@ -58,18 +69,19 @@ export async function canIdentify(): Promise<{ allowed: boolean; remaining: numb
   return await mutex.runExclusive(async () => {
     const state = await getRateLimitState();
     const today = getTodayString();
+    const limit = getDailyLimit();
 
     // Reset count if it's a new day
     if (state.date !== today) {
       // Don't save here - let incrementIdentificationCount handle it
-      return { allowed: true, remaining: DAILY_LIMIT, limit: DAILY_LIMIT };
+      return { allowed: true, remaining: limit, limit };
     }
 
-    const remaining = Math.max(0, DAILY_LIMIT - state.count);
+    const remaining = Math.max(0, limit - state.count);
     return {
-      allowed: state.count < DAILY_LIMIT,
+      allowed: state.count < limit,
       remaining,
-      limit: DAILY_LIMIT,
+      limit,
     };
   });
 }
@@ -111,22 +123,23 @@ export async function getRateLimitInfo(): Promise<{ date: string; count: number;
   return await mutex.runExclusive(async () => {
     const state = await getRateLimitState();
     const today = getTodayString();
+    const limit = getDailyLimit();
 
     // Reset count if it's a new day
     if (state.date !== today) {
       return {
         date: today,
         count: 0,
-        remaining: DAILY_LIMIT,
-        limit: DAILY_LIMIT,
+        remaining: limit,
+        limit,
       };
     }
 
     return {
       date: state.date,
       count: state.count,
-      remaining: Math.max(0, DAILY_LIMIT - state.count),
-      limit: DAILY_LIMIT,
+      remaining: Math.max(0, limit - state.count),
+      limit,
     };
   });
 }
