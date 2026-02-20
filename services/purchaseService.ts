@@ -60,16 +60,18 @@ export async function purchasePro(): Promise<{ success: boolean; error?: Purchas
     }
 
     const offerings = await Purchases.getOfferings();
-    const product = offerings.current?.availableProducts[0];
+    const packages = offerings.current?.availablePackages;
 
-    if (!product) {
+    if (!packages || packages.length === 0) {
       return {
         success: false,
         error: { type: 'product_not_available' }
       };
     }
 
-    const { customerInfo } = await Purchases.purchaseProduct(product.identifier);
+    // Use the first available package (typically the lifetime package for one-time purchase)
+    const pkg = packages[0];
+    const { customerInfo } = await Purchases.purchasePackage(pkg);
     const isPro = customerInfo.entitlements.active[ENTITLEMENT_ID] !== undefined;
 
     if (isPro) {
