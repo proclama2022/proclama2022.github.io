@@ -21,7 +21,7 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 - [x] **COLL-01**: User can save identified plant to "My Plants" collection
 - [x] **COLL-02**: Each saved plant stores: photo, species name, common name, date added, location nickname
-- [ ] **COLL-03**: User can view list of all saved plants with thumbnail grid
+- [x] **COLL-03**: User can view list of all saved plants with thumbnail grid
 - [x] **COLL-04**: User can view detailed plant profile (species, family, photo, added date)
 - [x] **COLL-05**: User can delete plants from collection
 - [x] **COLL-06**: Plant collection persists across app restarts (AsyncStorage)
@@ -36,8 +36,8 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 ### Watering Reminders & Tracking
 
-- [ ] **WATER-01**: User can mark plant as "watered today" with one tap
-- [ ] **WATER-02**: App schedules local notification reminder for next watering date
+- [x] **WATER-01**: User can mark plant as "watered today" with one tap
+- [x] **WATER-02**: App schedules local notification reminder for next watering date
 - [ ] **WATER-03**: App sends daily notification at 08:00 listing all plants due for watering
 - [ ] **WATER-04**: User can view watering history per plant (last 30 days)
 - [ ] **WATER-05**: History shows completion rate (e.g., "5/7 watered on schedule this month")
@@ -130,19 +130,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ID-05 | Phase 1 | Complete |
 | ID-06 | Phase 1 | Complete |
 | ID-07 | Phase 1 | Complete |
-| COLL-01 | Phase 1 | Pending |
-| COLL-02 | Phase 1 | Pending |
-| COLL-03 | Phase 1 | Pending |
+| COLL-01 | Phase 1 | Complete |
+| COLL-02 | Phase 1 | Complete |
+| COLL-03 | Phase 1 | Complete |
 | COLL-04 | Phase 1 | Complete |
 | COLL-05 | Phase 1 | Complete |
-| COLL-06 | Phase 1 | Pending |
+| COLL-06 | Phase 1 | Complete |
 | CARE-01 | Phase 1 | Complete |
 | CARE-02 | Phase 1 | Complete |
 | CARE-03 | Phase 1 | Complete |
 | CARE-04 | Phase 1 | Complete |
 | CARE-05 | Phase 1 | Complete |
-| WATER-01 | Phase 2 | Pending |
-| WATER-02 | Phase 2 | Pending |
+| WATER-01 | Phase 2 | Complete |
+| WATER-02 | Phase 2 | Complete |
 | WATER-03 | Phase 2 | Pending |
 | WATER-04 | Phase 2 | Pending |
 | WATER-05 | Phase 2 | Pending |

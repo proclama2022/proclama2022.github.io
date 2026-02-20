@@ -5,35 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance — accessible to anyone without a €30/year paywall
-**Current focus:** Phase 1 — Foundation and Core Loop
+**Current focus:** Phase 2 — Care Features and Notifications
 
 ## Current Position
 
-Phase: 1 of 3 (Foundation and Core Loop)
-Plan: 11 of 11
-Status: Plan 11 completed — Rate limiting UI with useRateLimit hook, RateLimitModal overlay, camera integration
-Last activity: 2026-02-19 — Completed rate limiting UI — Phase 01 complete
+Phase: 2 of 3 (Care Features and Notifications)
+Plan: 1 of 3
+Status: Plan 01 completed — Mark Watered business logic, notification scheduling, watering translations
+Last activity: 2026-02-20 — Completed watering service and notification service — Phase 02 Plan 01 complete
 
-Progress: [███████████] 100% (11/11 plans)
+Progress: [███░░░░░░░] 33% (1/3 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
-- Average duration: 143s
-- Total execution time: 1575s
+- Total plans completed: 12
+- Average duration: 150s
+- Total execution time: 1787s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 11 | 1575s | 143s |
+| 02 | 1 | 212s | 212s |
 
 **Recent Trend:**
-- Last 5 plans: 124s (01-11), 133s (01-10), 294s (01-08), 232s (01-07), 71s (01-06)
+- Last 5 plans: 212s (02-01), 124s (01-11), 133s (01-10), 294s (01-08), 232s (01-07)
 - Trend: steady
 
 *Updated after each plan completion*
+| Phase 02-care-features-and-notifications P01 | 212 | 2 tasks | 7 files |
 | Phase 01-foundation-and-core-loop P06 | 71 | 1 task | 4 files |
 | Phase 01-foundation-and-core-loop P05 | 160 | 1 task | 7 files |
 | Phase 01-foundation-and-core-loop P04 | 313 | 1 task | 1 file |
@@ -44,6 +46,7 @@ Progress: [███████████] 100% (11/11 plans)
 | Phase 01-foundation-and-core-loop P10 | 133 | 1 tasks | 3 files |
 | Phase 01 P11 | 124 | 1 tasks | 3 files |
 | Phase 01-foundation-and-core-loop P09 | 119 | 1 tasks | 3 files |
+| Phase 02 P01 | 212 | 4 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -83,6 +86,14 @@ Recent decisions affecting current work:
 - [Phase 01-09]: PlantCard display name priority: nickname > commonName > scientificName > species
 - [Phase 01-09]: FlatList key={viewMode} used to force remount when switching grid/list column count
 - [Phase 01-09]: Sort applied inside PlantGrid via spread copy to avoid mutating store state
+- [Phase 02-01]: Use local timezone arithmetic (new Date(year, month, date + days)) to avoid UTC bugs in next watering date calculation
+- [Phase 02-01]: Platform-specific notification triggers: Android uses hour/minute in DailyNotificationTrigger, iOS uses CalendarNotificationTrigger with repeats
+- [Phase 02-01]: Rolling 7-day compliance window (not 30-day) for more user-friendly motivation
+- [Phase 02-01]: 50% margin in streak calculation allows realistic watering schedules (weekly plants can be 3-4 days late without breaking streak)
+- [Phase 02]: Use local timezone arithmetic for next watering date calculation to avoid UTC bugs
+- [Phase 02]: Platform-specific notification triggers: Android DailyNotificationTrigger, iOS CalendarNotificationTrigger with repeats
+- [Phase 02]: Rolling 7-day compliance window instead of 30-day for user-friendly motivation
+- [Phase 02]: 50% margin in streak calculation allows realistic watering schedules
 
 ### Pending Todos
 
@@ -95,6 +106,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-19
-Stopped at: Completed 01-11 (Rate Limiting UI) — Phase 01 foundation-and-core-loop COMPLETE
-Resume file: .planning/phases/01-foundation-and-core-loop/01-11-SUMMARY.md
+Last session: 2026-02-20
+Stopped at: Completed 02-01 (Mark Watered and Notification Scheduling) — Phase 02 care-features-and-notifications Plan 01 complete
+Resume file: .planning/phases/02-care-features-and-notifications/02-01-SUMMARY.md
