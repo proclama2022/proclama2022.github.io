@@ -52,7 +52,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. At 08:00 in the user's local timezone, a single notification lists all plants due for watering that day — and this notification fires correctly on Android (including Samsung and Xiaomi devices with battery optimizers) after the user grants permission at the moment of first plant save
   3. User can view a per-plant watering history for the last 30 days and see a compliance rate (e.g., "5/7 watered on schedule this month")
   4. If a user deletes a plant, its scheduled notification is cancelled — reinstalling the app does not leave orphaned notifications
-**Plans**: TBD
+**Plans**: 3
+
+**Plan List:**
+- [ ] 02-01-PLAN.md — Watering service and notification scheduling foundation (services, types, translations)
+- [ ] 02-02-PLAN.md — Watering UI components (MarkWateredButton, WateringHistory calendar, ComplianceBar, Toast)
+- [ ] 02-03-PLAN.md — Plant detail screen integration and daily digest notification
 
 ### Phase 3: Monetization
 **Goal**: The app displays a non-intrusive banner ad on the Home screen for free users, and offers a one-time €4.99 Pro unlock that removes all ads and raises daily scan and collection limits
@@ -73,5 +78,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Core Loop | 11/11 | Complete   | 2026-02-19 |
-| 2. Care Features and Notifications | 0/TBD | Not started | - |
+| 2. Care Features and Notifications | 0/3 | Not started | - |
 | 3. Monetization | 0/TBD | Not started | - |
