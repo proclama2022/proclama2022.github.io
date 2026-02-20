@@ -6,9 +6,11 @@ import { canIdentify, incrementIdentificationCount } from '@/services/rateLimite
  *
  * - `allowed`: whether the user can make another identification today
  * - `remaining`: how many identifications remain today
- * - `limit`: the daily cap (5)
+ * - `limit`: the daily cap (5 for free users, 15 for Pro users)
  * - `checkLimit()`: re-query the rate limit state (e.g. on resume)
  * - `useScan()`: atomically check + increment; returns true if scan is allowed
+ *
+ * Limit is dynamic based on Pro status - changes reflected immediately after Pro upgrade.
  */
 export function useRateLimit() {
   const [allowed, setAllowed] = useState(true);
