@@ -4,6 +4,8 @@
 
 Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni sulla cura, e invia notifiche per l'annaffiatura. Completamente gratuita per l'utente finale con monetizzazione via ads non invasivi e unlock Pro opzionale (€4,99 una tantum).
 
+**Now shipping v1.0 MVP** — Complete identification workflow, watering reminders, Pro monetization.
+
 ## Core Value
 
 Rendere accessibile e gratuita l'identificazione precisa di piante con cura personalizzata — senza abbonamenti, a differenza dei competitor (PictureThis €30/anno, Planta €36/anno).
@@ -12,31 +14,31 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 
 ### Validated
 
-(Nessuno ancora — app in costruzione)
+**Core Loop (v1.0):**
+- ✓ User fotografa pianta via app camera — v1.0
+- ✓ PlantNet API identifica specie (score confidenza) — v1.0
+- ✓ App mostra nome scientifico, famiglia, nomi comuni — v1.0
+- ✓ Database locale fornisce cure (frequenza annaffiatura, luce, temperatura, terreno) — v1.0
+- ✓ User salva pianta identificata in locale — v1.0
+- ✓ App invia notifiche annaffiatura schedulate — v1.0
+- ✓ User può tracciare storico annaffiature — v1.0
+- ✓ App adatta UI tra IT/EN (e future lingue) — v1.0
+
+**Monetizzazione (v1.0):**
+- ✓ Banner ads in basso (rimovibili con Pro) — v1.0
+- ✓ In-app purchase Pro unlock (rimuovi ads + limiti aumentati) — v1.0
+- ✓ Tracking identificazioni/giorno per tier gratuito (5/giorno) vs Pro (15/giorno) — v1.0
+
+**UI Completa (v1.0):**
+- ✓ Home: lista piante salvate + annaffiature oggi + FAB camera — v1.0
+- ✓ Camera: preview + selezione organo pianta + scatta/da galleria — v1.0
+- ✓ Risultati: identificazione con confidence score + altre ipotesi — v1.0
+- ✓ Dettagli pianta: cura, storico annaffiature, prossima data, note — v1.0
+- ✓ Impostazioni: lingua, orario notifiche, statistiche, Pro unlock, info — v1.0
 
 ### Active
 
-**Core Loop:**
-- [ ] User fotografa pianta via app camera
-- [ ] PlantNet API identifica specie (score confidenza)
-- [ ] App mostra nome scientifico, famiglia, nomi comuni
-- [ ] Database locale fornisce cure (frequenza annaffiatura, luce, temperatura, terreno)
-- [ ] User salva pianta identificata in locale
-- [ ] App invia notifiche annaffiatura schedulate
-- [ ] User può tracciare storico annaffiature
-- [ ] App adatta UI tra IT/EN (e future lingue)
-
-**Monetizzazione:**
-- [ ] Banner ads in basso (rimovibili con Pro)
-- [ ] In-app purchase Pro unlock (rimuovi ads + limiti aumentati)
-- [ ] Tracking identificazioni/giorno per tier gratuito (5/giorno) vs Pro (15/giorno)
-
-**UI Completa:**
-- [ ] Home: lista piante salvate + annaffiature oggi + FAB camera
-- [ ] Camera: preview + selezione organo pianta + scatta/da galleria
-- [ ] Risultati: identificazione con confidence score + altre ipotesi
-- [ ] Dettagli pianta: cura, storico annaffiature, prossima data, note
-- [ ] Impostazioni: lingua, orario notifiche, statistiche, Pro unlock, info
+(No active requirements — plan next milestone with `/gsd:new-milestone`)
 
 ### Out of Scope
 
@@ -46,36 +48,32 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - Export dati CSV (Pro feature v2+)
 - Widget home screen (Pro feature v2+)
 - On-device ML fallback (fino a >500 scan/giorno con plan commercial)
+- Subscription model (explicitly rejected for MVP)
 
 ## Context
 
-**Stack Tecnologico (Expo):**
-- React Native + TypeScript (greenfield scaffold già presente)
-- Expo managed workflow
-- AsyncStorage per persistence locale
+**Stack Tecnologico (Expo SDK 54):**
+- React Native 0.81.5 + TypeScript
+- Expo managed workflow with development build
+- Expo Router for navigation
+- Zustand + AsyncStorage for state persistence
+- expo-notifications for local notifications
 - PlantNet API (free tier 500 scan/giorno)
-- Notifiche locali schedulate
-- AdMob per ads
-- Navigation: Expo Router (già in use)
+- RevenueCat for IAP
+- react-native-google-mobile-ads for AdMob
 
-**Codebase Stato:**
-- Services iniziati: `plantnet.ts` (API), `cache.ts`, `rateLimiter.ts`
-- Types definiti completamente in `types/index.ts`
-- Layout scaffold con tab navigation
-- No screens implementate yet (solo boilerplate)
+**Codebase Stato (v1.0):**
+- 8,988 lines TypeScript/TSX
+- 19 plans executed across 3 phases
+- 5 main screens: Home, Camera, Results, Plant Detail, Settings
+- Bilingual (IT/EN) with i18next
+- Services: plantnet, cache, rateLimiter, watering, notification, purchase
+- Stores: plantsStore, settingsStore, proStore
 
 **Database Cure Piante:**
-- Necessario: 300-500 piante comuni con cure di base
-- Fonte: Wikipedia, RHS, USDA (generare con Claude AI)
-- Formato: JSON locale in AsyncStorage
-- Fallback: se specie non nel DB, mostra solo risultati PlantNet
-
-**API Limits & Strategy:**
-- 500 identificazioni/giorno con plan free PlantNet
-- Rate limiter per utente (5/giorno gratuito)
-- Cache aggressiva per hash immagini identificate
-- Calcolo capacità: ~100 utenti attivi/giorno @ 5 scan = 500 totali
-- Upgrade path se scala: plan commercial PlantNet (€1.000/anno) o modello TFLite on-device
+- 100 species with care info (extensible to 500)
+- JSON local database in services/careDB.ts
+- Fallback: "Care info coming soon" if species not in DB
 
 ## Constraints
 
@@ -84,16 +82,20 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - **Storage**: Tutto on-device, zero server necessario
 - **Monolingue MVP**: MVP in IT/EN, future v2+ altre lingue
 - **Dependency**: Hardcoded su PlantNet API gratuita per MVP (Plan B: modello TF-Lite se API scale out)
+- **Dev Build Required**: IAP and AdMob require development build (not Expo Go)
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| PlantNet API (free tier) | 50.000+ specie, 50+ lingue, API semplice, zero server cost | — Pending |
-| AsyncStorage + cache | Nessun server remoto, privacy, offline-first fallback | — Pending |
-| Database cure locale (non API) | PlantNet non fornisce cure, soluzione semplice & controllata | — Pending |
-| React Native + Expo | Cross-platform iOS/Android, development velocity, community support | — Pending |
-| Monetizzazione ads + Pro uno-tanto | Competitive vs subscription (PictureThis/Planta), marketing angle "forever free" | — Pending |
+| PlantNet API (free tier) | 50.000+ specie, 50+ lingue, API semplice, zero server cost | ✓ Working — 500 scans/day limit manageable for MVP |
+| AsyncStorage + cache | Nessun server remoto, privacy, offline-first fallback | ✓ Working — LRU cache with image hash |
+| Database cure locale (non API) | PlantNet non fornisce cure, soluzione semplice & controllata | ✓ Working — 100 species in careDB.ts |
+| React Native + Expo | Cross-platform iOS/Android, development velocity, community support | ✓ Working — Expo SDK 54, RN 0.81.5 |
+| Monetizzazione ads + Pro uno-tanto | Competitive vs subscription (PictureThis/Planta), marketing angle "forever free" | ✓ Working — RevenueCat IAP, AdMob banners |
+| RevenueCat over react-native-iap | react-native-iap deprecated, RevenueCat has official Expo plugin | ✓ Working — Server-side receipt validation |
+| Manual notification opt-in | Less intrusive, better UX than auto-prompting | ✓ Working — Settings toggle, limit-based triggers |
 
 ---
-*Last updated: 2026-02-19 after project initialization*
+
+*Last updated: 2026-02-20 after v1.0 MVP milestone*
