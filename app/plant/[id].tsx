@@ -14,11 +14,16 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/Themed';
 import { CareInfo } from '@/components/Detail/CareInfo';
+import { MarkWateredButton } from '@/components/Detail/MarkWateredButton';
+import { WateringHistory } from '@/components/Detail/WateringHistory';
+import { ComplianceBar } from '@/components/Detail/ComplianceBar';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { getCareInfo } from '@/services/careDB';
+import { scheduleDailyDigest } from '@/services/notificationService';
 
 // ---------------------------------------------------------------------------
 // Plant Detail Screen
@@ -74,18 +79,21 @@ export default function PlantDetailScreen() {
   const saveNotes = useCallback(() => {
     if (notes !== (plant.notes ?? '')) {
       updatePlant(plant.id, { notes });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   }, [notes, plant.id, plant.notes, updatePlant]);
 
   const saveNickname = useCallback(() => {
     if (nickname !== (plant.nickname ?? '')) {
       updatePlant(plant.id, { nickname });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   }, [nickname, plant.id, plant.nickname, updatePlant]);
 
   const saveLocation = useCallback(() => {
     if (location !== (plant.location ?? '')) {
       updatePlant(plant.id, { location });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
   }, [location, plant.id, plant.location, updatePlant]);
 
@@ -93,9 +101,10 @@ export default function PlantDetailScreen() {
   // Delete
   // ------------------------------------------------------------------
 
-  const handleDeleteConfirm = useCallback(() => {
+  const handleDeleteConfirm = useCallback(async () => {
     setShowDeleteModal(false);
-    removePlant(plant.id);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    await removePlant(plant.id);
     router.back();
   }, [plant.id, removePlant, router]);
 
@@ -179,6 +188,7 @@ export default function PlantDetailScreen() {
               <View style={styles.fieldHeader}>
                 <Ionicons name="person-outline" size={16} color="#666" />
                 <Text style={styles.fieldLabel}>{t('detail.nickname')}</Text>
+                <Ionicons name="pencil" size={12} color="#bbb" style={styles.editIcon} />
               </View>
               <TextInput
                 style={styles.textInput}
@@ -197,6 +207,7 @@ export default function PlantDetailScreen() {
               <View style={styles.fieldHeader}>
                 <Ionicons name="location-outline" size={16} color="#666" />
                 <Text style={styles.fieldLabel}>{t('detail.location')}</Text>
+                <Ionicons name="pencil" size={12} color="#bbb" style={styles.editIcon} />
               </View>
               <TextInput
                 style={styles.textInput}
@@ -215,6 +226,7 @@ export default function PlantDetailScreen() {
               <View style={styles.fieldHeader}>
                 <Ionicons name="document-text-outline" size={16} color="#666" />
                 <Text style={styles.fieldLabel}>{t('detail.notes')}</Text>
+                <Ionicons name="pencil" size={12} color="#bbb" style={styles.editIcon} />
               </View>
               <TextInput
                 style={[styles.textInput, styles.notesInput]}
@@ -231,6 +243,9 @@ export default function PlantDetailScreen() {
             </View>
           </View>
 
+          {/* Mark Watered button */}
+          <MarkWateredButton plant={plant} />
+
           {/* Care info section */}
           <View style={styles.card}>
             <View style={styles.sectionHeader}>
@@ -240,6 +255,14 @@ export default function PlantDetailScreen() {
               </Text>
             </View>
             <CareInfo care={care} />
+          </View>
+
+          {/* Watering compliance */}
+          <ComplianceBar plant={plant} />
+
+          {/* Watering history */}
+          <View style={styles.card}>
+            <WateringHistory plant={plant} />
           </View>
 
           {/* Delete button */}
@@ -438,6 +461,9 @@ const styles = StyleSheet.create({
     color: '#888',
     textTransform: 'uppercase',
     letterSpacing: 0.4,
+  },
+  editIcon: {
+    marginLeft: 'auto',
   },
   textInput: {
     fontSize: 14,
