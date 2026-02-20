@@ -3,12 +3,15 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SavedPlant } from '@/types';
 import { cancelPlantNotification, cancelAllPlantNotifications } from '@/services/notificationService';
+import { useProStore } from '@/stores/proStore';
+
+const MAX_PLANTS_FREE = 10;
 
 interface PlantsState {
   plants: SavedPlant[];
   notificationTimePreference: string;
   setNotificationTimePreference: (time: string) => void;
-  addPlant: (plant: SavedPlant) => void;
+  addPlant: (plant: SavedPlant) => boolean;
   removePlant: (id: string) => Promise<void>;
   getPlant: (id: string) => SavedPlant | undefined;
   updatePlant: (id: string, updates: Partial<SavedPlant>) => void;
@@ -21,9 +24,21 @@ export const usePlantsStore = create<PlantsState>()(
       plants: [],
       notificationTimePreference: '08:00',
       setNotificationTimePreference: (time) => set({ notificationTimePreference: time }),
-      addPlant: (plant) => set((state) => ({
-        plants: [{ ...plant, id: plant.id || crypto.randomUUID() }, ...state.plants]
-      })),
+      /**
+       * Add plant to collection. Returns false if free user has reached limit (10 plants).
+       * Pro users have unlimited collection size.
+       */
+      addPlant: (plant) => {
+        const { isPro } = useProStore.getState();
+        const plants = get().plants;
+        if (!isPro && plants.length >= MAX_PLANTS_FREE) {
+          return false; // Collection full
+        }
+        set((state) => ({
+          plants: [{ ...plant, id: plant.id || crypto.randomUUID() }, ...state.plants]
+        }));
+        return true; // Success
+      },
       removePlant: async (id) => {
         const plant = get().plants.find(p => p.id === id);
         if (plant?.scheduledNotificationId) {
