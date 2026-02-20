@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { Calendar, DateData } from 'react-native-calendars';
 import { useTranslation } from 'react-i18next';
-import { usePlantsStore } from '@/stores/plantsStore';
 import { getWateringStreak, generateMarkedDates } from '@/services/wateringService';
 import { SavedPlant } from '@/types';
 import { Text } from '@/components/Themed';
@@ -21,7 +20,6 @@ interface WateringHistoryProps {
 
 export function WateringHistory({ plant }: WateringHistoryProps) {
   const { t } = useTranslation();
-  const getPlant = usePlantsStore((state) => state.getPlant);
 
   // Calculate streak
   const streak = getWateringStreak(plant.id);
@@ -66,37 +64,33 @@ export function WateringHistory({ plant }: WateringHistoryProps) {
       )}
 
       {/* Calendar */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <Calendar
-          markingType="multi-dot"
-          markedDates={markedDates}
-          onDayPress={handleDayPress}
-          minDate={thirtyDaysAgo.toISOString().split('T')[0]}
-          maxDate={today.toISOString().split('T')[0]}
-          theme={{
-            dotStyle: {
-              width: 8,
-              height: 8,
-              marginTop: 2,
-            },
-            todayTextColor: '#2e7d32',
-            selectedDayBackgroundColor: '#e8f5e9',
-            arrowColor: '#2e7d32',
-            monthTextColor: '#1a1a1a',
-            textMonthFontSize: 16,
-            textMonthFontWeight: 'bold',
-            textDayFontSize: 14,
-            textDayHeaderFontSize: 12,
-            textDayFontFamily: 'System',
-            calendarBackground: '#ffffff',
-          }}
-          style={styles.calendar}
-          hideExtraDays
-          disableMonthNavigation
-          hideArrows={false}
-          enableSwipeMonths={false}
-        />
-      </ScrollView>
+      <Calendar
+        markingType="multi-dot"
+        markedDates={markedDates}
+        onDayPress={handleDayPress}
+        minDate={thirtyDaysAgo.toISOString().split('T')[0]}
+        maxDate={today.toISOString().split('T')[0]}
+        theme={{
+          dotStyle: {
+            width: 8,
+            height: 8,
+            marginTop: 2,
+          },
+          todayTextColor: '#2e7d32',
+          selectedDayBackgroundColor: '#e8f5e9',
+          arrowColor: '#2e7d32',
+          monthTextColor: '#1a1a1a',
+          textMonthFontSize: 16,
+          textMonthFontWeight: 'bold',
+          textDayFontSize: 14,
+          textDayHeaderFontSize: 12,
+          textDayFontFamily: 'System',
+          calendarBackground: '#ffffff',
+        }}
+        style={styles.calendar}
+        hideExtraDays
+        enableSwipeMonths={false}
+      />
     </View>
   );
 }
