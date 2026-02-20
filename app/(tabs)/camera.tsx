@@ -1,27 +1,29 @@
-import React, { useRef, useState } from 'react';
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  SafeAreaView,
-  Platform,
-} from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import * as ImagePicker from 'expo-image-picker';
-import { StatusBar } from 'expo-status-bar';
-import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Haptics from 'expo-haptics';
+import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import {
+  Image,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import { Text } from '@/components/Themed';
 import OrganSelector from '@/components/OrganSelector';
 import PreviewConfirm from '@/components/PreviewConfirm';
 import { RateLimitModal } from '@/components/RateLimitModal';
-import { OrganType } from '@/types';
-import { useSettingsStore } from '@/stores/settingsStore';
-import { identifyPlant } from '@/services/plantnet';
+import { BannerAdWrapper } from '@/components/BannerAdWrapper';
+import { Text } from '@/components/Themed';
 import { useRateLimit } from '@/hooks/useRateLimit';
+import { identifyPlant } from '@/services/plantnet';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { OrganType } from '@/types';
 
 // ---------------------------------------------------------------------------
 // Permission screen shown when camera access is denied or not yet granted
@@ -108,6 +110,7 @@ export default function CameraScreen() {
 
     setIsCapturing(true);
     try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       const photo = await cameraRef.current.takePictureAsync({
         quality: 0.85,
         skipProcessing: Platform.OS === 'android',
@@ -133,7 +136,7 @@ export default function CameraScreen() {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
       allowsEditing: false,
-      quality: 1,
+      quality: 0.85, // Forces JPEG conversion from HEIC on iOS
     });
 
     if (!result.canceled && result.assets[0]?.uri) {
@@ -194,6 +197,7 @@ export default function CameraScreen() {
   };
 
   const toggleFacing = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setFacing((f) => (f === 'back' ? 'front' : 'back'));
   };
 
@@ -241,95 +245,102 @@ export default function CameraScreen() {
         ref={cameraRef}
         style={styles.camera}
         facing={facing}
-      >
-        <SafeAreaView style={styles.cameraOverlay}>
-          {/* Top bar */}
-          <View style={styles.topBar}>
-            <View style={styles.topBarSpacer} />
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={toggleFacing}
-              accessibilityRole="button"
-              accessibilityLabel="Flip camera"
-            >
-              <Ionicons name="camera-reverse-outline" size={26} color="#fff" />
-            </TouchableOpacity>
-          </View>
+      />
 
-          {/* Viewfinder guide */}
-          <View style={styles.viewfinderContainer} pointerEvents="none">
-            <View style={styles.viewfinder}>
-              {/* Corner brackets */}
-              <View style={[styles.corner, styles.cornerTL]} />
-              <View style={[styles.corner, styles.cornerTR]} />
-              <View style={[styles.corner, styles.cornerBL]} />
-              <View style={[styles.corner, styles.cornerBR]} />
-            </View>
-            <Text style={styles.viewfinderHint}>
-              Center the plant in the frame
+      {/* Camera overlay — absolute positioned on top of CameraView */}
+      <SafeAreaView style={styles.cameraOverlay} pointerEvents="box-none">
+        {/* Top bar */}
+        <View style={styles.topBar}>
+          <View style={styles.topBarSpacer} />
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={toggleFacing}
+            accessibilityRole="button"
+            accessibilityLabel="Flip camera"
+          >
+            <Ionicons name="camera-reverse-outline" size={26} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Viewfinder guide */}
+        <View style={styles.viewfinderContainer} pointerEvents="none">
+          <View style={styles.viewfinder}>
+            {/* Rule of thirds grid */}
+            <View style={styles.gridLineHorizontal1} />
+            <View style={styles.gridLineHorizontal2} />
+            <View style={styles.gridLineVertical1} />
+            <View style={styles.gridLineVertical2} />
+
+            {/* Corner brackets */}
+            <View style={[styles.corner, styles.cornerTL]} />
+            <View style={[styles.corner, styles.cornerTR]} />
+            <View style={[styles.corner, styles.cornerBL]} />
+            <View style={[styles.corner, styles.cornerBR]} />
+          </View>
+          <Text style={styles.viewfinderHint}>
+            Center the plant in the frame
+          </Text>
+        </View>
+
+        {/* Bottom controls */}
+        <View style={styles.bottomBar}>
+          {/* Gallery button */}
+          <TouchableOpacity
+            style={[styles.galleryButton, !allowed && styles.disabledButton]}
+            onPress={pickFromGallery}
+            accessibilityRole="button"
+            accessibilityLabel="Choose from gallery"
+          >
+            <Ionicons
+              name="images-outline"
+              size={28}
+              color={allowed ? '#fff' : 'rgba(255,255,255,0.4)'}
+            />
+            <Text style={[styles.galleryLabel, !allowed && styles.disabledLabel]}>
+              Gallery
             </Text>
-          </View>
+          </TouchableOpacity>
 
-          {/* Bottom controls */}
-          <View style={styles.bottomBar}>
-            {/* Gallery button */}
+          {/* Shutter button */}
+          <View style={styles.shutterWrapper}>
             <TouchableOpacity
-              style={[styles.galleryButton, !allowed && styles.disabledButton]}
-              onPress={pickFromGallery}
+              style={[
+                styles.shutterOuter,
+                (isCapturing || !allowed) && styles.shutterCapturing,
+              ]}
+              onPress={takePicture}
+              disabled={isCapturing}
               accessibilityRole="button"
-              accessibilityLabel="Choose from gallery"
+              accessibilityLabel="Take photo"
             >
-              <Ionicons
-                name="images-outline"
-                size={28}
-                color={allowed ? '#fff' : 'rgba(255,255,255,0.4)'}
-              />
-              <Text style={[styles.galleryLabel, !allowed && styles.disabledLabel]}>
-                Gallery
-              </Text>
-            </TouchableOpacity>
-
-            {/* Shutter button */}
-            <View style={styles.shutterWrapper}>
-              <TouchableOpacity
+              <View
                 style={[
-                  styles.shutterOuter,
-                  (isCapturing || !allowed) && styles.shutterCapturing,
+                  styles.shutterInner,
+                  !allowed && styles.shutterInnerDisabled,
                 ]}
-                onPress={takePicture}
-                disabled={isCapturing}
-                accessibilityRole="button"
-                accessibilityLabel="Take photo"
-              >
-                <View
-                  style={[
-                    styles.shutterInner,
-                    !allowed && styles.shutterInnerDisabled,
-                  ]}
-                />
-              </TouchableOpacity>
-              {/* Remaining scans badge */}
-              {allowed && (
-                <View style={styles.remainingBadge}>
-                  <Text style={styles.remainingText}>
-                    {t('rateLimit.remaining', { remaining })}
-                  </Text>
-                </View>
-              )}
-              {!allowed && (
-                <View style={styles.remainingBadge}>
-                  <Text style={styles.limitReachedText}>
-                    {t('rateLimit.title')}
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            {/* Spacer to balance layout */}
-            <View style={styles.bottomSpacer} />
+              />
+            </TouchableOpacity>
+            {/* Remaining scans badge */}
+            {allowed && (
+              <View style={styles.remainingBadge}>
+                <Text style={styles.remainingText}>
+                  {t('rateLimit.remaining', { remaining })}
+                </Text>
+              </View>
+            )}
+            {!allowed && (
+              <View style={styles.remainingBadge}>
+                <Text style={styles.limitReachedText}>
+                  {t('rateLimit.title')}
+                </Text>
+              </View>
+            )}
           </View>
-        </SafeAreaView>
-      </CameraView>
+
+          {/* Spacer to balance layout */}
+          <View style={styles.bottomSpacer} />
+        </View>
+      </SafeAreaView>
 
       {/* Organ selector modal — shown after preview confirm */}
       <OrganSelector
@@ -344,6 +355,9 @@ export default function CameraScreen() {
         limit={limit}
         onClose={() => setShowRateLimitModal(false)}
       />
+
+      {/* Banner ad — shown at bottom for free users */}
+      <BannerAdWrapper />
     </View>
   );
 }
@@ -365,7 +379,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cameraOverlay: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'space-between',
   },
 
@@ -434,6 +452,39 @@ const styles = StyleSheet.create({
     borderBottomWidth: CORNER_THICKNESS,
     borderRightWidth: CORNER_THICKNESS,
     borderBottomRightRadius: CORNER_RADIUS,
+  },
+  // Grid lines
+  gridLineHorizontal1: {
+    position: 'absolute',
+    top: '33.33%',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  gridLineHorizontal2: {
+    position: 'absolute',
+    top: '66.66%',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  gridLineVertical1: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: '33.33%',
+    width: 1,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  gridLineVertical2: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: '66.66%',
+    width: 1,
+    backgroundColor: 'rgba(255,255,255,0.3)',
   },
   viewfinderHint: {
     color: 'rgba(255,255,255,0.75)',
