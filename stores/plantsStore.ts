@@ -5,6 +5,8 @@ import { SavedPlant } from '@/types';
 
 interface PlantsState {
   plants: SavedPlant[];
+  notificationTimePreference: string;
+  setNotificationTimePreference: (time: string) => void;
   addPlant: (plant: SavedPlant) => void;
   removePlant: (id: string) => void;
   getPlant: (id: string) => SavedPlant | undefined;
@@ -15,6 +17,8 @@ export const usePlantsStore = create<PlantsState>()(
   persist(
     (set, get) => ({
       plants: [],
+      notificationTimePreference: '08:00',
+      setNotificationTimePreference: (time) => set({ notificationTimePreference: time }),
       addPlant: (plant) => set((state) => ({
         plants: [{ ...plant, id: plant.id || crypto.randomUUID() }, ...state.plants]
       })),
