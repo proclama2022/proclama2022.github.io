@@ -1,13 +1,17 @@
 import React from 'react';
-import { Alert, Modal, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 
-import { Text } from '@/components/Themed';
+import { ThemedText as Text } from '@/components/Themed';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
+import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useProStore } from '@/stores/proStore';
 import { usePlantsStore } from '@/stores/plantsStore';
+import { useProStatus } from '@/hooks/useProStatus';
 import { changeLanguage } from '@/i18n';
 import { resetRateLimit } from '@/services/rateLimiter';
 import * as NotificationService from '@/services/notificationService';
@@ -16,11 +20,14 @@ import Colors from '@/constants/Colors';
 export default function SettingsScreen() {
   const { language, setLanguage, notificationEnabled, setNotificationEnabled, notificationTime, setNotificationTime } = useSettingsStore();
   const plants = usePlantsStore((state) => state.plants);
+  const isPro = useProStore((state) => state.isPro);
+  const { restore, loading: restoreLoading } = useProStatus();
   const { t } = useTranslation();
   const colorScheme = useColorScheme() ?? 'light';
 
   const [permissionStatus, setPermissionStatus] = React.useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [showTimePicker, setShowTimePicker] = React.useState(false);
+  const [showProUpgradeModal, setShowProUpgradeModal] = React.useState(false);
 
   // Check notification permission on mount
   React.useEffect(() => {
@@ -78,6 +85,15 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleRestorePurchases = async () => {
+    const success = await restore();
+    if (success) {
+      Alert.alert(t('pro.restoreSuccess'));
+    } else {
+      Alert.alert(t('pro.restoreFailed'));
+    }
+  };
+
   const tintColor = Colors[colorScheme].tint;
   const textColor = Colors[colorScheme].text;
 
@@ -131,6 +147,63 @@ export default function SettingsScreen() {
             </Text>
           </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Pro status section */}
+      <View style={styles.section}>
+        <View style={styles.proStatusRow}>
+          <Text style={styles.sectionLabel}>{t('settings.upgrade', { defaultValue: 'Pro Status' })}</Text>
+          <View style={[
+            styles.proBadge,
+            isPro && styles.proBadgePro,
+            !isPro && styles.proBadgeFree,
+          ]}>
+            <Ionicons
+              name={isPro ? 'diamond' : 'diamond-outline'}
+              size={16}
+              color={isPro ? '#fff' : '#666'}
+            />
+            <Text style={[
+              styles.proBadgeText,
+              isPro && styles.proBadgeTextPro,
+            ]}>
+              {isPro ? 'Pro' : 'Free'}
+            </Text>
+          </View>
+        </View>
+
+        {/* Thank you message for Pro users */}
+        {isPro && (
+          <View style={styles.proThankYou}>
+            <Ionicons name="heart" size={16} color="#e91e63" />
+            <Text style={styles.proThankYouText}>{t('pro.proThankYou')}</Text>
+          </View>
+        )}
+
+        {/* Upgrade button for free users */}
+        {!isPro && (
+          <TouchableOpacity
+            style={styles.upgradeButton}
+            onPress={() => setShowProUpgradeModal(true)}
+            accessibilityRole="button"
+          >
+            <Ionicons name="diamond-outline" size={20} color="#fff" />
+            <Text style={styles.upgradeButtonText}>{t('pro.upgradeForMore')}</Text>
+          </TouchableOpacity>
+        )}
+
+        {/* Restore purchases button for all users */}
+        <TouchableOpacity
+          style={styles.restoreButton}
+          onPress={handleRestorePurchases}
+          disabled={restoreLoading}
+          accessibilityRole="button"
+        >
+          <Ionicons name="refresh-outline" size={18} color="#666" />
+          <Text style={styles.restoreButtonText}>
+            {restoreLoading ? t('common.loading', { defaultValue: 'Loading...' }) : t('pro.restorePurchases')}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Notification settings */}
@@ -263,6 +336,13 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       )}
       </View>
+
+      <ProUpgradeModal
+        visible={showProUpgradeModal}
+        onClose={() => setShowProUpgradeModal(false)}
+        triggerReason="manual"
+      />
+
       <BannerAdWrapper />
     </>
   );
@@ -456,5 +536,81 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#555',
+  },
+  // Pro status section
+  proStatusRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  proBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    borderWidth: 1,
+  },
+  proBadgeFree: {
+    backgroundColor: '#f5f5f5',
+    borderColor: '#e0e0e0',
+  },
+  proBadgePro: {
+    backgroundColor: '#ffd700',
+    borderColor: '#ffb300',
+  },
+  proBadgeText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#666',
+  },
+  proBadgeTextPro: {
+    color: '#fff',
+  },
+  proThankYou: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#fce4ec',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  proThankYouText: {
+    fontSize: 14,
+    color: '#c2185b',
+    fontWeight: '600',
+  },
+  upgradeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#2e7d32',
+    paddingVertical: 14,
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  upgradeButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  restoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#f5f5f5',
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  restoreButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#666',
   },
 });
