@@ -19,6 +19,7 @@ import OrganSelector from '@/components/OrganSelector';
 import PreviewConfirm from '@/components/PreviewConfirm';
 import { RateLimitModal } from '@/components/RateLimitModal';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
+import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { Text } from '@/components/Themed';
 import { useRateLimit } from '@/hooks/useRateLimit';
 import { identifyPlant } from '@/services/plantnet';
@@ -70,6 +71,7 @@ export default function CameraScreen() {
   const [screenState, setScreenState] = useState<ScreenState>('camera');
   const [isCapturing, setIsCapturing] = useState(false);
   const [showRateLimitModal, setShowRateLimitModal] = useState(false);
+  const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
   const cameraRef = useRef<CameraView>(null);
   const router = useRouter();
   const { language } = useSettingsStore();
@@ -104,7 +106,7 @@ export default function CameraScreen() {
 
     // Enforce rate limit before capturing
     if (!allowed) {
-      setShowRateLimitModal(true);
+      setUpgradeModalVisible(true);
       return;
     }
 
@@ -129,7 +131,7 @@ export default function CameraScreen() {
   const pickFromGallery = async () => {
     // Enforce rate limit before opening gallery
     if (!allowed) {
-      setShowRateLimitModal(true);
+      setUpgradeModalVisible(true);
       return;
     }
 
@@ -161,7 +163,7 @@ export default function CameraScreen() {
     // Consume a scan slot before calling the API
     const scanAllowed = await useScan();
     if (!scanAllowed) {
-      setShowRateLimitModal(true);
+      setUpgradeModalVisible(true);
       setScreenState('camera');
       setCapturedUri(null);
       return;
@@ -354,6 +356,13 @@ export default function CameraScreen() {
         visible={showRateLimitModal}
         limit={limit}
         onClose={() => setShowRateLimitModal(false)}
+      />
+
+      {/* Pro upgrade modal — shown when user hits scan limit */}
+      <ProUpgradeModal
+        visible={upgradeModalVisible}
+        onClose={() => setUpgradeModalVisible(false)}
+        triggerReason="scan_limit"
       />
 
       {/* Banner ad — shown at bottom for free users */}

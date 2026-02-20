@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 import * as ExpoCrypto from 'expo-crypto';
 import { Text } from '@/components/Themed';
+import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { PlantNetResult, SavedPlant } from '@/types';
 import { extractName } from '@/services/plantnet';
 import { getCareInfo } from '@/services/careDB';
@@ -66,6 +67,7 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
   const { t, i18n } = useTranslation();
   const [careExpanded, setCareExpanded] = useState(false);
   const [added, setAdded] = useState(false);
+  const [upgradeModalVisible, setUpgradeModalVisible] = useState(false);
   const addPlant = usePlantsStore((s) => s.addPlant);
 
   const { score, species, images } = result;
@@ -97,8 +99,8 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
 
     const success = addPlant(plant);
     if (!success) {
-      // Collection full - do not set added state
-      // Upgrade modal will be shown by parent component
+      // Collection full - show upgrade modal
+      setUpgradeModalVisible(true);
       return;
     }
 
@@ -231,6 +233,13 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Pro upgrade modal — shown when collection limit reached */}
+      <ProUpgradeModal
+        visible={upgradeModalVisible}
+        onClose={() => setUpgradeModalVisible(false)}
+        triggerReason="collection_limit"
+      />
     </View>
   );
 }
