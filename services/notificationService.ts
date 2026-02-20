@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
+import { SavedPlant } from '@/types';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -133,4 +134,83 @@ export async function checkPermission(): Promise<'granted' | 'denied' | 'undeter
   }
 
   return 'undetermined';
+}
+
+/**
+ * Schedule a daily digest notification listing all plants due for watering
+ * @param plants - Array of all saved plants
+ * @param time - Time string in "HH:mm" format (default "08:00")
+ */
+export async function scheduleDailyDigest(
+  plants: SavedPlant[],
+  time: string = '08:00'
+): Promise<void> {
+  // Parse time string to hour/minute
+  const [hourStr, minuteStr] = time.split(':');
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  // Cancel existing daily digest notification
+  await Notifications.cancelScheduledNotificationAsync('daily-watering-digest');
+
+  // Get today's date in ISO format (local timezone)
+  const today = new Date();
+  const todayISO = today.toISOString().split('T')[0];
+
+  // Filter plants due today
+  const duePlants = plants.filter((plant) => {
+    if (!plant.nextWateringDate) return false;
+    const nextDate = new Date(plant.nextWateringDate);
+    const nextISO = nextDate.toISOString().split('T')[0];
+    return nextISO === todayISO;
+  });
+
+  // If no plants due, return early (don't show empty notification)
+  if (duePlants.length === 0) {
+    return;
+  }
+
+  // Build plant names list
+  const plantNames = duePlants
+    .map((p) => p.nickname || p.commonName || p.species)
+    .slice(0, 3);
+
+  let plantNamesStr: string;
+  if (duePlants.length <= 3) {
+    plantNamesStr = plantNames.join(', ');
+  } else {
+    plantNamesStr = `${plantNames.join(', ')} and ${duePlants.length - 3} more...`;
+  }
+
+  // Platform-specific trigger
+  let trigger: Notifications.NotificationTriggerInput;
+
+  if (Platform.OS === 'android') {
+    trigger = {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      hour,
+      minute,
+    };
+  } else {
+    trigger = {
+      type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+      repeats: true,
+      hour,
+      minute,
+    };
+  }
+
+  const notificationContent: Notifications.NotificationContentInput = {
+    title: 'Watering Reminder',
+    body: `${plantNamesStr} need water today`,
+    sound: 'default',
+    categoryIdentifier: 'watering',
+  };
+
+  // Schedule notification with fixed identifier for cancellation
+  await Notifications.scheduleNotificationAsync({
+    content: notificationContent,
+    trigger,
+    identifier: 'daily-watering-digest',
+  });
 }
