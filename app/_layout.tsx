@@ -8,6 +8,9 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { initI18n } from '@/i18n';
+import { initNotificationService, checkPermission, scheduleDailyDigest } from '@/services/notificationService';
+import { useSettingsStore } from '@/stores/settingsStore';
+import { usePlantsStore } from '@/stores/plantsStore';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -28,6 +31,9 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
   const [i18nReady, setI18nReady] = useState(false);
+  const notificationEnabled = useSettingsStore((state) => state.notificationEnabled);
+  const notificationTime = useSettingsStore((state) => state.notificationTime);
+  const plants = usePlantsStore((state) => state.plants);
 
   // Initialize i18n
   useEffect(() => {
@@ -38,6 +44,28 @@ export default function RootLayout() {
         setI18nReady(true); // Continue even if i18n fails to avoid blocking app
       });
   }, []);
+
+  // Initialize notification service on mount
+  useEffect(() => {
+    initNotificationService().catch((err) => {
+      console.error('Failed to initialize notification service:', err);
+    });
+  }, []);
+
+  // Schedule daily digest at startup if notifications enabled
+  useEffect(() => {
+    if (!notificationEnabled || plants.length === 0) {
+      return;
+    }
+
+    checkPermission().then((status) => {
+      if (status === 'granted') {
+        scheduleDailyDigest(plants, notificationTime).catch((err) => {
+          console.error('Failed to schedule daily digest:', err);
+        });
+      }
+    });
+  }, [notificationEnabled, notificationTime, plants]);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
