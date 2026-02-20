@@ -4,6 +4,7 @@ import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/components/Themed';
+import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { useColorScheme } from '@/components/useColorScheme';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { usePlantsStore } from '@/stores/plantsStore';
@@ -81,7 +82,8 @@ export default function SettingsScreen() {
   const textColor = Colors[colorScheme].text;
 
   return (
-    <View style={styles.container}>
+    <>
+      <View style={styles.container}>
       <Text style={styles.title}>{t('settings.title')}</Text>
 
       {/* Language switcher */}
@@ -260,7 +262,9 @@ export default function SettingsScreen() {
           <Text style={styles.devButtonText}>⚙ Reset daily scan limit (dev only)</Text>
         </TouchableOpacity>
       )}
-    </View>
+      </View>
+      <BannerAdWrapper />
+    </>
   );
 }
 
