@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-19)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance — accessible to anyone without a €30/year paywall
-**Current focus:** Phase 2 — Care Features and Notifications
+**Current focus:** Phase 3 — Monetization
 
 ## Current Position
 
-Phase: 2 of 3 (Care Features and Notifications)
-Plan: 3 of 3 (COMPLETE)
-Status: Phase 02 complete — All watering features integrated and notification settings implemented
-Last activity: 2026-02-20 — Integrated watering UI into plant detail screen, added notification settings with daily digest — Phase 02 COMPLETE
+Phase: 3 of 3 (Monetization)
+Plan: 3 of 5
+Status: Pro-aware rate limiting and collection limits implemented
+Last activity: 2026-02-20 — Implemented Pro-aware scan limits (5 vs 15/day) and collection cap (10 plants for free users, unlimited for Pro)
 
-Progress: [██████████] 100% (3/3 plans)
+Progress: [█████░░░░░] 60% (3/5 plans)
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Progress: [██████████] 100% (3/3 plans)
 | Phase 02 P01 | 212 | 4 tasks | 7 files |
 | Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
 | Phase 03 P01 | 300 | 5 tasks | 7 files |
+| Phase 03 P03 | 240 | 5 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,9 @@ Recent decisions affecting current work:
 - [Phase 03]: RevenueCat package purchases over direct product purchases for better offerings management
 - [Phase 03]: Default import for Purchases class per react-native-purchases v9 API
 - [Phase 03]: Cached Pro status fallback when RevenueCat unavailable ensures app works offline
+- [Phase 03-03]: Use getDailyLimit() function instead of constant for dynamic Pro limits (5 vs 15 scans/day)
+- [Phase 03-03]: Return boolean from addPlant() to indicate success/failure vs silent failure
+- [Phase 03-03]: Don't show "Added" UI state when collection limit prevents save
 
 ### Pending Todos
 
@@ -123,5 +127,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 02-03 (Watering UI Integration and Notifications) — Phase 02 COMPLETE, ready for Phase 03 IAP and Ad integration
-Resume file: .planning/phases/02-care-features-and-notifications/02-03-SUMMARY.md
+Stopped at: Completed 03-03 (Pro-Aware Limits) — Implemented Pro-aware rate limiting and collection limits
+Resume file: .planning/phases/03-monetization/03-03-SUMMARY.md

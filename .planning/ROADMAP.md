@@ -71,9 +71,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5
 
 **Plan List:**
-- [ ] 03-01-PLAN.md — RevenueCat IAP setup, Pro store, purchase service, and hook
+- [x] 03-01-PLAN.md — RevenueCat IAP setup, Pro store, purchase service, and hook
 - [ ] 03-02-PLAN.md — AdMob integration and BannerAdWrapper component
-- [ ] 03-03-PLAN.md — Rate limiter modification for Pro limits and collection limit
+- [x] 03-03-PLAN.md — Rate limiter modification for Pro limits and collection limit
 - [ ] 03-04-PLAN.md — Pro upgrade modal and Settings integration
 - [ ] 03-05-PLAN.md — Ad integration into tab screens and final verification
 
@@ -86,4 +86,4 @@ Phases execute in numeric order: 1 → 2 → 3
 |-------|----------------|--------|-----------|
 | 1. Foundation and Core Loop | 11/11 | Complete   | 2026-02-19 |
 | 2. Care Features and Notifications | 3/3 | Complete   | 2026-02-20 |
-| 3. Monetization | 0/5 | Not started | - |
+| 3. Monetization | 2/5 | In progress | - |
