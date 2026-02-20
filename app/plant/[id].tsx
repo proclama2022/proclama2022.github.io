@@ -21,6 +21,7 @@ import { CareInfo } from '@/components/Detail/CareInfo';
 import { MarkWateredButton } from '@/components/Detail/MarkWateredButton';
 import { WateringHistory } from '@/components/Detail/WateringHistory';
 import { ComplianceBar } from '@/components/Detail/ComplianceBar';
+import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { getCareInfo } from '@/services/careDB';
 import { scheduleDailyDigest } from '@/services/notificationService';
@@ -124,7 +125,8 @@ export default function PlantDetailScreen() {
   // ------------------------------------------------------------------
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <>
+      <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -317,6 +319,8 @@ export default function PlantDetailScreen() {
         </View>
       </Modal>
     </SafeAreaView>
+    <BannerAdWrapper />
+    </>
   );
 }
 
