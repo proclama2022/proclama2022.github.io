@@ -13,7 +13,7 @@ Plantid ships in three phases that follow the hard dependency graph of the archi
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation and Core Loop** - Fix existing service bugs, build missing services and data layer, implement all five screens, deliver the complete identify-save-view workflow (completed 2026-02-19)
-- [ ] **Phase 2: Care Features and Notifications** - Add watering reminders via expo-notifications, watering history tracking, compliance stats, expanded care DB to 300-500 species
+- [x] **Phase 2: Care Features and Notifications** - Add watering reminders via expo-notifications, watering history tracking, compliance stats, expanded care DB to 300-500 species (completed 2026-02-20)
 - [ ] **Phase 3: Monetization** - AdMob banner ads, Pro one-time IAP (€4.99), Pro unlock removes ads and raises limits
 
 ## Phase Details
@@ -55,9 +55,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3
 
 **Plan List:**
-- [ ] 02-01-PLAN.md — Watering service and notification scheduling foundation (services, types, translations)
-- [ ] 02-02-PLAN.md — Watering UI components (MarkWateredButton, WateringHistory calendar, ComplianceBar, Toast)
-- [ ] 02-03-PLAN.md — Plant detail screen integration and daily digest notification
+- [x] 02-01-PLAN.md — Watering service and notification scheduling foundation (services, types, translations)
+- [x] 02-02-PLAN.md — Watering UI components (MarkWateredButton, WateringHistory calendar, ComplianceBar, Toast)
+- [x] 02-03-PLAN.md — Plant detail screen integration and daily digest notification
 
 ### Phase 3: Monetization
 **Goal**: The app displays a non-intrusive banner ad on the Home screen for free users, and offers a one-time €4.99 Pro unlock that removes all ads and raises daily scan and collection limits
@@ -78,5 +78,5 @@ Phases execute in numeric order: 1 → 2 → 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation and Core Loop | 11/11 | Complete   | 2026-02-19 |
-| 2. Care Features and Notifications | 0/3 | Not started | - |
+| 2. Care Features and Notifications | 3/3 | Complete   | 2026-02-20 |
 | 3. Monetization | 0/TBD | Not started | - |

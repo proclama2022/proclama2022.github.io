@@ -38,10 +38,10 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 - [x] **WATER-01**: User can mark plant as "watered today" with one tap
 - [x] **WATER-02**: App schedules local notification reminder for next watering date
-- [ ] **WATER-03**: App sends daily notification at 08:00 listing all plants due for watering
+- [x] **WATER-03**: App sends daily notification at 08:00 listing all plants due for watering
 - [x] **WATER-04**: User can view watering history per plant (last 30 days)
 - [x] **WATER-05**: History shows completion rate (e.g., "5/7 watered on schedule this month")
-- [ ] **WATER-06**: Notification persists if app uninstalled and reinstalled (stored in AsyncStorage)
+- [x] **WATER-06**: Notification persists if app uninstalled and reinstalled (stored in AsyncStorage)
 
 ### Rate Limiting & Usage Tracking
 
@@ -143,10 +143,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CARE-05 | Phase 1 | Complete |
 | WATER-01 | Phase 2 | Complete |
 | WATER-02 | Phase 2 | Complete |
-| WATER-03 | Phase 2 | Pending |
+| WATER-03 | Phase 2 | Complete |
 | WATER-04 | Phase 2 | Complete |
 | WATER-05 | Phase 2 | Complete |
-| WATER-06 | Phase 2 | Pending |
+| WATER-06 | Phase 2 | Complete |
 | RATE-01 | Phase 1 | Complete |
 | RATE-02 | Phase 3 | Pending |
 | RATE-03 | Phase 1 | Complete |

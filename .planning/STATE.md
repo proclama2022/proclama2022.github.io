@@ -10,31 +10,32 @@ See: .planning/PROJECT.md (updated 2026-02-19)
 ## Current Position
 
 Phase: 2 of 3 (Care Features and Notifications)
-Plan: 2 of 3
-Status: Plan 02 completed — Watering history calendar, compliance bar, Mark Watered button with toast undo
-Last activity: 2026-02-20 — Built UI components for watering visualization and compliance tracking — Phase 02 Plan 02 complete
+Plan: 3 of 3 (COMPLETE)
+Status: Phase 02 complete — All watering features integrated and notification settings implemented
+Last activity: 2026-02-20 — Integrated watering UI into plant detail screen, added notification settings with daily digest — Phase 02 COMPLETE
 
-Progress: [██████░░░░] 67% (2/3 plans)
+Progress: [██████████] 100% (3/3 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
-- Average duration: 178s
-- Total execution time: 2290s
+- Total plans completed: 16
+- Average duration: 191s
+- Total execution time: 3057s
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 11 | 1575s | 143s |
-| 02 | 2 | 715s | 358s |
+| 02 | 3 | 902s | 301s |
 
 **Recent Trend:**
-- Last 5 plans: 503s (02-02), 212s (02-01), 124s (01-11), 133s (01-10), 294s (01-08)
+- Last 5 plans: 187s (02-03), 503s (02-02), 212s (02-01), 124s (01-11), 133s (01-10)
 - Trend: steady
 
 *Updated after each plan completion*
+| Phase 02-care-features-and-notifications P03 | 187 | 4 tasks | 4 files |
 | Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
 | Phase 02-care-features-and-notifications P01 | 212 | 2 tasks | 7 files |
 | Phase 01-foundation-and-core-loop P06 | 71 | 1 task | 4 files |
@@ -100,6 +101,11 @@ Recent decisions affecting current work:
 - [Phase 02-02]: Calendar dots color coding: green (#2e7d32) for watered, red (#c62828) for missed, gray (#e0e0e0) for future
 - [Phase 02-02]: Streak badge shows only for 7+ day streaks with yellow background (#fff9c4)
 - [Phase 02-02]: Compliance bar shows positive progress only, no shaming for missed days
+- [Phase 02-03]: Manual opt-in for notifications — user must explicitly enable in Settings, no auto-prompt
+- [Phase 02-03]: Simple time picker modal with 8 preset hours (06:00-10:00, 18:00-20:00) instead of native wheel picker
+- [Phase 02-03]: Fixed notification identifier 'daily-watering-digest' for reliable cancellation and rescheduling
+- [Phase 02-03]: Return early from scheduleDailyDigest if no plants due (don't show empty notifications)
+- [Phase 02-03]: Truncate plant list at 3 items: "Monstera, Ficus, and 2 more..." to avoid notification overflow
 
 ### Pending Todos
 
@@ -113,5 +119,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-20
-Stopped at: Completed 02-02 (Watering History and Compliance UI) — Phase 02 care-features-and-notifications Plan 02 complete
-Resume file: .planning/phases/02-care-features-and-notifications/02-02-SUMMARY.md
+Stopped at: Completed 02-03 (Watering UI Integration and Notifications) — Phase 02 COMPLETE, ready for Phase 03 IAP and Ad integration
+Resume file: .planning/phases/02-care-features-and-notifications/02-03-SUMMARY.md
