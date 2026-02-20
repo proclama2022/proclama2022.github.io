@@ -1,10 +1,10 @@
 import React from 'react';
-import { Alert, Modal, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 
-import { ThemedText as Text } from '@/components/Themed';
+import { Text } from '@/components/Themed';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { useColorScheme } from '@/components/useColorScheme';
