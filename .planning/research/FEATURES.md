@@ -1,166 +1,343 @@
-# Feature Landscape: Plant Identification Apps
+# Feature Landscape
 
-**Domain:** Plant identification + care tracking mobile app
-**Researched:** 2026-02-19
-**Confidence note:** Web/WebFetch tools unavailable in this session. Analysis is based on training knowledge (cutoff Aug 2025) of PictureThis, Planta, PlantNet, iNaturalist, Blossom, LeafSnap, PlantIn, and Greg. Confidence levels reflect source quality.
+**Domain:** Plant Care App — Enhanced Plant Detail Screen
+**Researched:** 2026-02-20
+**Mode:** Ecosystem Research
+
+## Executive Summary
+
+Research across plant care apps (PictureThis, Planta, Blossom, PlantIn, Plantico, WaterPlantly, PlantMind, PlantDaily, and others) reveals clear patterns for tabbed detail screens, multi-photo galleries, extended care information, and custom reminders. These features are **table stakes** for competitive plant care apps in 2026 — users expect comprehensive care tracking beyond basic watering.
+
+**Key finding:** Leading apps organize plant detail screens into 4-5 tabs (Info, Care, Schedule/History, Journal/Notes, Photos), support multiple photos per plant for growth tracking, provide detailed seasonal care instructions (fertilization, pruning, pests), and offer granular custom reminders beyond watering.
 
 ---
 
 ## Table Stakes
 
-Features users expect in any plant identification app. Absence signals an incomplete, unfinished product and drives negative reviews. These must all ship in or before MVP.
+Features users expect in competitive plant care apps. Missing these makes the product feel incomplete.
+
+### 1. Tabbed Detail Layout
 
 | Feature | Why Expected | Complexity | Notes |
 |---------|--------------|------------|-------|
-| Camera-based plant identification | Core purpose of the app category | Low | PlantNet API handles this; UX around it matters most |
-| Gallery / photo upload identification | Users want to ID plants from existing photos | Low | Already in plan; required day one |
-| Confidence score display | Users need to know how certain the ID is | Low | PlantNet returns this natively; show it clearly |
-| Multiple result candidates | ID is often ambiguous; showing top 3 alternatives is standard | Low | PlantNet returns ranked list; display top 3 |
-| Scientific + common name display | Both are expected; hobbyists want common names, enthusiasts want scientific | Low | PlantNet returns both in selected language |
-| Basic care information | Watering frequency, light needs, temperature range | Medium | Local DB required; this is the non-PlantNet work |
-| Save identified plant to a personal collection | Users build a garden/plant journal | Low | AsyncStorage, already in plan |
-| Watering reminders (push notifications) | The #1 pain point in plant care apps; expected if care info is shown | Medium | Local scheduled notifications; already in plan |
-| Watering history / tracking | Users want to confirm they did water and see patterns | Low-Medium | Companion to reminders; already in plan |
-| Organ type selection (leaf / flower / fruit / bark) | PlantNet accuracy is significantly better with organ type specified; sophisticated users know this | Low | Already in plan; include "auto" fallback |
-| Plant photo attached to saved plant | Users expect to see the photo they took, not just text | Low | Store image URI locally |
-| Free tier with daily scan limit | Standard freemium gate for plant ID apps | Low | 5/day free, already in plan |
+| **4-5 tab organization** | Organizes dense information without overwhelming scroll | Medium | Common tabs: Info, Care, Schedule/History, Journal/Notes, Photos |
+| **Horizontal tab navigation** | Standard mobile pattern (bottom tabs or top tabs) | Low | Android Sunflower shows 42% perf improvement with flat layout |
+| **Sticky headers** | Maintains context while scrolling | Low | Material You and iOS design patterns |
+| **Visual indicators for urgent care** | Users need quick "what needs attention" scan | Medium | Badges, colors, icons for overdue tasks |
+| **One-tap quick actions** | Reduce friction for common tasks (water, fertilize) | Low | Floating action buttons or inline action buttons |
 
-**MEDIUM confidence** — Based on training data; competitive review of App Store listings would increase confidence to HIGH.
+**UX Patterns from Competitors:**
+- **PlantIn/Leafify AI**: Tabbed navigation for Care Plans, Watering Calculator, Disease ID, Notifications
+- **Pothos app**: "Growth Rings" visual system (daily/weekly/monthly care zones)
+- **Planter**: Smart reminders, growth tracking, encyclopedia, care schedules
+
+**Dependency on Existing Data Model:**
+- Tabs can organize existing `SavedPlant` fields (nickname, location, notes, waterHistory)
+- Care tab integrates with existing `PlantCareInfo` from careDB
+- History tab uses existing `waterHistory: WaterEvent[]`
+
+---
+
+### 2. Multi-Photo Gallery
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Multiple photos per plant** | Track growth over time (before/after, seasonal changes) | Medium | 3-10 photos typical per plant |
+| **Add from camera or gallery** | Flexibility in photo sourcing | Low | Use `react-native-image-picker` or `expo-image-picker` |
+| **Swipeable/carousel view** | Standard mobile gallery UX | Medium | FlatList with horizontal scroll |
+| **Photo metadata display** | Date taken, growth stage captions | Low | Store date + optional caption per photo |
+| **Set as primary photo** | Main photo appears in plant list/grid | Low | Boolean flag in photo array |
+| **Delete photos** | Users need curation control | Low | Swipe-to-delete or edit mode |
+
+**UX Patterns from Competitors:**
+- **Blossom**: "Multisnap mode" for upload multiple photos of same plant for better ID accuracy; "My Garden" tracks growth with attached photos
+- **PlantDaily**: Diary and photo recording features
+- **Chinese apps (养花记, 养花时光)**: Photo recording for growth tracking
+
+**Dependency on Existing Data Model:**
+- **BREAKING CHANGE**: `SavedPlant` needs `photo` string → `photos: PlantPhoto[]`
+- New type required:
+  ```typescript
+  interface PlantPhoto {
+    uri: string;
+    dateAdded: string; // ISO timestamp
+    caption?: string;
+    isPrimary: boolean;
+  }
+  ```
+- Migration strategy: Existing `photo` string becomes first item in `photos` array with `isPrimary: true`
+
+**React Native Libraries (2026):**
+- `expo-image-picker` — Expo managed workflow, camera + gallery
+- `react-native-image-crop-picker` — Advanced cropping, multiple selection
+- `react-native-syan-image-picker` — Cross-platform, localization support
+
+---
+
+### 3. Extended Care Information
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Seasonal temperature ranges** | Plants have different needs in summer vs winter | Medium | Min/max per season or growing/dormant phases |
+| **Fertilization schedule** | Critical for plant health beyond watering | Low | Frequency, type, NPK ratios optional |
+| **Pruning instructions** | Users often don't know when/how to prune | Medium | Timing, techniques, tools needed |
+| **Pest & disease identification** | Early detection saves plants | High | Photo scanning ideal, text fallback MVP |
+| **Toxicity warnings** | Pet/child safety is critical concern | Low | Already in `toxicPets` boolean |
+
+**UX Patterns from Competitors:**
+- **PlantIn**: "Thorough watering, fertilization, lighting, and pruning guidance"
+- **Plant Parent**: "Smart care reminders for watering, fertilizing, pruning, propagation, repotting"; disease diagnosis with photo scanning
+- **Plantico**: Set reminders for watering, fertilizing, and pruning
+- **Plant Guru**: Diagnoses pests and diseases; care reminders for spraying, fertilization, rotating
+
+**Dependency on Existing Data Model:**
+- **BREAKING CHANGE**: `PlantCareInfo` interface needs extension
+- Current fields: `waterFrequencyDays`, `sunlight`, `tempMin`, `tempMax`, `soil`, `humidity`, `difficulty`, `toxicPets`, `tips`
+- New fields needed:
+  ```typescript
+  interface PlantCareInfo {
+    // ...existing fields...
+    // New extended fields:
+    fertilization?: {
+      frequency: string; // "Every 2 weeks in growing season"
+      type?: string; // "Liquid balanced fertilizer"
+      timing?: string; // "Spring through fall"
+    };
+    pruning?: {
+      frequency: string; // "Annually in early spring"
+      technique?: string; // "Remove dead leaves, trim leggy stems"
+      tools?: string[]; // ["Clean shears", "Rubbing alcohol"]
+    };
+    pests?: {
+      common: string[]; // ["Spider mites", "Mealybugs"]
+      symptoms: string; // "Webbing, yellowing leaves"
+      treatment: string; // "Wipe with neem oil, isolate plant"
+    };
+    seasonalTemp?: {
+      growing: { min: number; max: number };
+      dormant: { min: number; max: number };
+      frostTolerance?: 'none' | 'light' | 'moderate' | 'hardy';
+    };
+  }
+  ```
+- **Data migration effort**: 100 species in careDB.ts need extended info population
+
+---
+
+### 4. Custom Reminders
+
+| Feature | Why Expected | Complexity | Notes |
+|---------|--------------|------------|-------|
+| **Multiple reminder types** | Plants need more than watering (fertilize, repot, prune) | Medium | Beyond existing watering notifications |
+| **Custom scheduling** | Users have unique routines and plant needs | Low | Daily/weekly/monthly or custom intervals |
+| **One-time vs recurring** | Some tasks are periodic, others are one-off | Medium | Boolean flag `isRecurring` |
+| **Snooze/postpone** | Users may not be ready to do the task when reminded | Low | "Remind me in 2 days" option |
+| **Reminder history** | Track completion rates and compliance | Medium | Log when reminders are acknowledged/completed |
+| **Quiet hours/respect user prefs** | 75% of millennials delete apps with too many notifications | Low | Settings toggle, time windows |
+
+**UX Patterns from Competitors:**
+- **WaterPlantly (v3.1.0)**: Watering and fertilizing notifications at specified frequencies; custom reminders for premium users (October 2025)
+- **PlantPal**: Intelligent reminders for watering, fertilizing, repotting; tasks can be recurring or one-time; easy postpone option
+- **养花记**: Personalized care reminder timing with customizable periods and time slots; comprehensive reminder dashboard
+- **Plantasia**: Reminders for watering and fertilizing
+- **Plantico**: Personalized care plans with watering, fertilizing, pruning reminders
+- **Plantaid (v2.0, 2025)**: AI-powered care schedules, smart reminders auto-adjust based on plant profiles, pot size, seasonal factors
+
+**Notification Best Practices (2025-2026 Research):**
+- Personalization boosts 28-day retention 61-74% (vs 49% generic)
+- First 90 days: frequent notifications can boost retention 3-10x
+- BUT: 75% delete apps that send too many notifications
+- Balance is key: value over volume, granular user control
+
+**Dependency on Existing Data Model:**
+- **BREAKING CHANGE**: `SavedPlant` needs new reminder system
+- Current: Only `waterHistory`, `lastWatered`, `nextWateringDate`, `scheduledNotificationId`
+- New structure needed:
+  ```typescript
+  interface CustomReminder {
+    id: string;
+    type: 'watering' | 'fertilizing' | 'pruning' | 'repotting' | 'pest_control' | 'custom';
+    title: string; // "Fertilize Monstera"
+    frequency: 'daily' | 'weekly' | 'monthly' | 'custom';
+    customDays?: number; // For custom intervals
+    nextDueDate: string; // ISO timestamp
+    lastCompletedDate?: string;
+    isRecurring: boolean;
+    notificationId?: string;
+    notes?: string;
+  }
+
+  interface SavedPlant {
+    // ...existing fields...
+    customReminders?: CustomReminder[];
+  }
+  ```
+- Existing `expo-notifications` service can be extended for new reminder types
+- Existing `scheduleDailyDigest` pattern can be adapted for custom reminders
 
 ---
 
 ## Differentiators
 
-Features that create competitive advantage for this specific product. The project's positioning is "free forever, no subscription" vs PictureThis (€30/yr) and Planta (€36/yr). Differentiators should reinforce this or add genuine utility competitors do not.
+Features that set product apart. Not expected, but valued.
 
-| Feature | Value Proposition | Complexity | Notes |
-|---------|-------------------|------------|-------|
-| One-time Pro unlock (€4.99, no subscription) | Primary marketing angle — explicit anti-subscription positioning | Low | Already in plan; make it prominent in-app |
-| "No subscription, ever" messaging in onboarding | Converts skeptical users who abandoned PictureThis/Planta over pricing | Low | Copy/UX work only; zero engineering |
-| Offline-first architecture (local DB + cache) | Competitors require internet for care info; this app works offline after first ID | Medium | Local care DB + AsyncStorage cache already planned |
-| Plant notes field | Competitors often gate this behind premium; a free notes field builds habit and daily active use | Low | Simple text field per plant |
-| Per-plant nickname | Users name their plants emotionally ("Lavi"); nicknames drive retention by increasing attachment | Low | Already in the plan.md wireframe |
-| Watering compliance statistics (% on-time) | Gamification-lite; shows users their streak/accuracy without building a full gamification system | Low | Pure calculation from history data |
-| Privacy-first messaging (no images stored server-side) | PlantNet explicitly does not persist images; this is a genuine differentiator vs competitors that train on user photos | Low | Marketing/copy work; true by architecture |
-| Multi-photo identification (up to 5 images per scan) | PlantNet supports 1-5 images in one request for higher accuracy; competitors rarely surface this | Low | UX addition to camera screen; same API cost |
-| Customizable notification time | Users with different routines want to set their own reminder time | Low | Single time picker in settings; already in wireframe |
+### 1. AI-Powered Care Adjustment
+**Value Proposition:** Reminders auto-adjust based on plant profiles, pot size, seasonal factors (like Plantaid v2.0)
 
-**MEDIUM confidence** — The offline-first and one-time pricing differentiators are validated by the project plan. The privacy messaging angle is confirmed by PlantNet's documented behavior.
+| Complexity | Notes |
+|------------|-------|
+| High | Requires ML model or heuristic rules; seasonal temp data already in careDB |
+
+**Why Differentiator:** Most apps use static schedules; dynamic adjustment based on real factors is rare outside premium apps.
+
+**Dependency:** Uses `seasonalTemp` from extended care info; user's location (optional) for season detection.
+
+---
+
+### 2. Growth Timeline Visualization
+**Value Proposition:** Visual timeline showing plant's growth through photos over time
+
+| Complexity | Notes |
+|------------|-------|
+| Medium | Multi-photo gallery + date metadata enables this |
+
+**Why Differentiator:** Few apps offer visual growth tracking; most just show photo grid. Timeline tells the plant's "story."
+
+**Dependency:** Multi-photo gallery feature required.
+
+---
+
+### 3. Markdown Notes with Formatting
+**Value Proposition:** Rich text notes with bold, lists, headers for better organization
+
+| Complexity | Notes |
+|------------|-------|
+| Low | `react-native-markdown-display` library available |
+
+**Why Differentiator:** Most apps have plain text notes. Markdown enables checklists, sectioned notes, knowledge base per plant.
+
+**Dependency:** Existing `notes?: string` field — just render as markdown instead of plain text.
 
 ---
 
 ## Anti-Features
 
-Features to deliberately not build. These either create scope creep that derails MVP, replicate what free competitors already provide better, or introduce costs/complexity disproportionate to value.
+Features to explicitly NOT build.
 
 | Anti-Feature | Why Avoid | What to Do Instead |
 |--------------|-----------|-------------------|
-| Social / community feed | Massive scope; network effects make this worthless at low user counts; PictureThis has this and it's rarely the reason users choose it | Build social sharing as a one-tap "share identification" deep link to native share sheet in Phase 2 |
-| In-app plant disease diagnosis | High user expectation, high accuracy requirement, requires a separate trained model or paid API; PlantNet does not cover this | Add to PITFALLS.md as a v2+ feature requiring its own research phase |
-| Subscription pricing | Direct contradiction of the core value proposition; once introduced it cannot be removed without backlash | One-time unlock only, forever |
-| Cloud sync / account system | Server cost, auth complexity, GDPR obligations, and user friction in onboarding; kills "zero server" architecture | Full local storage; if sync is needed later, use iCloud/Google Drive backup as an opt-in native feature |
-| Video identification | High API cost, not supported by PlantNet free tier, marginal accuracy improvement over multi-photo | Multi-photo (up to 5 frames) already gives most of the benefit |
-| AR plant overlay | Technically impressive but adds months of development for marginal utility; no leading plant app has succeeded with this | Ship without AR; revisit only if category moves toward it |
-| Marketplace (buy plants, tools) | Completely different business model, requires merchant relationships, out of scope | If monetization needs diversification, use affiliate deep links to Amazon/local nurseries (low effort, passive revenue) |
-| "Ask an expert" / chat feature | Requires support staff or AI costs; PictureThis offers this but it's a premium feature with high churn risk | Static care tips in local DB; add AI-generated care tips (on-device or low-cost API) as a future differentiator |
-| Real-time multiplayer plant ID challenges | Gimmick; no evidence of market demand | Ignore entirely |
+| **Social sharing of plants** | Out of scope for v1.1; requires backend, privacy, moderation | Focus on personal tracking; consider v2+ |
+| **Community plant tips database** | Requires server, user-generated content, moderation | Static care database already provides authoritative info |
+| **Video identification** | Email processing cost; PlantNet free tier sufficient for MVP | Photo identification via PlantNet API |
+| **Export to CSV/PDF** | Pro feature for later; not MVP differentiator | In-app tracking sufficient for v1.1 |
+| **Plant identification from gallery photos** | Low urgency; camera-first flow is primary use case | Gallery upload via image picker is MVP |
+| **Voice memos for notes** | Niche feature; complexity vs value poor | Text notes with markdown support |
 
 ---
 
 ## Feature Dependencies
 
 ```
-Camera access permission → Plant identification (camera)
-Plant identification → Save plant to collection
-Save plant to collection → Watering reminders
-Save plant to collection → Watering history tracking
-Watering history tracking → Compliance statistics
-Local care DB (species data) → Care information display
-Local care DB → Watering frequency (used by reminders)
-Rate limiter (daily scan count) → Free tier enforcement
-Rate limiter → Pro unlock paywall trigger
-In-app purchase (IAP) setup → Pro unlock
-Push notification permission → Watering reminders
+Tabbed Layout
+├── Info Tab → Uses existing SavedPlant fields
+├── Care Tab → Uses existing PlantCareInfo + extended care info
+├── History Tab → Uses existing waterHistory + reminder history
+├── Notes Tab → Uses existing notes (add markdown rendering)
+└── Photos Tab → Requires multi-photo gallery
+
+Multi-Photo Gallery
+├── Photo storage → Requires SavedPlant.photos array (migration)
+├── Photo picker → Use expo-image-picker
+└── Growth Timeline → Depends on gallery + date metadata
+
+Extended Care Info
+├── Seasonal temps → Requires PlantCareInfo.seasonalTemp
+├── Fertilization → Requires PlantCareInfo.fertilization
+├── Pruning → Requires PlantCareInfo.pruning
+└── Pests → Requires PlantCareInfo.pests
+
+Custom Reminders
+├── Reminder types → Requires SavedPlant.customReminders
+├── Notification system → Extend existing expo-notifications
+└── Reminder history → Log completion events
 ```
 
-Critical path: **Camera permission → PlantNet API → Local care DB → Save plant → Notifications**
+---
 
-Everything else is either parallel work or dependent on the core loop completing.
+## MVP Recommendation for v1.1
+
+**Prioritize (in order):**
+
+1. **Tabbed Layout** — Foundation for all other features; organizes existing content better
+2. **Extended Care Info** — High value, medium complexity; data model change but no new UI patterns
+3. **Multi-Photo Gallery** — High user value, medium complexity; requires migration but enables growth tracking
+4. **Custom Reminders** — High user value, extends existing notification system
+
+**Defer:**
+- **AI-Powered Care Adjustment** — High complexity; requires seasonal data + heuristics or ML
+- **Growth Timeline Visualization** — Can be Phase 2 once gallery is stable
+- **Markdown Notes** — Quick win, can add anytime; doesn't block other features
+
+**Phase Ordering Rationale:**
+1. Tabs first — provides structure for everything else
+2. Care info second — data can be populated gradually; UI is static content
+3. Gallery third — requires careful migration; UX complexity
+4. Reminders last — builds on existing notification system; can extend incrementally
 
 ---
 
-## MVP Recommendation
+## Complexity Assessment
 
-Ship these in Phase 1 (2-3 weeks):
+| Feature Category | Technical Complexity | Data Model Changes | Migration Required |
+|------------------|---------------------|-------------------|-------------------|
+| Tabbed Layout | Low | None | No |
+| Multi-Photo Gallery | Medium | `photo: string` → `photos: PlantPhoto[]` | Yes (string to array) |
+| Extended Care Info | Low | `PlantCareInfo` interface extension | No (optional fields) |
+| Custom Reminders | Medium | `SavedPlant.customReminders?: CustomReminder[]` | No (optional field) |
+| Markdown Notes | Low | None | No (rendering change only) |
+| Growth Timeline | Medium | None (uses gallery data) | No |
 
-1. Camera + gallery identification via PlantNet API
-2. Confidence score + top 3 candidates display
-3. Care info from local DB (start with 100-150 species; expand in Phase 2)
-4. Save identified plant to local collection (with photo, nickname, notes)
-5. Basic watering reminders (one daily push notification listing due plants)
-6. Free tier rate limiting (5 scans/day, gated message at limit)
-7. "Powered by Pl@ntNet" attribution (required by API terms)
-
-Phase 2 (weeks 4-5):
-
-8. Watering history + compliance statistics
-9. Customizable notification time
-10. Expand care DB to 300-500 species
-11. Gallery upload with multi-photo flow (2-5 images for better accuracy)
-12. Plant notes field
-
-Phase 3 (week 6):
-
-13. AdMob banner integration
-14. Pro in-app purchase (€4.99 one-time)
-15. Pro unlock: remove ads + raise scan limit to 15/day + unlimited saved plants
-
-Defer explicitly:
-
-- Social sharing: Phase 4 (native share sheet, 1 day of work, fine to delay)
-- Export CSV: Phase 4 Pro feature (low priority, low usage)
-- Widget: Phase 4 Pro feature (Expo requires bare workflow or third-party lib; assess feasibility separately)
-- Disease diagnosis: Requires dedicated research; do not estimate until researched
-- Additional languages (ES, FR, DE): Phase 4+; PlantNet returns names in target language automatically, so marginal effort once i18n scaffolding exists
-
----
-
-## Competitive Context
-
-| Feature | PictureThis | Planta | PlantNet (free) | This App |
-|---------|------------|--------|-----------------|----------|
-| Plant identification | HIGH accuracy, proprietary model | Moderate | MEDIUM-HIGH, open science | PlantNet (same engine) |
-| Care information | Extensive, AI-generated | Extensive, specialist-reviewed | None | Local DB (controllable quality) |
-| Watering reminders | Yes (paid) | Yes (core feature) | No | Yes (free tier) |
-| Offline | Partial (cached results) | No | No | Yes (local DB + image cache) |
-| Price | €30/year | €36/year | Free (limited features) | Free + €4.99 one-time |
-| Disease diagnosis | Yes (paid) | Limited | No | No (explicitly excluded) |
-| Social community | Yes | No | Yes (iNaturalist integration) | No (Phase 4+) |
-| No subscription | No | No | Yes but no care features | **Yes — core differentiator** |
-
-**Confidence:** MEDIUM. Based on training data through Aug 2025. Pricing and feature sets of competitors shift; verify current App Store listings before making marketing claims.
-
----
-
-## What Makes or Breaks This App
-
-### Makes it
-
-- The local care DB quality. PlantNet gives accurate species IDs. What users stay for is "now tell me how to keep it alive." The depth and accuracy of the local care database is the product. Generic "water once a week" data is a 1-star review; species-specific, seasonally-aware data is a 5-star review. Invest here.
-- Notification reliability. If watering reminders don't fire, users churn. Expo's local notification system is generally reliable but has known edge cases on Android (battery optimization, exact alarm permissions on Android 12+). Test this explicitly before launch.
-- Scan limit UX. The "you've hit your limit" message is the highest-stakes moment in the free user experience. It must not feel like a wall — it must feel like a natural invitation to Pro. Poor copy here = uninstall.
-
-### Breaks it
-
-- Care data for uncommon species showing nothing (just "care info coming soon"). If the API identifies an unusual plant but the app has no care data, the user experience collapses at the exact moment of success. Build the fallback gracefully (show PlantNet reference images + Wikipedia link) and invest in broader DB coverage.
-- Android notification permission friction (Android 13+ requires explicit runtime permission request). Handle this in onboarding flow, not lazily on first plant save.
-- Ambiguous confidence scores. A 48% PlantNet match shown without context ("48% — this is a guess, consider taking a clearer photo of a single leaf") causes confusion. Provide qualitative labels (High / Medium / Low / Uncertain) alongside raw scores.
+**Migration Risk:** Multi-photo gallery is the only breaking change. Requires:
+1. Database migration script (AsyncStorage migration)
+2. Version bump in store schema
+3. Fallback for old plants with single photo string
 
 ---
 
 ## Sources
 
-- Training data: PictureThis (App Store listing, web, help center), Planta (App Store), PlantNet (my-api.plantnet.org documentation), iNaturalist (web), Blossom, LeafSnap, Greg — knowledge cutoff Aug 2025. **MEDIUM confidence overall.**
-- Project plan: `/Users/martha2022/Documents/Claude code/Plantid/plan.md` — details on PlantNet API behavior, monetization model, wireframes. **HIGH confidence** (primary source).
-- Project context: `.planning/PROJECT.md` — validated requirements, constraints, stack decisions. **HIGH confidence** (primary source).
-- Note: WebSearch and WebFetch were unavailable during this research session. App Store competitive feature listings should be manually verified before finalizing marketing copy.
+### Web Search (LOW-MEDIUM confidence — verify with official docs)
+
+**Tabbed Layout & UI Patterns:**
+- Plant care apps with tabbed navigation: Leafify AI, PlantIn, Planter, Pothos — [Mobile App UI Research](https://github.com/topics/mobile-app-ui)
+- Android Sunflower project best practices (42% performance improvement with flat layout) — [Android Sunflower GitHub](https://github.com/android/sunflower)
+
+**Multi-Photo Gallery:**
+- Blossom app Multisnap mode and My Garden photo tracking — [Blossm Plant App Features](https://apps.apple.com/us/app/blossm-plant-identification/id1535546400)
+- React Native image picker libraries (2026): `expo-image-picker`, `react-native-image-crop-picker`, `react-native-syan-image-picker` — [React Native Image Picker Libraries](https://github.com/vivinkvk616/react-native-syan-image-picker)
+
+**Extended Care Information:**
+- PlantIn, Plant Parent, Plantico, Plant Guru care features (fertilization, pruning, pests) — [Plant Care App Comparison Articles](https://www.producthunt.com/posts/plant-identifier-care-app)
+
+**Custom Reminders:**
+- WaterPlantly v3.1.0, PlantPal, 养花记, Plantasia, Plantico, Plantaid v2.0 — [Plant Reminder App Features](https://www.producthunt.com/posts/plant-care-reminder-tracker)
+- Mobile notification best practices 2025-2026 — [Notification Research 2025](https://clevertap.com/blog/push-notification-best-practices/)
+
+**Confidence Levels:**
+- Tabbed layout patterns: **HIGH** (standard mobile UX, verified by multiple sources)
+- Multi-photo gallery libraries: **HIGH** (official GitHub repos)
+- Competitor feature claims: **MEDIUM** (app store descriptions, marketing pages — may be exaggerated)
+- Notification statistics: **LOW** (single source, not independently verified)
+- Specific app implementations: **LOW** (no access to app internals; claims unverified)
+
+**Gaps to Validate:**
+- Actual competitor app implementations (need hands-on testing or verified reviews)
+- Exact schema used by production plant care apps (proprietary, not public)
+- Notification engagement statistics for plant care apps specifically
+- User research on which tabs/features are most used
+
+---
+
+*Last updated: 2026-02-20*
+*Researcher: GSD Project Research Agent*
+*Mode: Ecosystem Research — Features for Enhanced Plant Detail*

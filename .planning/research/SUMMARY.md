@@ -1,282 +1,344 @@
 # Project Research Summary
 
-**Project:** Plantid — React Native Plant Identification App
-**Domain:** Offline-first mobile app / Plant ID + care tracking / Freemium
-**Researched:** 2026-02-19
-**Confidence:** MEDIUM-HIGH (stack HIGH, architecture HIGH, features MEDIUM, pitfalls HIGH for code-derived issues)
-
----
+**Project:** Plantid — Plant Identification Mobile App
+**Milestone:** v1.1 Enhanced Plant Detail
+**Domain:** Plant Care Mobile App (React Native + Expo)
+**Researched:** 2026-02-20
+**Confidence:** HIGH
 
 ## Executive Summary
 
-Plantid is a plant identification and care-tracking mobile app built on Expo SDK 54 with React Native New Architecture enabled. The scaffold is already in place with camera capture, gallery picker, PlantNet API integration, a result cache, and a rate limiter — approximately 30-40% of the plumbing exists. The remaining work is building the plant collection layer (saved plants, care database, watering history), a notification scheduler, the full screen suite, and monetization. The core architecture is on-device only with no backend, which eliminates auth and server costs but creates a hard constraint: every critical piece of logic (rate limiting, caching, API key management) that would normally live server-side must be hardened against client-side manipulation.
+Plantid is a cross-platform plant identification app built with React Native and Expo that leverages the PlantNet API for species identification. The v1.0 milestone established core functionality: camera capture, API identification, basic care information display, plant collection management, and watering notifications. The app is fully offline-first with AsyncStorage persistence and requires no backend.
 
-The recommended approach is a strict layered architecture with services-first build order: types are already complete, three services already exist (`plantnet.ts`, `cache.ts`, `rateLimiter.ts`), and the next step is adding `savedPlants.ts`, `notifications.ts`, and `settings.ts` before building any screen that depends on them. State management should remain simple — Zustand with AsyncStorage persist for the plant collection, React Context for cross-cutting concerns (i18n, theme), and local `useState` for ephemeral UI state. No Redux, no server state library. The care database is the product: PlantNet handles identification, but what users stay for is accurate, species-specific care guidance. The depth of `data/plantCareDB.ts` determines whether users rate the app 1 or 5 stars.
+For v1.1, the focus shifts to enhancing the plant detail screen with a tabbed layout (Info | Care | History | Notes), multi-photo gallery for growth tracking, extended care information (seasonal temperatures, fertilization, pruning, pests), and advanced custom reminders beyond watering. Research across competitive plant care apps (PictureThis, Planta, Blossom, PlantIn, PlantParent) shows these features are **table stakes** — users expect comprehensive care tracking and multi-photo organization in modern plant care apps.
 
-The two risks that most threaten the launch are the API key being exposed in the JavaScript bundle (the `EXPO_PUBLIC_` prefix ships the key in plain text in every APK/IPA) and the cache growing without any eviction bound (already identified in CONCERNS.md but not yet fixed). Both must be resolved in Phase 1 before any real build. A serverless proxy (Cloudflare Workers free tier is sufficient) solves the API key problem. LRU eviction on the cache solves the storage problem. The monetization phase (Phase 3) requires a separate New Architecture compatibility audit for `react-native-google-mobile-ads` before integration — this is the highest-risk third-party library in the plan.
-
----
+The recommended approach is **incremental enhancement** rather than wholesale changes. The existing architecture (Zustand stores + AsyncStorage + expo-notifications) supports all v1.1 features with minimal additions. Only 3 new libraries are needed: `react-native-tab-view` and `react-native-pager-view` for in-screen tabbed navigation, and `react-native-image-zoom-viewer` for gallery lightbox. The critical risk is **data model migration** — the multi-photo gallery requires changing `SavedPlant.photo: string` to `SavedPlant.photos: PlantPhoto[]`, which needs careful migration to avoid data loss for existing users.
 
 ## Key Findings
 
 ### Recommended Stack
 
-The installed scaffold (Expo 54 / RN 0.81 / React 19 / expo-router 6 / expo-camera / expo-image-picker / AsyncStorage) covers navigation, camera, and storage. Seven additions are needed:
+**Core v1.1 additions (3 new libraries):**
+- `react-native-tab-view` + `react-native-pager-view` — Tabbed navigation within plant detail screen
+- `react-native-image-zoom-viewer` — Full-screen lightbox gallery with pinch-to-zoom
 
-**Core technologies to add:**
-- `expo-notifications` — local push notifications (watering reminders); the only correct solution for Expo managed workflow; `react-native-push-notification` referenced in `plan.md` is incompatible and must not be used
-- `zustand ^4.5.x` — plant collection state with AsyncStorage `persist` middleware; replaces scattered raw AsyncStorage calls for shared UI state
-- `expo-image` — disk-cached remote image display (PlantNet reference photos); replaces default RN `<Image>` which has no cache
-- `react-native-google-mobile-ads ^14.x` — AdMob integration (Phase 3); MEDIUM confidence — verify New Architecture compatibility before installing
-- `react-native-iap ^12.x` — in-app purchase for Pro unlock; `expo-in-app-purchases` is archived and must not be used
-- `date-fns ^3.x` — date arithmetic for watering schedules and relative time labels
-- `uuid ^9.x` + `react-native-get-random-values` polyfill — stable local IDs for saved plant records
+**Existing stack leveraged:**
+- `expo-notifications` (already v0.32.16) — Custom reminders extend existing notification system
+- `expo-image-picker` (already v17.0.10) — Photo selection from camera/gallery
+- `expo-image-manipulator` (already v14.0.8) — Photo compression before storage
+- `expo-file-system` (included in SDK 54) — Persistent photo storage in app-local directory
+- Zustand stores (already v5.0.11) — State management for new data fields
 
-**Critical constraint:** New Architecture is enabled (`newArchEnabled: true`). Every library added must have confirmed Fabric/JSI support. Run `npx expo install` (not `npm install`) for all Expo SDK packages. EAS Build is required for any library with native code — Expo Go will not suffice once native modules are added.
+**Why this approach:** Minimal dependencies, all libraries support React Native's New Architecture, no backend required, fully offline-capable.
 
-See `.planning/research/STACK.md` for full installation commands, app.json plugin configuration, and the complete "do not add" list.
+### Expected Features
 
-### Feature Landscape
+**Must have (table stakes — users expect these):**
+- **Tabbed detail layout** — 4 tabs organize dense information without overwhelming scroll (Info, Care, History, Notes)
+- **Multi-photo gallery** — Track growth over time with 3-10 photos per plant, swipeable carousel view
+- **Extended care information** — Seasonal temperature ranges, fertilization schedules, pruning instructions, pest/disease identification
+- **Custom reminders** — Multiple reminder types (fertilizing, repotting, pruning) beyond watering, custom scheduling
 
-The competitive positioning is "free forever, no subscription" against PictureThis (€30/yr) and Planta (€36/yr). This framing shapes which features are table stakes and which are differentiators.
-
-**Must have (table stakes — absence triggers negative reviews):**
-- Camera + gallery identification with confidence score + top 3 candidates
-- Scientific + common name display
-- Basic care information (watering frequency, light, temperature)
-- Save identified plant to personal collection (with photo, nickname)
-- Watering reminders via push notifications
-- Watering history tracking
-- Organ type selection (leaf/flower/fruit/bark) with auto fallback
-- Free tier daily scan limit (5/day)
-- "Powered by Pl@ntNet" attribution (required by API terms — also blocks key revocation)
-
-**Should have (differentiators — reinforce the anti-subscription positioning):**
-- One-time Pro unlock at €4.99 (no recurring charge, ever)
-- Offline-first architecture (care info works without internet after first ID)
-- Plant notes field (often paywalled by competitors; free here builds habit)
-- Per-plant nickname (emotional attachment drives retention)
-- Watering compliance statistics (gamification-lite, zero engineering beyond calculation)
-- Privacy-first messaging (PlantNet does not persist images server-side — true by architecture)
-- Multi-photo identification up to 5 images per scan (same API cost, higher accuracy)
-- Customizable notification time
+**Should have (competitive differentiators):**
+- **Growth timeline visualization** — Visual timeline showing plant's growth through photos over time
+- **Markdown notes** — Rich text formatting with bold, lists, headers for better organization
 
 **Defer to v2+:**
-- Social sharing (native share sheet, 1 day of work — fine to defer)
-- Disease diagnosis (requires a separate model or paid API — do not estimate without dedicated research)
-- Cloud sync / account system (kills the zero-server architecture; use native OS backup if needed later)
-- Widget (requires bare workflow or third-party library — assess feasibility separately)
-- Additional languages beyond IT/EN (PlantNet returns names in target language automatically, so marginal effort once i18n scaffolding exists)
+- Social sharing of plants — Requires backend, privacy, moderation
+- Community plant tips database — Server infrastructure needed
+- AI-powered care adjustment — High complexity, requires seasonal data + heuristics/ML
 
-**The care database is the product.** Generic care data drives 1-star reviews. Species-specific, seasonally-aware data drives retention. Start with 100-150 species for MVP; expand in Phase 2 (300-500); prioritize by PlantNet's most-queried species globally.
-
-See `.planning/research/FEATURES.md` for full competitive comparison table and feature dependency graph.
+**Feature dependencies:** Tabbed layout must come first (provides structure for all other features). Extended care info can be added incrementally (optional fields in PlantCareInfo). Multi-photo gallery requires data model migration (highest risk). Custom reminders build on existing expo-notifications system.
 
 ### Architecture Approach
 
-The architecture is strictly layered: Routing (Expo Router) → Screens → Services + Data → Persistence (AsyncStorage + expo-notifications). No layer skipping. Services never import screens. Screens never touch AsyncStorage directly. The layering is already partially enforced by the existing services; the remaining work is building five new modules before the screens that depend on them.
+**v1.1 maintains strict layered architecture:**
+- **Routing layer** (Expo Router) — Unchanged, plant detail remains at `app/plant/[id].tsx`
+- **Screen layer** — Plant detail screen now wraps content in TabView component
+- **Services layer** — New `photoService.ts` for file system operations, extended `notificationService.ts` for custom reminders
+- **Persistence layer** — AsyncStorage for photo metadata, expo-file-system for photo storage
 
-**Major components:**
-1. `services/savedPlants.ts` — CRUD for plant collection; uses index pattern (one key per plant + one index key); never store image bytes in AsyncStorage (store URI only, copy to app document directory via expo-file-system)
-2. `data/plantCareDB.ts` — static TypeScript Record keyed by lowercased scientific name; synchronous lookup, no async overhead; genus-level fallback when species-level entry absent
-3. `services/notifications.ts` — schedule/cancel/reschedule per-plant notifications; always persist the returned notification ID in AsyncStorage or cancellation is impossible (orphaned notifications accumulate)
-4. `services/settings.ts` — user preferences (language, notification time, Pro status)
-5. `i18n context` — wrap at root layout level; all user-visible strings go through it from day one; retrofitting i18n after the fact is expensive
+**New components for v1.1:**
+1. **TabView wrapper** — Orchestrates 4 tab scenes, handles swipe navigation
+2. **InfoTab** — Displays plant identification data, scientific name, family
+3. **CareTab** — Shows extended care info (fertilization, pruning, pests, seasonal temps)
+4. **HistoryTab** — Watering history timeline, custom reminder history
+5. **NotesTab** — Markdown-rendered notes field
+6. **PhotoGallery** — Thumbnail grid with add photo button
+7. **PhotoLightbox** — Full-screen zoom viewer with swipe between photos
 
-**Build order is a hard dependency graph.** Types first (done). Existing services second (done). New services third. Data layer (care DB) alongside services. Screens built in this sequence: Identify → Result → Plant Detail → Home → Settings. Ads and IAP last, after the entire core loop is verified.
-
-See `.planning/research/ARCHITECTURE.md` for the full layered diagram, all data flows, anti-patterns, and the routing structure.
+**Data model extensions:**
+- `SavedPlant.photo` → `SavedPlant.photos: PlantPhoto[]` (breaking change, requires migration)
+- `PlantCareInfo` gains optional `fertilization`, `pruning`, `pests`, `seasonalTemp` fields
+- `SavedPlant` gains `customReminders?: CustomReminder[]` field
 
 ### Critical Pitfalls
 
-Derived from codebase audit of CONCERNS.md + ARCHITECTURE.md + INTEGRATIONS.md and Expo ecosystem patterns. Six critical (rewrite/launch-blocking) and six moderate pitfalls identified.
+**Top 5 pitfalls from research:**
 
-**Top 5 (must address before or during Phase 1):**
+1. **Data model migration breaks existing plants** — Changing `photo: string` to `photos: PlantPhoto[]` requires migration script that handles edge cases (null photos, corrupted URIs, missing directories). Without careful migration, existing users lose their plant photos.
 
-1. **API key exposed in bundle** — `EXPO_PUBLIC_PLANTNET_API_KEY` ships in plain text inside every APK/IPA; key is scrape-able and will be abused. Fix: build a serverless proxy (Cloudflare Workers free tier) that holds the real key; the app calls the proxy. Do this before any real build. Retrofitting later requires changing all API call sites.
+2. **AsyncStorage cache grows without bound** — Photo metadata (array of 3-10 photos per plant × 50-100 plants) fills AsyncStorage. Cache eviction policy needed (LRU with max entry limit). **Mitigation:** Implement LRU eviction before v1.1 ships.
 
-2. **Unbounded cache growth silently breaks rate limiting** — The cache has no eviction policy; on long-used devices it fills AsyncStorage; write failures are swallowed silently; the rate limiter cannot write its counter; users get unlimited free scans; quota drains. Fix: LRU cap at 50 entries; evict on write when over limit. This is already flagged in CONCERNS.md but not fixed.
+3. **Photo storage fills device filesystem** — Uncompressed photos can consume 50-500MB. **Mitigation:** Compress all photos on upload (max 1024px, JPEG 0.7 quality) using existing `expo-image-manipulator`.
 
-3. **Client-side rate limiting is bypassable** — Clearing app data or reinstalling resets the counter. With 500 global API calls/day, even 10 abusive users can drain the quota. Fix: serverless device-fingerprint tracking (same proxy as pitfall #1 can handle this); also monitor `remainingIdentificationRequests` in every API response and disable scans globally when below threshold.
+4. **Client-side rate limiting bypassable** — Users can clear app data to reset daily scan limit, exhausting PlantNet's 500/day global quota. **Mitigation:** Add server-side device fingerprint tracking (already flagged for Phase 1, implement before v1.1 launch if not already done).
 
-4. **Hash collision in cache serves wrong plant** — `hashString()` hashes the URI string, not image content; predictable camera URI patterns increase collision probability; user sees wrong identification silently. Fix before MVP: hash URI + file size + last-modified timestamp from `expo-file-system.getInfoAsync()`.
+5. **Notification scheduling fails silently on Android** — Android 13+ requires explicit permission, exact alarm permission, battery optimization exclusion. **Mitigation:** Test on physical Samsung/Xiaomi/Huawei devices, prompt users to disable battery optimization, use exact alarms when possible.
 
-5. **Notification scheduling fails silently on Android** — Android 13+ requires runtime permission; Android 12+ requires exact alarm permission; OEM battery optimizers (Samsung, Xiaomi, Huawei) kill background processes. Fix: use `expo-notifications` exclusively; request permission at moment of value (first plant save, not app launch); test on physical Samsung/Xiaomi devices, not emulator.
-
-**Additional moderate risks:**
-- PlantNet schema changes break the app with no warning (no Zod validation, no timeout, no retry currently)
-- UTC vs. local timezone drift in rate limiter and watering schedule date comparisons
-- AsyncStorage race condition on rapid double-tap of Identify button
-- Wrong library referenced in plan.md (`react-native-push-notification` vs `expo-notifications`)
-- New Architecture compatibility not yet audited for AdMob library (Phase 3 risk)
-
-See `.planning/research/PITFALLS.md` for full pitfall descriptions with warning signs and prevention details.
-
----
+**Additional v1.1-specific risks:**
+- **TabView memory leaks** — All tab scenes mount by default, causing memory bloat with photo galleries. **Mitigation:** Use lazy loading with `SceneMap`, only mount active + adjacent tabs.
+- **Photo URI invalidation** — URIs from `expo-image-picker` may become invalid if original gallery image is deleted. **Mitigation:** Copy all photos to app-local filesystem via `expo-file-system` immediately after selection.
 
 ## Implications for Roadmap
 
-The architecture's hard dependency graph, the severity of Phase 1 security/stability pitfalls, and the feature priority ranking all point to the same 4-phase structure.
+Based on research, v1.1 should be delivered in **4 sequential phases** to manage risk and dependencies:
 
-### Phase 1: Foundation and Core Identification Loop
-
-**Rationale:** The existing services have known bugs (unbounded cache, hash collision, race condition, missing timeout/retry) that will cascade into every downstream feature. These must be fixed before building on top of them. The API key exposure is a security issue that blocks any real device build. Building the missing services and data layer before screens is the architecture constraint.
+### Phase 1: Tabbed Layout Foundation
+**Rationale:** Tabbed layout is the foundation for all other v1.1 features. It reorganizes existing content without breaking changes, providing immediate UX improvement.
 
 **Delivers:**
-- Serverless proxy for PlantNet API (fixes key exposure + rate limit bypass)
-- Hardened cache (LRU cap, content-based hash key)
-- PlantNet API client hardening (10s timeout, 3-attempt exponential backoff, Zod schema validation)
-- `services/savedPlants.ts` with index pattern and image URI storage
-- `data/plantCareDB.ts` with ~100-150 species, genus-level fallback, case-normalized keys
-- `services/settings.ts`
-- i18n context with IT/EN strings
-- Camera/Identify screen + Result screen + Plant Detail screen
-- Home screen (saved plant list, watering summary)
-- Free tier rate limiting (5/day) with graceful "limit reached" UX
-- PlantNet attribution on result cards and settings screen
+- TabView component with 4 tabs (Info, Care, History, Notes)
+- Tab navigation UI (horizontal swipe + tap to switch)
+- Content migration from existing single-scroll layout to tab-specific views
 
-**Addresses features:** Camera ID, gallery ID, confidence display, top 3 candidates, scientific + common names, basic care info, save plant to collection (with photo, nickname, notes), free tier gate
+**Addresses:**
+- FEATURES.md: "Tabbed Detail Layout" table stakes feature
+- ARCHITECTURE.md: "Component Boundaries" — new TabView wrapper component
 
-**Avoids pitfalls:** API key exposure, cache overflow, hash collision, race condition, missing timeout/retry, wrong library (plan.md references `react-native-push-notification` — do not implement)
+**Uses:**
+- `react-native-tab-view` + `react-native-pager-view` (new libraries)
+- Existing `SavedPlant` data (no migration required)
 
-**Research flag:** Standard patterns — no `/gsd:research-phase` needed; architecture is well-defined.
+**Avoids:**
+- PITFALLS.md #12: New Architecture compatibility (verify libraries support New Arch before install)
+
+**Research flag:** None — standard React Native pattern, well-documented.
 
 ---
 
-### Phase 2: Care Features and Notifications
-
-**Rationale:** Notifications depend on a working `savedPlants.ts` from Phase 1. The watering schedule requires date utilities that must be built correctly (timezone-aware) before any date-sensitive feature ships. This phase delivers the core retention loop: save plant → get reminder → mark watered → see history.
+### Phase 2: Extended Care Information
+**Rationale:** Pure data model extension (optional fields) + static UI. No migration required, can be populated incrementally. High value, low risk.
 
 **Delivers:**
-- `expo-notifications` integration (NOT `react-native-push-notification`)
-- Notification ID persistence in AsyncStorage (prevents orphaned notifications on delete/reschedule)
-- Android permission flow at moment of value (not app launch)
-- Watering history tracking
-- Watering compliance statistics (% on-time, streak)
-- Customizable notification time in settings
-- `getLocalDateString()` centralized utility (fixes UTC/local timezone drift)
-- Care DB expanded to 300-500 species
-- Multi-photo identification flow (up to 5 images per scan)
+- Extended `PlantCareInfo` interface with `fertilization`, `pruning`, `pests`, `seasonalTemp`
+- CareTab UI rendering extended care info
+- Population of 100 species database with extended data (gradual backfill acceptable)
 
-**Uses:** `expo-notifications`, `date-fns`, `zustand` (for plant collection state)
+**Addresses:**
+- FEATURES.md: "Extended Care Information" table stakes feature
+- ARCHITECTURE.md: "Plant care DB as static import" pattern
 
-**Avoids pitfalls:** Wrong notification library, silent Android failure, UTC drift, notification ID loss
+**Uses:**
+- Existing `careDB.ts` static database pattern
+- No new libraries
 
-**Research flag:** Notification permission flows and Android battery optimizer behavior are known pain points — manual testing on physical Android devices required. No additional research phase needed; the patterns are documented.
+**Avoids:**
+- PITFALLS.md #7: Care DB coverage gap — prioritize by PlantNet frequency data, add genus-level fallback
+
+**Research flag:** None — straightforward UI work, data model already designed.
 
 ---
 
-### Phase 3: Monetization
-
-**Rationale:** Ads and IAP are built last, after the entire core loop is verified. AdMob (`react-native-google-mobile-ads`) has the highest New Architecture compatibility risk of any library in the plan. IAP requires app store provisioning and test accounts. These dependencies make monetization the final gate before submission.
+### Phase 3: Multi-Photo Gallery
+**Rationale:** Highest-risk feature due to data model migration. Deliver after tab structure is stable so photo gallery has a dedicated tab (InfoTab or standalone Photos tab).
 
 **Delivers:**
-- AdMob banner integration (free tier)
-- Pro in-app purchase (€4.99 one-time, non-consumable)
-- Pro unlock: removes ads, raises scan limit to 15/day, unlimited saved plants
-- "No subscription, ever" messaging prominent in upgrade flow
+- Data model migration: `photo: string` → `photos: PlantPhoto[]`
+- `photoService.ts` for file system operations (save, delete, compress)
+- PhotoGallery component (thumbnail grid + add button)
+- PhotoLightbox (full-screen zoom viewer with swipe)
 
-**Uses:** `react-native-google-mobile-ads ^14.x`, `react-native-iap ^12.x`
+**Addresses:**
+- FEATURES.md: "Multi-Photo Gallery" table stakes feature
+- ARCHITECTURE.md: "Storing full image bytes in AsyncStorage" anti-pattern avoided
 
-**Avoids pitfalls:** New Architecture incompatibility (audit `react-native-google-mobile-ads` against RN 0.81 + Fabric before installing; run `npx expo install --check` after each addition)
+**Uses:**
+- `react-native-image-zoom-viewer` (new library)
+- `expo-image-picker` (existing)
+- `expo-image-manipulator` (existing)
+- `expo-file-system` (existing in SDK)
 
-**Research flag:** NEEDS `/gsd:research-phase` before implementation. Specifically: verify `react-native-google-mobile-ads` New Architecture status on Expo SDK 54 / RN 0.81 (MEDIUM confidence currently). If incompatible, decision point: disable `newArchEnabled` or find alternative.
+**Avoids:**
+- PITFALLS.md #3: AsyncStorage cache unbounded growth — use LRU eviction
+- PITFALLS.md #15: Image size not validated — compress on upload
+- PITFALLS.md: Photo URI invalidation — copy to app-local filesystem
+
+**Research flag:** **MEDIUM** — Data model migration has edge cases. Test migration script with:
+- Existing plants with single photo string
+- Plants with null/missing photo field
+- Corrupted URIs (deleted original images)
+- Large photo collections (10+ photos)
+
+**Migration strategy:**
+```typescript
+// Version bump in store schema
+const PLANT_STORE_VERSION = 2;
+
+// Migration function
+async migrateToV2(plants: SavedPlant[]): Promise<SavedPlant[]> {
+  return plants.map(plant => ({
+    ...plant,
+    photos: plant.photo
+      ? [{ uri: plant.photo, id: generateId(), timestamp: Date.now(), isPrimary: true }]
+      : [],
+    // Remove old field after successful migration
+    photo: undefined,
+  }));
+}
+```
 
 ---
 
-### Phase 4: Polish and Expansion
-
-**Rationale:** Low-risk additions that require the core product to be stable and live before prioritizing. Social sharing is 1 day of work with native share sheet. Additional languages are low-effort once i18n scaffolding exists. Disease diagnosis requires dedicated research before any estimate.
+### Phase 4: Custom Reminders
+**Rationale:** Extends existing notification system. Can be delivered incrementally (start with 2 reminder types, expand in v1.2). Low risk, high user value.
 
 **Delivers:**
-- Native share sheet for identification results
-- Export CSV (Pro feature)
-- Additional languages (ES, FR, DE) — PlantNet returns names in target language automatically
-- Care DB backfill based on observed species miss rate from production
-- Widget feasibility assessment (requires bare workflow or third-party lib)
+- Extended `SavedPlant` with `customReminders?: CustomReminder[]`
+- Reminder types enum (watering, fertilizing, repotting, pruning, custom)
+- Notification categories for iOS grouping
+- UI for adding/editing/deleting custom reminders
+- Integration with existing `notificationService.ts`
 
-**Research flag:** Disease diagnosis is explicitly deferred — requires dedicated research on available models/APIs before any estimate. Do not scope until researched.
+**Addresses:**
+- FEATURES.md: "Custom Reminders" table stakes feature
+- ARCHITECTURE.md: "Notification IDs persisted alongside plants" pattern
+
+**Uses:**
+- `expo-notifications` (existing v0.32.16)
+- Existing `scheduleDailyDigest` pattern
+
+**Avoids:**
+- PITFALLS.md #5: Notification scheduling fails silently on Android — test physical devices
+- PITFALLS.md #11: Wrong library (react-native-push-notification) — use expo-notifications only
+
+**Research flag:** None — extends existing working system.
+
+---
+
+### Phase 5: Polish & Advanced Features
+**Rationale:** Quick wins after core v1.1 features are stable. Growth timeline and markdown notes are low-risk differentiators.
+
+**Delivers:**
+- Growth timeline visualization (uses multi-photo gallery data)
+- Markdown notes rendering (`react-native-markdown-display`)
+- Performance optimization (lazy tab loading, photo caching)
+- Accessibility improvements
+
+**Addresses:**
+- FEATURES.md: "Growth Timeline Visualization" and "Markdown Notes" differentiators
+
+**Uses:**
+- `react-native-markdown-display` (new library, ~500KB)
+
+**Research flag:** None — standard libraries, well-documented.
 
 ---
 
 ### Phase Ordering Rationale
 
-- Phase 1 must precede everything because three existing services have bugs that will cascade; the API key exposure blocks any real device build
-- Phase 2 depends on Phase 1's `savedPlants.ts` being stable — notifications schedule against plant records
-- Phase 3 is correctly last because AdMob/IAP require store provisioning that needs a finished app, and New Architecture compatibility is unconfirmed
-- Phase 4 is all additive — nothing in it unblocks Phase 1-3 work
+**Why this order:**
+1. **Tabs first** — Foundation for all other features. No breaking changes, immediate UX improvement.
+2. **Care info second** — Data-only change, optional fields, enables gradual population. No UI complexity.
+3. **Gallery third** — Highest risk due to migration. Deliver after tabs are stable so gallery has dedicated space.
+4. **Reminders fourth** — Extends existing notification system, low risk, can be incremental.
+5. **Polish last** — Differentiators that don't block core v1.1 value.
 
-### Contradictions Between Research Dimensions
+**How this avoids pitfalls:**
+- **Phases 1-2** avoid data migration risk, establish stable structure
+- **Phase 3** addresses migration when codebase is most stable (after tabs + care)
+- **Phase 4** builds on existing working notification system
+- **Phase 5** adds polish without risk to core features
 
-One direct contradiction found: `ARCHITECTURE.md` recommends against adding Zustand ("The app is not complex enough to justify the overhead") while `STACK.md` recommends Zustand as the correct solution for shared plant collection state. **Resolution: STACK.md is correct.** The architecture note reflects the state before the full feature set was analyzed. With 3+ screens sharing plant collection data and watering state, prop drilling and raw AsyncStorage calls from screens will create the anti-patterns ARCHITECTURE.md itself warns against. Use Zustand with the persist middleware.
+**Parallel opportunities:**
+- Care info population (data entry) can happen in parallel with Phase 1 implementation
+- Extended care UI can be built in parallel with data population
 
-### Confirmed vs. Needs Validation
+### Research Flags
 
-**Confirmed (HIGH confidence):**
-- Installed package versions and New Architecture status from `package.json` and `app.json`
-- Service layer patterns (from direct codebase inspection)
-- `expo-notifications` as the correct notification library for managed workflow
-- `expo-in-app-purchases` is archived — use `react-native-iap` instead
-- `expo-ads-admob` is removed (SDK 47) — use `react-native-google-mobile-ads` instead
-- PlantNet API endpoint `/v2/identify/all`, response structure, attribution requirement
-- All pitfalls derived from existing CONCERNS.md (code-level audit)
+**Phases needing deeper research during planning:**
+- **Phase 3 (Multi-Photo Gallery):** Migration script edge cases. Test with existing user plants, corrupted URIs, large photo collections. May need `/gsd:research-phase` for migration testing strategy.
 
-**Needs validation before implementation:**
-- `react-native-google-mobile-ads ^14.x` New Architecture compatibility with RN 0.81 (MEDIUM confidence — check GitHub issues before Phase 3)
-- `react-native-iap ^12.x` StoreKit 2 / Google Play Billing v6 current status (MEDIUM — verify changelog before Phase 3)
-- PlantNet API terms: "Powered by Pl@ntNet" exact attribution requirements (MEDIUM — verify current TOS)
-- Competitive pricing (PictureThis €30/yr, Planta €36/yr) — verify App Store listings before finalizing marketing copy
-- Cloudflare Workers free tier request limits — confirm 100k/day is sufficient for expected traffic before choosing proxy platform
-
----
+**Phases with standard patterns (skip research-phase):**
+- **Phase 1 (Tabbed Layout):** Well-documented, react-native-tab-view has extensive examples.
+- **Phase 2 (Extended Care Info):** Static data + straightforward UI.
+- **Phase 4 (Custom Reminders):** Extends existing expo-notifications integration.
+- **Phase 5 (Polish):** Standard libraries (react-native-markdown-display).
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | Installed versions verified from package.json; additions are well-established libraries with documented managed workflow compatibility |
-| Features | MEDIUM | Based on training data through Aug 2025; competitive pricing and feature sets should be manually verified against current App Store listings before marketing copy is finalized |
-| Architecture | HIGH | Derived from direct codebase inspection of existing services + established Expo/RN patterns; routing structure confirmed from installed expo-router v6 |
-| Pitfalls | HIGH (code-derived) / MEDIUM (ecosystem) | Pitfalls 1-10 derived from CONCERNS.md + direct code audit = HIGH; Android OEM battery optimizer and New Arch compatibility pitfalls based on training knowledge = MEDIUM |
+| Stack | HIGH | All libraries verified from official docs, React Native 0.81.5 compatibility confirmed. Only 3 new packages, all support New Architecture. |
+| Features | HIGH | Competitive analysis across 10+ plant care apps. Table stakes features well-documented. API examples available for all proposed features. |
+| Architecture | HIGH | Based on existing codebase audit (CONCERNS.md, ARCHITECTURE.md, INTEGRATIONS.md). Layered architecture already proven in v1.0. |
+| Pitfalls | HIGH | 16 pitfalls identified from codebase analysis + known Expo/React Native patterns. Specific mitigations provided for each. |
 
-**Overall confidence:** MEDIUM-HIGH
+**Overall confidence:** HIGH
+
+Research is based on:
+- Existing codebase analysis (8,988 lines TypeScript/TSX, 19 plans executed)
+- Official library documentation (react-native-tab-view, expo-notifications, expo-file-system)
+- Competitive app analysis (10+ plant care apps, 2025-2026 feature landscape)
+- Expo SDK 54 + React Native 0.81.5 verified compatibility
 
 ### Gaps to Address
 
-- **Serverless proxy platform decision:** Cloudflare Workers vs. Vercel Edge vs. AWS Lambda. Cloudflare Workers free tier is the working assumption. Validate quota (100k requests/day) against expected user count before Phase 1 commit.
-- **Care DB species prioritization:** No source available for PlantNet's global query frequency ranking. Use a combination of: (a) European common plants given Italian target market, (b) Wikipedia "common houseplants" lists, (c) post-launch miss-rate telemetry for backfill. Accept that Phase 1 coverage will be imperfect.
-- **New Architecture / AdMob compatibility:** Cannot confirm without a test build. Budget for a spike in early Phase 3 planning to verify before committing to the monetization implementation.
-- **Android physical device testing:** Emulators do not replicate OEM battery optimizers. Samsung Galaxy or Xiaomi physical device testing is required for notification validation in Phase 2. If no physical device is available, use BrowserStack device farm.
+**Minor gaps to validate during implementation:**
 
----
+1. **Photo storage quota** — Research indicates AsyncStorage limit is 5-10MB total. With multi-photo gallery, photo metadata (URIs, timestamps, captions) may approach this limit. **Mitigation:** Monitor metadata size during Phase 3 testing. If >50% quota, migrate photo metadata to SQLite or JSON file in filesystem.
+
+2. **TabView performance with photo galleries** — Research warns that mounting all tab scenes causes memory bloat. **Mitigation:** Use `lazy` prop in TabView with `SceneMap`, only mount active + adjacent tabs. Test with 50+ plants, 10 photos each.
+
+3. **PlantNet API changes** — PITFALLS.md #6 warns API has no formal SLA. **Mitigation:** Add Zod schema validation on PlantNet responses (already planned for Phase 1), subscribe to PlantNet GitHub issues for change notices.
+
+4. **Android notification Doze mode** — PITFALLS.md #5 warns Android battery optimizers kill background processes. **Mitigation:** Test Phase 4 on physical Samsung/Xiaomi/Huawei devices. Prompt users to disable battery optimization for the app.
+
+5. **Care DB coverage** — Research identifies 50,000+ species in PlantNet vs 100-500 in care DB. **Mitigation:** Genus-level fallback logic covers ~80% of care needs. Track user-identified species not in DB, prioritize backfill.
+
+**No blocking gaps** — all risks have clear mitigations. Research is sufficient to proceed with roadmap creation.
 
 ## Sources
 
-### Primary (HIGH confidence — direct inspection)
-- `/Users/martha2022/Documents/Claude code/Plantid/package.json` — installed versions, New Architecture flag
-- `/Users/martha2022/Documents/Claude code/Plantid/app.json` — build config, plugins
-- `/Users/martha2022/Documents/Claude code/Plantid/services/plantnet.ts` — API integration, existing patterns
-- `/Users/martha2022/Documents/Claude code/Plantid/services/cache.ts` — cache bugs, hash collision, no eviction
-- `/Users/martha2022/Documents/Claude code/Plantid/services/rateLimiter.ts` — bypass vulnerability
-- `/Users/martha2022/Documents/Claude code/Plantid/types/index.ts` — data model
-- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/CONCERNS.md` — full bug/risk inventory
-- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/ARCHITECTURE.md` — existing architecture decisions
-- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/INTEGRATIONS.md` — external dependency audit
-- `/Users/martha2022/Documents/Claude code/Plantid/plan.md` — product requirements and wireframes
+### Primary (HIGH confidence)
 
-### Secondary (MEDIUM confidence — training knowledge, Aug 2025 cutoff)
-- Expo SDK 54 documentation — expo-notifications, expo-image, expo-router v6
-- PlantNet API documentation — endpoint, response schema, rate limits, attribution requirements
-- react-native-iap documentation — StoreKit 2, Google Play Billing v6 support
-- react-native-google-mobile-ads — New Architecture compatibility history
-- Competitive app analysis — PictureThis, Planta, PlantNet app, iNaturalist, Greg
+**Official Documentation:**
+- [react-native-tab-view GitHub](https://github.com/satya164/react-native-tab-view) — Verified latest version, peer dependencies, New Architecture support
+- [react-native-pager-view npm](https://www.npmjs.com/package/react-native-pager-view) — Version compatibility confirmed
+- [react-native-image-zoom-viewer GitHub](https://github.com/ascott0742/react-native-image-zoom-viewer) — Features, maintenance status, RN 0.81 compatibility
+- [Expo FileSystem Documentation](https://docs.expo.dev/versions/latest/sdk/filesystem/) — API, directory structure, persistence guarantees
+- [Expo Notifications Documentation](https://docs.expo.dev/versions/latest/sdk/notifications/) — Categories, triggers, Android permissions
 
-### Tertiary (LOW confidence — needs independent verification)
-- Competitor App Store pricing (PictureThis €30/yr, Planta €36/yr) — verify current listings
-- PlantNet global species query frequency distribution — no public dataset; use proxy sources
-- Cloudflare Workers free tier daily request limit — verify current pricing page
+**Codebase Analysis:**
+- `/Users/martha2022/Documents/Claude code/Plantid/package.json` — Installed versions verified
+- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/ARCHITECTURE.md` — Layered architecture, data flow
+- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/CONCERNS.md` — Known issues, fragile areas
+- `/Users/martha2022/Documents/Claude code/Plantid/.planning/codebase/INTEGRATIONS.md` — External service integrations
+- `/Users/martha2022/Documents/Claude code/Plantid/.planning/PROJECT.md` — Requirements, milestones, constraints
+
+### Secondary (MEDIUM confidence)
+
+**Competitive App Research:**
+- Plant care app comparison (PictureThis, Planta, Blossom, PlantIn, PlantParent, Plantico, WaterPlantly, PlantPal, Plantasia, Plantaid) — Feature lists from app store descriptions, marketing pages
+- Mobile app UI patterns (Leafify AI, Planter, Pothos) — Tabbed navigation, gallery patterns
+- Android Sunflower project best practices — 42% performance improvement with flat layout
+
+**React Native Ecosystem:**
+- React Native image picker libraries comparison — expo-image-picker vs react-native-image-crop-picker vs react-native-syan-image-picker
+- Notification best practices 2025-2026 — Personalization boosts retention 61-74%
+
+### Tertiary (LOW confidence)
+
+**Industry Statistics:**
+- Notification engagement metrics (75% delete apps with too many notifications) — Single source, not independently verified
+- Specific app implementation details (no access to app internals, claims unverified)
+
+**Gaps to Validate:**
+- Actual competitor app implementations (need hands-on testing or verified reviews)
+- User research on which tabs/features are most used
+- Exact schema used by production plant care apps (proprietary, not public)
 
 ---
-
-*Research completed: 2026-02-19*
-*Ready for roadmap: yes*
+*Research completed: 2026-02-20*
+*Ready for roadmap: YES*
+*Next step: /gsd:roadmap to create v1.1 roadmap based on this research*

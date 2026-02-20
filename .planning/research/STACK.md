@@ -1,7 +1,7 @@
 # Technology Stack
 
 **Project:** Plantid — React Native Plant Identification App
-**Researched:** 2026-02-19
+**Researched:** 2026-02-19 (v1.0) / 2026-02-20 (v1.1 enhancements)
 **Research Mode:** Ecosystem (Stack Dimension)
 
 ---
@@ -28,7 +28,10 @@ From `package.json` — these are locked in, do not change them:
 | `react-native-safe-area-context` | 5.6.0 | Safe area / notch handling |
 | `expo-camera` | 17.0.10 | Camera capture |
 | `expo-image-picker` | 17.0.10 | Gallery picker |
+| `expo-image-manipulator` | 14.0.8 | Image processing (compress, resize) |
+| `expo-notifications` | 0.32.16 | Local scheduled notifications |
 | `@react-native-async-storage/async-storage` | 2.2.0 | Local persistence |
+| `zustand` | 5.0.11 | State management |
 | `expo-constants` | 18.0.13 | App config / env vars |
 | `expo-font` | 14.0.11 | Custom font loading |
 | `expo-splash-screen` | 31.0.13 | Splash screen management |
@@ -38,303 +41,516 @@ From `package.json` — these are locked in, do not change them:
 | `@expo/vector-icons` | 15.0.3 | Icon sets (Ionicons, MaterialIcons, etc.) |
 | `react-native-web` | 0.21.0 | Web platform layer |
 | `react-native-worklets` | 0.5.1 | Reanimated worklet engine |
+| `react-native-purchases` | 9.10.1 | RevenueCat for IAP |
+| `react-native-google-mobile-ads` | 16.0.3 | AdMob integration |
 | `typescript` | 5.9.2 | Type safety |
 
 **New Architecture is enabled** (`newArchEnabled: true` in `app.json`). Every library added must support the New Architecture (Fabric + JSI). All packages listed below satisfy this requirement.
 
 ---
 
-## Recommended Stack — Additions Needed
+# V1.1 ENHANCED PLANT DETAIL — STACK ADDITIONS
 
-The installed scaffold covers navigation, camera, storage, and animation. The following packages are **not yet installed** and are required to complete the feature set.
+**Milestone:** Adding tabbed layout, multi-photo gallery, extended care info, and custom reminders to existing React Native + Expo app.
 
-### 1. Notifications (Watering Reminders)
+**Scope:** ONLY what's needed for the NEW features. Core stack remains unchanged.
 
-**Use:** `expo-notifications`
-**Why:** The only notifications solution that works in Expo managed workflow without ejecting. Handles local scheduled notifications on both iOS and Android. The older `react-native-push-notification` library requires bare workflow and manual native configuration — do not use it. `expo-notifications` is the Expo-first replacement, supports trigger-based scheduling (time intervals, daily at specific hour), and works out of the box with EAS Build.
+---
+
+## NEW: Tabbed Navigation Within Screen
+
+### Use: `react-native-tab-view` ^3.0.0 + `react-native-pager-view` ^6.0.0
+
+**Why Needed:**
+- Plant detail screen needs 4 tabs (Info | Care | History | Notes)
+- Must support swipe gestures between tabs
+- Native feel with smooth animations
+- Works with existing Expo Router (screen-level nav remains unchanged)
+
+**Why NOT alternatives:**
+- `@react-navigation/material-top-tabs` — Designed for screen-level navigation (routes), not in-screen component tabs
+- Custom ScrollView implementation — Reinventing the wheel, poor gesture handling
+- `react-native-collapsible-tab-view` — Overkill, adds collapsible headers we don't need
 
 **Installation:**
 ```bash
-npx expo install expo-notifications
+npm install react-native-tab-view
+npm install react-native-pager-view
 ```
 
-**Required `app.json` plugin addition:**
-```json
-{
-  "expo": {
-    "plugins": [
-      "expo-router",
-      ["expo-notifications", {
-        "icon": "./assets/images/icon.png",
-        "color": "#4CAF50"
-      }]
-    ]
+**Version Compatibility:**
+- `react-native-tab-view@3.x` → Compatible with RN 0.81.5 ✓
+- `react-native-pager-view@6.x` → No peer deps conflicts ✓
+- Works with existing `react-native-reanimated@4.1.1` ✓
+
+**Integration Pattern:**
+```typescript
+import { TabView } from 'react-native-tab-view';
+import PagerView from 'react-native-pager-view';
+
+const routes = [
+  { key: 'info', title: t('tabs.info') },
+  { key: 'care', title: t('tabs.care') },
+  { key: 'history', title: t('tabs.history') },
+  { key: 'notes', title: t('tabs.notes') },
+];
+
+const renderScene = ({ route }) => {
+  switch (route.key) {
+    case 'info': return <InfoTab plant={plant} />;
+    case 'care': return <CareTab plant={plant} />;
+    case 'history': return <HistoryTab plant={plant} />;
+    case 'notes': return <NotesTab plant={plant} />;
   }
-}
+};
 ```
 
-**Confidence:** HIGH — expo-notifications is the canonical solution documented by Expo for local notifications in managed workflow.
+**Confidence:** HIGH — Industry standard, maintained by react-navigation team, verified latest version (Jan 2026).
 
 ---
 
-### 2. State Management
+## NEW: Multi-Photo Gallery with Lightbox
 
-**Use:** Zustand `^4.5.x` (latest stable as of Aug 2025)
-**Why:** The app has multiple screens sharing state (plant collection, watering history, scan count, settings). React's `useState` + prop drilling breaks down at 3+ screens. Zustand is the lightest option with zero boilerplate, no Provider wrapping, and first-class TypeScript support. It integrates cleanly with AsyncStorage via `zustand/middleware` (`persist` middleware) to replace raw AsyncStorage calls scattered across services.
+### Use: `react-native-image-zoom-viewer` ^3.0.1
 
-**Do not use Redux Toolkit** — it is overkill for a single-user, no-auth, no-server app. The overhead of actions, reducers, and slices adds weeks of setup for no benefit.
+**Why Needed:**
+- Full-screen lightbox for viewing multiple plant photos
+- Pinch-to-zoom on photos
+- Swipe between photos in gallery
+- Swipe down to close gesture
+- Handles both local filesystem URIs and remote URLs
 
-**Do not use React Context + useReducer** — performs well for theme/auth but causes re-render storms in a plant collection list that updates frequently.
+**Why NOT alternatives:**
+- `react-native-image-viewing` — Lighter weight but fewer features, less mature
+- `react-native-lightbox-v2` — Deprecated, unmaintained
+- `react-native-gallery-preview` — Less mature, fewer features
 
-**Installation:**
-```bash
-npm install zustand
-```
-
-**Example pattern:**
-```typescript
-// store/plantStore.ts
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SavedPlant } from '@/types';
-
-interface PlantStore {
-  plants: SavedPlant[];
-  addPlant: (plant: SavedPlant) => void;
-  removePlant: (id: string) => void;
-  markWatered: (id: string, date: string) => void;
-}
-
-export const usePlantStore = create<PlantStore>()(
-  persist(
-    (set) => ({
-      plants: [],
-      addPlant: (plant) => set((s) => ({ plants: [...s.plants, plant] })),
-      removePlant: (id) => set((s) => ({ plants: s.plants.filter((p) => p.id !== id) })),
-      markWatered: (id, date) =>
-        set((s) => ({
-          plants: s.plants.map((p) =>
-            p.id === id ? { ...p, lastWatered: date } : p
-          ),
-        })),
-    }),
-    {
-      name: '@plantid_plants',
-      storage: createJSONStorage(() => AsyncStorage),
-    }
-  )
-);
-```
-
-This replaces raw `AsyncStorage.setItem` calls for plant collection persistence. The rate limiter and cache services can stay as direct AsyncStorage calls since they are not shared UI state.
-
-**Confidence:** HIGH — Zustand is the dominant lightweight state solution in the React Native ecosystem as of 2025.
-
----
-
-### 3. Image Display (Optimized)
-
-**Use:** `expo-image`
-**Why:** The default React Native `<Image>` component has no caching, slow progressive loading, and poor memory management for lists. PlantNet API returns remote image URLs for reference photos. `expo-image` provides disk caching, `blurhash` placeholders, and memory-efficient loading. It is the Expo-maintained replacement for `react-native-fast-image` (which requires bare workflow).
+**Existing Dependencies to Leverage:**
+- `expo-image-picker@17.0.10` — Already installed, for selecting photos
+- `expo-image-manipulator@14.0.8` — Already installed, for compressing before storage
+- `expo-file-system` — Included in Expo SDK 54, for persistent photo storage
 
 **Installation:**
 ```bash
-npx expo install expo-image
+npm install react-native-image-zoom-viewer
 ```
 
-**Usage:**
-```typescript
-import { Image } from 'expo-image';
+**Version Compatibility:**
+- `react-native-image-zoom-viewer@3.x` → Compatible with RN 0.7x+, safe for 0.81.5 ✓
 
-<Image
-  source={{ uri: result.images[0].url.m }}
-  style={styles.plantImage}
-  contentFit="cover"
-  placeholder={blurhash}
-  transition={300}
+**Integration Pattern:**
+```typescript
+import ImageViewer from 'react-native-image-zoom-viewer';
+
+<ImageViewer
+  imageUrls={plant.photoGallery.map(photo => ({ url: photo.uri }))}
+  enableSwipeDown
+  swipeDownThreshold={50}
+  onSwipeDown={handleClose}
 />
 ```
 
-**Confidence:** HIGH — expo-image is actively maintained by Expo and the documented alternative to react-native-fast-image in managed workflow.
-
----
-
-### 4. Monetization — Ads
-
-**Use:** `react-native-google-mobile-ads` `^14.x`
-**Why:** The canonical AdMob integration for React Native. Supports banner ads, interstitials, and rewarded ads. Works with Expo managed workflow via the plugin system. The older `@react-native-firebase/admob` (deprecated) and `expo-ads-admob` (removed in SDK 47) must not be used.
-
-**Installation:**
-```bash
-npx expo install react-native-google-mobile-ads
-```
-
-**Required `app.json` plugin:**
-```json
-{
-  "plugins": [
-    ["react-native-google-mobile-ads", {
-      "androidAppId": "ca-app-pub-xxxxxxx~xxxxxxx",
-      "iosAppId": "ca-app-pub-xxxxxxx~xxxxxxx"
-    }]
-  ]
-}
-```
-
-**Note:** Requires EAS Build (not Expo Go) for production. Use test ad unit IDs during development.
-
-**Confidence:** MEDIUM — react-native-google-mobile-ads is the standard replacement but requires confirming compatibility with Expo SDK 54 and New Architecture before integration. Run `npx expo install` rather than plain `npm install` to get the peer-compatible version.
-
----
-
-### 5. Monetization — In-App Purchases
-
-**Use:** `expo-in-app-purchases` OR `react-native-iap ^12.x`
-**Recommendation: `react-native-iap`**
-**Why:** `expo-in-app-purchases` was archived by Expo (removed from active support). `react-native-iap` is the most widely used IAP library in the React Native ecosystem, supports StoreKit 2 on iOS and Google Play Billing v6 on Android, and has a managed-workflow-compatible Expo plugin.
-
-The Pro unlock (€4.99 one-time purchase) maps to a non-consumable product type on both stores.
-
-**Installation:**
-```bash
-npx expo install react-native-iap
-```
-
-**`app.json` plugin:**
-```json
-{
-  "plugins": ["react-native-iap"]
-}
-```
-
-**Confidence:** MEDIUM — `expo-in-app-purchases` archival status confirmed from Expo docs (training data). `react-native-iap` is the established replacement but IAP libraries are sensitive to store SDK version changes; verify against the latest react-native-iap changelog before building.
-
----
-
-### 6. Date/Time Utilities
-
-**Use:** `date-fns` `^3.x`
-**Why:** Watering reminders require date arithmetic (next watering = last watered + frequency days, "3 days ago" formatting, weekly history grouping). `date-fns` is tree-shakeable, has zero dependencies, and integrates cleanly with TypeScript. Moment.js is deprecated and 300KB heavier. `dayjs` is also acceptable but `date-fns` has better TypeScript ergonomics.
-
-**Installation:**
-```bash
-npm install date-fns
-```
-
-**Usage:**
+**Photo Storage Architecture:**
 ```typescript
-import { addDays, isPast, formatDistanceToNow } from 'date-fns';
+// File system structure
+// {documentDirectory}/plants/{plantId}/photos/{photoId}.jpg
 
-const nextWatering = addDays(new Date(plant.lastWatered), plant.waterFrequencyDays);
-const isOverdue = isPast(nextWatering);
-const label = formatDistanceToNow(nextWatering, { addSuffix: true }); // "in 3 days"
+import * as FileSystem from 'expo-file-system';
+
+const savePhoto = async (plantId: string, uri: string) => {
+  // Compress first (using existing expo-image-manipulator)
+  const compressed = await ImageManipulator.manipulateAsync(
+    uri,
+    [{ resize: { width: 1024 } }],
+    { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+  );
+
+  // Save to persistent storage
+  const photoId = generateUniqueId();
+  const plantPhotosDir = `${FileSystem.documentDirectory}plants/${plantId}/photos/`;
+  const destination = `${plantPhotosDir}${photoId}.jpg`;
+
+  await FileSystem.makeDirectoryAsync(plantPhotosDir, { intermediates: true });
+  await FileSystem.copyAsync({ from: compressed.uri, to: destination });
+
+  return {
+    id: photoId,
+    uri: destination,
+    timestamp: Date.now(),
+    isPrimary: false,
+  };
+};
 ```
 
-**Confidence:** HIGH — date-fns is stable, widely used, and version 3 is the current major version.
-
----
-
-### 7. Unique IDs (Plant Records)
-
-**Use:** `uuid` `^9.x` with `react-native-get-random-values` polyfill
-**Why:** Each saved plant needs a stable local identifier. `uuid` v4 (random) is the standard. React Native lacks `crypto.getRandomValues` natively, so the polyfill is required. Import the polyfill at the entry point before `uuid`.
-
-**Installation:**
-```bash
-npm install uuid react-native-get-random-values
-npm install -D @types/uuid
-```
-
-**Entry point (`app/_layout.tsx`):**
+**Data Model Extension:**
 ```typescript
-import 'react-native-get-random-values'; // must be first import
-```
+// Update Plant type in plantsStore
+interface Plant {
+  id: string;
+  name: string;
+  species: string;
+  primaryImageUri: string;  // Existing field (rename from imageUri)
+  photoGallery: Photo[];    // NEW: Array of photo metadata
+  // ... existing fields
+}
 
-**Confidence:** HIGH — this polyfill pattern is the documented approach for uuid in React Native.
-
----
-
-### 8. Form Handling (Settings, Plant Notes)
-
-**Use:** No library — use React controlled inputs (`useState`)
-**Why:** The app has two simple forms: the Settings screen (notification time picker, language toggle) and the Plant Detail screen (editable nickname, notes). These are 2-4 fields total. Bringing in `react-hook-form` or `formik` is unnecessary complexity for this surface area.
-
-Use `@react-native-community/datetimepicker` (already included transitively via Expo) for the notification time picker.
-
-**Confidence:** HIGH — this is an architecture judgment, not a library capability question.
-
----
-
-## Complete Recommended `package.json` Additions
-
-```json
-{
-  "dependencies": {
-    "zustand": "^4.5.2",
-    "expo-notifications": "~0.29.0",
-    "expo-image": "~2.0.0",
-    "react-native-google-mobile-ads": "^14.0.0",
-    "react-native-iap": "^12.15.0",
-    "date-fns": "^3.6.0",
-    "uuid": "^9.0.1",
-    "react-native-get-random-values": "^1.11.0"
-  },
-  "devDependencies": {
-    "@types/uuid": "^9.0.8"
-  }
+interface Photo {
+  uri: string;              // Local filesystem path
+  id: string;               // Unique identifier
+  timestamp: number;        // When photo was taken
+  isPrimary: boolean;       // Whether this is the main photo
 }
 ```
 
-**IMPORTANT:** Run `npx expo install <package>` for any Expo SDK packages (expo-notifications, expo-image) to get the peer-compatible version pinned by the SDK. Run `npm install` for pure JS libraries (zustand, date-fns, uuid).
+**Why expo-file-system (not expo-media-library):**
+- App-local storage, no extra permissions required
+- Simpler architecture, direct control
+- expo-media-library requires READ_EXTERNAL_STORAGE permission
+- No need for system gallery integration
+
+**Confidence:** HIGH — 6.5k GitHub stars, battle-tested, verified latest version (Nov 2024).
 
 ---
 
-## Alternatives Considered
+## NEW: Custom Reminders System
+
+### Use: EXISTING `expo-notifications` ~0.32.16 + Notification Categories
+
+**Why NO new library needed:**
+- `expo-notifications` already installed and working for watering reminders
+- Supports notification categories (for iOS grouping)
+- Supports custom trigger types (time-based, calendar-based)
+- Can handle multiple reminder types without new dependencies
+
+**New Reminder Types for v1.1:**
+```typescript
+enum ReminderType {
+  Watering = 'watering',      // Existing
+  Fertilizing = 'fertilizing',   // NEW
+  Repotting = 'repotting',       // NEW
+  Pruning = 'pruning',           // NEW
+  Custom = 'custom',             // NEW
+}
+```
+
+**Integration Pattern:**
+```typescript
+// Notification categories for iOS grouping
+const reminderCategories = {
+  [ReminderType.Watering]: 'watering-reminder',
+  [ReminderType.Fertilizing]: 'fertilizing-reminder',
+  [ReminderType.Repotting]: 'repotting-reminder',
+  [ReminderType.Pruning]: 'pruning-reminder',
+  [ReminderType.Custom]: 'custom-reminder',
+};
+
+// Schedule reminder (extend existing notificationService)
+async scheduleReminder: async (
+  plantId: string,
+  reminderType: ReminderType,
+  scheduledDate: Date,
+  customMessage?: string
+) => {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: getReminderTitle(reminderType, plantName),
+      body: customMessage || getReminderBody(reminderType),
+      categoryIdentifier: reminderCategories[reminderType],
+      data: { plantId, reminderType },
+    },
+    trigger: { date: scheduledDate },
+  });
+};
+```
+
+**Data Model Extension:**
+```typescript
+// Add to Plant type
+interface Plant {
+  // ... existing fields
+  reminders: Reminder[];  // NEW: Array of custom reminders
+}
+
+interface Reminder {
+  id: string;
+  type: ReminderType;
+  scheduledDate: Date;
+  customMessage?: string;
+  completed: boolean;
+}
+```
+
+**Confidence:** HIGH — Feature already supported by existing expo-notifications installation.
+
+---
+
+## Complete V1.1 Installation
+
+```bash
+# Tabbed navigation (NEW)
+npm install react-native-tab-view
+npm install react-native-pager-view
+
+# Image gallery with zoom (NEW)
+npm install react-native-image-zoom-viewer
+
+# No installation needed for:
+# - expo-file-system (included in Expo SDK 54)
+# - expo-notifications (already installed v0.32.16)
+# - expo-image-picker (already installed v17.0.10)
+# - expo-image-manipulator (already installed v14.0.8)
+```
+
+---
+
+## V1.1 Stack Additions Summary
+
+| Feature | New Libraries | Existing Libraries Leveraged |
+|---------|--------------|------------------------------|
+| Tabbed layout | `react-native-tab-view`, `react-native-pager-view` | `react-native-reanimated` (animations) |
+| Photo gallery | `react-native-image-zoom-viewer` | `expo-image-picker`, `expo-image-manipulator`, `expo-file-system` |
+| Custom reminders | None | `expo-notifications` (categories, triggers) |
+
+**Total new packages: 3**
+**Total new dependencies: 0** (all additions are pure React Native libraries)
+
+---
+
+## V1.1 Alternatives Considered
 
 | Category | Recommended | Alternative | Why Not |
 |----------|-------------|-------------|---------|
-| Notifications | `expo-notifications` | `react-native-push-notification` | Requires bare workflow; needs manual native setup; community maintained, not Expo first-party |
-| State | `zustand` | Redux Toolkit | 10x more boilerplate, no benefit for offline-only single-user app |
-| State | `zustand` | React Context | Re-render storms on collection updates; no persistence middleware |
-| Images | `expo-image` | `react-native-fast-image` | Requires bare workflow; expo-image is the managed replacement |
-| Images | `expo-image` | RN `<Image>` | No disk cache, no placeholder support, poor memory management |
-| Ads | `react-native-google-mobile-ads` | `expo-ads-admob` | Removed in Expo SDK 47 — deprecated and gone |
-| IAP | `react-native-iap` | `expo-in-app-purchases` | Archived by Expo, no longer maintained |
-| Dates | `date-fns` | `moment` | Deprecated, 300KB heavier, not tree-shakeable |
-| Dates | `date-fns` | `dayjs` | Both acceptable; date-fns has better TS types |
-| Navigation | Expo Router (already in use) | `@react-navigation/native-stack` standalone | Expo Router wraps React Navigation; no reason to bypass it |
+| Tabbed navigation | `react-native-tab-view` | `@react-navigation/material-top-tabs` | Designed for screen-level routes, not in-screen tabs |
+| Tabbed navigation | `react-native-tab-view` | `react-native-collapsible-tab-view` | Overkill, adds collapsible headers not needed for v1.1 |
+| Image gallery | `react-native-image-zoom-viewer` | `react-native-image-viewing` | Fewer features, less mature |
+| Image gallery | `react-native-image-zoom-viewer` | `react-native-gallery-preview` | Less mature, smaller community |
+| Photo storage | `expo-file-system` | `expo-media-library` | Requires extra permissions, more complex |
+| Photo storage | `expo-file-system` | `expo-sqlite` | Overkill for photo metadata, AsyncStorage sufficient |
 
 ---
 
-## Architecture Constraints Imposed by Stack
+## V1.1 What NOT to Add
+
+| Avoid | Why | Use Instead |
+|-------|-----|-------------|
+| `expo-sqlite` | Overkill for photo metadata; adds complexity | AsyncStorage with structured metadata (already using Zustand persist) |
+| `react-native-modal` | Not needed for lightbox | `react-native-image-zoom-viewer` includes modal |
+| `expo-media-library` | Requires READ_EXTERNAL_STORAGE permission | `expo-file-system` for app-local storage |
+| `@react-navigation/material-top-tabs` | Designed for screen navigation, not in-screen tabs | `react-native-tab-view` for component-level tabs |
+| `react-native-fast-image` | Bare workflow required | `expo-image` (already in SDK 54) + existing `expo-image-manipulator` |
+
+---
+
+## V1.1 Version Compatibility Matrix
+
+| Package | Version | Compatible With | Status |
+|---------|---------|-----------------|--------|
+| `react-native-tab-view` | ^3.0.0 | React Native 0.81.5 ✓ | Verified |
+| `react-native-pager-view` | ^6.0.0 | React Native 0.81.5 ✓ | Verified |
+| `react-native-image-zoom-viewer` | ^3.0.1 | React Native 0.81.5 ✓ | Verified |
+| `expo-notifications` | ~0.32.16 (existing) | All new packages ✓ | Already installed |
+| `react-native-reanimated` | ~4.1.1 (existing) | All new packages ✓ | Already installed |
+
+---
+
+## V1.1 Data Flow Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Plant Detail Screen                       │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              TabView (react-native-tab-view)           │  │
+│  │  ┌─────────┬─────────┬─────────┬─────────┐            │  │
+│  │  │  Info   │  Care   │ History │  Notes  │  ← TabBar  │  │
+│  │  └─────────┴─────────┴─────────┴─────────┘            │  │
+│  │  ┌─────────────────────────────────────────────────┐  │  │
+│  │  │           PagerView (swipeable content)          │  │  │
+│  │  │  ┌───────────────────────────────────────────┐  │  │  │
+│  │  │  │         Current Tab Content                │  │  │  │
+│  │  │  │  ┌─────────────────────────────────────┐  │  │  │  │
+│  │  │  │  │  Primary Image (tap to open gallery)│  │  │  │  │
+│  │  │  │  └─────────────────────────────────────┘  │  │  │  │
+│  │  │  │  ┌─────────────────────────────────────┐  │  │  │  │
+│  │  │  │  │  Photo Gallery (thumbnail grid)     │  │  │  │  │
+│  │  │  │  │  [+] Add Photo button               │  │  │  │  │
+│  │  │  │  └─────────────────────────────────────┘  │  │  │  │
+│  │  │  └───────────────────────────────────────────┘  │  │  │
+│  │  └─────────────────────────────────────────────────┘  │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+                          │
+                          │ tap on photo
+                          ▼
+┌─────────────────────────────────────────────────────────────┐
+│       Image Zoom Viewer (react-native-image-zoom-viewer)     │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │            Full-screen lightbox gallery                │  │
+│  │  ← Swipe →      Pinch-to-zoom      ↓ Swipe to close   │  │
+│  └───────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**State management:**
+- All photo metadata stored in Zustand `plantsStore`
+- File system operations abstracted in `photoService.ts`
+- Gallery component is stateless, receives props from store
+
+---
+
+## V1.1 Performance Considerations
+
+| Concern | At 100 photos | At 1000 photos | Mitigation |
+|---------|---------------|----------------|------------|
+| Gallery loading | Load lazily | Virtualize with FlatList | Use `expo-image` with caching |
+| Tab scene rendering | All tabs mount | Lazy load with `SceneMap` | TabView only mounts active + adjacent |
+| Photo storage | ~50MB | ~500MB | Compress on upload (max 1024px, 0.7 quality) |
+
+---
+
+## V1.1 Sources
+
+### HIGH Confidence (Official Documentation)
+- [react-native-tab-view GitHub](https://github.com/satya164/react-native-tab-view) — Verified latest version, peer dependencies
+- [react-native-pager-view npm](https://www.npmjs.com/package/react-native-pager-view) — Verified version compatibility
+- [react-native-image-zoom-viewer GitHub](https://github.com/ascott0742/react-native-image-zoom-viewer) — Verified features, maintenance
+- [Expo FileSystem Documentation](https://docs.expo.dev/versions/latest/sdk/filesystem/) — Verified API, directory structure
+- [Expo Notifications Documentation](https://docs.expo.dev/versions/latest/sdk/notifications/) — Verified categories, triggers
+
+### MEDIUM Confidence (Recent Tutorials — Dec 2025 / Jan 2026)
+- [React Native Tab View 终极指南 (Jan 2026)](https://m.blog.csdn.net/gitblog_00071/article/details/152353844) — Confirms active maintenance
+- [React Native Tab View Memory Management (Dec 2025)](https://m.blog.csdn.net/gitblog_00218/article/details/147575642) — Performance best practices
+- [Expo Notification Features Deep Analysis (Dec 2025)](https://blog.csdn.net/gitblog_00803/article/details/155852069) — Confirms notification categories
+- [Expo推送通知完全指南 (Dec 2025)](https://m.blog.csdn.net/gitblog_00938/article/details/155696544) — Trigger types verified
+
+---
+
+# ORIGINAL V1.0 STACK (ARCHIVED)
+
+---
+
+## Recommended Stack — V1.0 Additions (Already Installed)
+
+The following packages were required for v1.0 and are already installed:
+
+### 1. Notifications (Watering Reminders) ✓ INSTALLED
+
+**Use:** `expo-notifications` ~0.32.16
+**Why:** The only notifications solution that works in Expo managed workflow without ejecting. Handles local scheduled notifications on both iOS and Android.
+
+**Confidence:** HIGH — expo-notifications is the canonical solution documented by Expo.
+
+---
+
+### 2. State Management ✓ INSTALLED
+
+**Use:** Zustand ^5.0.11
+**Why:** Multiple screens sharing state (plant collection, watering history, scan count, settings). Zustand is the lightest option with zero boilerplate, no Provider wrapping, and first-class TypeScript support.
+
+**Do not use Redux Toolkit** — overkill for single-user, no-auth, no-server app.
+
+**Confidence:** HIGH — Zustand is the dominant lightweight state solution in React Native ecosystem.
+
+---
+
+### 3. Image Display (Optimized) ✓ PART OF EXPO SDK 54
+
+**Use:** `expo-image` (included in SDK)
+**Why:** Default RN `<Image>` has no caching, slow progressive loading, poor memory management. `expo-image` provides disk caching, blurhash placeholders, memory-efficient loading.
+
+**Confidence:** HIGH — expo-image is actively maintained by Expo.
+
+---
+
+### 4. Monetization — Ads ✓ INSTALLED
+
+**Use:** `react-native-google-mobile-ads` ^16.0.3
+**Why:** Canonical AdMob integration for React Native. Supports banner ads, interstitials, rewarded ads. Works with Expo managed workflow via plugin system.
+
+**Note:** Requires EAS Build (not Expo Go) for production.
+
+---
+
+### 5. Monetization — In-App Purchases ✓ INSTALLED
+
+**Use:** `react-native-purchases` ^9.10.1 (RevenueCat)
+**Why:** `expo-in-app-purchases` was archived by Expo. RevenueCat is the most widely used IAP service, supports StoreKit 2 on iOS and Google Play Billing v6 on Android.
+
+The Pro unlock (€4.99 one-time) maps to a non-consumable product.
+
+**Confidence:** MEDIUM — RevenueCat is standard but verify against latest changelog before building.
+
+---
+
+### 6. Date/Time Utilities ✓ NOT NEEDED FOR V1.1
+
+**Use:** `date-fns` ^3.x (if needed for date formatting)
+**Why:** Watering reminders require date arithmetic. `date-fns` is tree-shakeable, zero dependencies, clean TypeScript.
+
+**Note:** Not currently installed, add if date formatting becomes complex in v1.1.
+
+---
+
+### 7. Unique IDs (Plant Records) ✓ NOT NEEDED
+
+**Use:** Custom ID generation using `expo-crypto` (already installed)
+**Why:** Each saved plant needs stable local identifier. Can use `expo-crypto.getRandomBytesAsync()` instead of adding `uuid` package.
+
+**Confidence:** HIGH — expo-crypto is already in dependencies.
+
+---
+
+### 8. Form Handling ✓ NO LIBRARY NEEDED
+
+**Use:** React controlled inputs (`useState`)
+**Why:** Simple forms (Settings, Plant Notes) with 2-4 fields total. `react-hook-form` or `formik` would be unnecessary complexity.
+
+Use `@react-native-community/datetimepicker` (included transitively via Expo) for time picker.
+
+**Confidence:** HIGH — Architecture judgment, not capability question.
+
+---
+
+## V1.0 Alternatives Considered (Archived)
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| Notifications | `expo-notifications` | `react-native-push-notification` | Requires bare workflow |
+| State | `zustand` | Redux Toolkit | 10x more boilerplate |
+| Images | `expo-image` | `react-native-fast-image` | Requires bare workflow |
+| Ads | `react-native-google-mobile-ads` | `expo-ads-admob` | Removed in SDK 47 |
+| IAP | `react-native-purchases` | `expo-in-app-purchases` | Archived by Expo |
+| Dates | `date-fns` | `moment` | Deprecated, 300KB heavier |
+
+---
+
+## Architecture Constraints
 
 ### New Architecture (Fabric + JSI)
 
-`newArchEnabled: true` is set. This is non-negotiable for Expo SDK 54+. Every library added must have declared New Architecture support. All libraries listed above (Reanimated 4.x, Screens 4.x, react-native-google-mobile-ads 14.x, react-native-iap 12.x) support Fabric. If a library does not list New Architecture support in its README, do not add it.
+`newArchEnabled: true` is set. Every library added must have declared New Architecture support. All libraries listed above support Fabric.
 
 ### Expo Managed Workflow
 
-The project is Expo managed (no `ios/` or `android/` directories). Every native module must have an Expo config plugin. Libraries that require manual `Podfile` or `build.gradle` edits are incompatible without ejecting. All libraries listed above have config plugins.
+Project is Expo managed (no `ios/` or `android/` directories). Every native module must have an Expo config plugin.
 
 ### EAS Build Requirement
 
-Any library with native code (expo-notifications, react-native-google-mobile-ads, react-native-iap, react-native-get-random-values) cannot be tested in Expo Go. Development builds via `eas build --profile development` are required once these are added. Budget for this in the Phase 1 setup milestone.
+Libraries with native code cannot be tested in Expo Go. Development builds via `eas build --profile development` are required.
 
 ---
 
-## What NOT to Add
+## V1.0 What NOT to Add
 
 | Library | Reason to Avoid |
 |---------|----------------|
-| `react-native-camera` | Deprecated; superseded by `expo-camera` (already installed) |
-| `react-native-image-picker` | Superseded by `expo-image-picker` (already installed) |
-| `@react-native-firebase/*` | Entire Firebase suite is overkill for an offline-only app; adds 20+ MB to bundle |
-| `react-native-mmkv` | Excellent storage, but adds native code complexity; AsyncStorage + Zustand persist is sufficient for this data volume |
-| `react-query` / `TanStack Query` | No server/remote data fetching beyond single PlantNet API call; full query library is overkill |
-| `nativewind` / `tailwind-rn` | The app uses StyleSheet.create (established convention); introducing Tailwind mid-project creates a two-style-system problem |
-| `expo-sqlite` | Unnecessary for this data model (flat list of 10-100 plants); AsyncStorage + Zustand is simpler |
-| `@shopify/flash-list` | Only relevant for lists of 100+ items with complex cells; RecyclerListView overhead not worth it at this scale |
+| `react-native-camera` | Deprecated; superseded by `expo-camera` |
+| `react-native-image-picker` | Superseded by `expo-image-picker` |
+| `@react-native-firebase/*` | Overkill for offline-only app |
+| `react-native-mmkv` | Adds native code complexity; AsyncStorage sufficient |
+| `react-query` / `TanStack Query` | No server/remote data fetching beyond PlantNet |
+| `nativewind` / `tailwind-rn` | Two-style-system problem |
+| `expo-sqlite` | Unnecessary for flat data model |
+| `@shopify/flash-list` | Only for 100+ item lists with complex cells |
 
 ---
 
@@ -342,32 +558,34 @@ Any library with native code (expo-notifications, react-native-google-mobile-ads
 
 | Tool | Version | Purpose |
 |------|---------|---------|
-| EAS Build | Latest | Native binary builds for App Store / Google Play |
-| EAS Submit | Latest | Automated store submission |
-| Expo Go | Latest | Development testing (before adding native modules) |
-| Development Build | EAS profile | Testing with native modules (post Phase 1) |
+| EAS Build | Latest | Native binary builds |
+| EAS Submit | Latest | Store submission |
+| Expo Go | Latest | Dev testing (before native modules) |
+| Development Build | EAS profile | Testing with native modules |
 
-**Build command for development:**
+**Build development:**
 ```bash
 eas build --profile development --platform all
 ```
 
-**Build command for production:**
+**Build production:**
 ```bash
 eas build --profile production --platform all
 ```
 
 ---
 
-## Sources
+## Combined Sources
 
 - Installed versions: `/package.json` (verified)
 - App config: `/app.json` (verified)
 - Architecture doc: `/.planning/codebase/ARCHITECTURE.md` (verified)
-- expo-notifications: https://docs.expo.dev/versions/latest/sdk/notifications/ (HIGH confidence, Expo official)
-- expo-image: https://docs.expo.dev/versions/latest/sdk/image/ (HIGH confidence, Expo official)
-- expo-in-app-purchases archival: https://github.com/expo/expo/tree/main/packages/expo-in-app-purchases (MEDIUM — training data, verify current status)
-- react-native-google-mobile-ads: https://docs.page/invertase/react-native-google-mobile-ads (MEDIUM — verify SDK 54 compatibility)
-- Zustand: https://zustand-demo.pmnd.rs/ (HIGH — stable v4 library)
-- date-fns v3: https://date-fns.org/ (HIGH — stable, current major version)
-- New Architecture library compatibility: https://reactnative.directory/ (MEDIUM — check before adding any unlisted library)
+- expo-notifications: https://docs.expo.dev/versions/latest/sdk/notifications/
+- expo-image: https://docs.expo.dev/versions/latest/sdk/image/
+- expo-file-system: https://docs.expo.dev/versions/latest/sdk/filesystem/
+- react-native-tab-view: https://github.com/satya164/react-native-tab-view
+- react-native-image-zoom-viewer: https://github.com/ascott0742/react-native-image-zoom-viewer
+- react-native-google-mobile-ads: https://docs.page/invertase/react-native-google-mobile-ads
+- Zustand: https://zustand-demo.pmnd.rs/
+- RevenueCat: https://www.revenuecat.com/
+- New Architecture compatibility: https://reactnative.directory/
