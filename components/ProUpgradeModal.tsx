@@ -40,15 +40,16 @@ export function ProUpgradeModal({
     if (result.success) {
       onClose();
     } else if (result.error) {
-      // Show appropriate error message
-      if (result.error === 'user_cancelled') {
+      // Show appropriate error message based on error type
+      if (result.error.type === 'user_cancelled') {
         // User cancelled — don't show error, just close modal
         return;
-      } else if (result.error === 'network_error') {
+      } else if (result.error.type === 'network_error') {
         setErrorMessage(t('pro.restoreError'));
-      } else if (result.error === 'purchase_failed') {
+      } else if (result.error.type === 'product_not_available') {
         setErrorMessage(t('pro.purchaseError'));
       } else {
+        // verification_failed or unknown
         setErrorMessage(t('pro.purchaseError'));
       }
     }
