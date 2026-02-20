@@ -56,6 +56,7 @@ Progress: [██████████] 100% (5/5 plans)
 | Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
 | Phase 03 P01 | 300 | 5 tasks | 7 files |
 | Phase 03 P03 | 240 | 5 tasks | 6 files |
+| Phase 03-monetization P04 | 376 | 4 tasks | 7 files |
 
 ## Accumulated Context
 
