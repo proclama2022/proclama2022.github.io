@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/Themed';
 import Onboarding from '@/components/Onboarding';
 import PlantGrid from '@/components/PlantGrid';
+import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
@@ -24,46 +25,52 @@ export default function HomeScreen() {
   // Empty state
   if (plants.length === 0) {
     return (
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.emptyContainer}>
-          <Ionicons name="leaf-outline" size={72} color="#c8e6c9" />
-          <Text style={styles.emptyTitle}>{t('collection.empty')}</Text>
-          <Text style={styles.emptyCTA}>{t('collection.emptyCTA')}</Text>
-          <TouchableOpacity
-            style={styles.cameraButton}
-            onPress={() => router.push('/camera' as const)}
-            activeOpacity={0.85}
-            accessibilityRole="button"
-            accessibilityLabel={t('camera.title')}
-          >
-            <Ionicons name="camera" size={22} color="#fff" />
-            <Text style={styles.cameraButtonText}>{t('camera.title')}</Text>
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.emptyContainer}>
+            <Ionicons name="leaf-outline" size={72} color="#c8e6c9" />
+            <Text style={styles.emptyTitle}>{t('collection.empty')}</Text>
+            <Text style={styles.emptyCTA}>{t('collection.emptyCTA')}</Text>
+            <TouchableOpacity
+              style={styles.cameraButton}
+              onPress={() => router.push('/camera' as const)}
+              activeOpacity={0.85}
+              accessibilityRole="button"
+              accessibilityLabel={t('camera.title')}
+            >
+              <Ionicons name="camera" size={22} color="#fff" />
+              <Text style={styles.cameraButtonText}>{t('camera.title')}</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+        <BannerAdWrapper />
+      </>
     );
   }
 
   // Collection view with FAB
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.titleBar}>
-        <Text style={styles.screenTitle}>{t('collection.title')}</Text>
-      </View>
+    <>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.titleBar}>
+          <Text style={styles.screenTitle}>{t('collection.title')}</Text>
+        </View>
 
-      <PlantGrid plants={plants} />
+        <PlantGrid plants={plants} />
 
-      {/* Camera FAB */}
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push('/camera' as const)}
-        activeOpacity={0.85}
-        accessibilityRole="button"
-        accessibilityLabel={t('camera.title')}
-      >
-        <Ionicons name="camera" size={26} color="#fff" />
-      </TouchableOpacity>
-    </SafeAreaView>
+        {/* Camera FAB */}
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => router.push('/camera' as const)}
+          activeOpacity={0.85}
+          accessibilityRole="button"
+          accessibilityLabel={t('camera.title')}
+        >
+          <Ionicons name="camera" size={26} color="#fff" />
+        </TouchableOpacity>
+      </SafeAreaView>
+      <BannerAdWrapper />
+    </>
   );
 }
 

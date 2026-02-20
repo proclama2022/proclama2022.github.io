@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Modal, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Modal, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
