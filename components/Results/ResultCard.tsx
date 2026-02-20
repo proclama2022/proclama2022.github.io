@@ -11,8 +11,10 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 
+import * as ExpoCrypto from 'expo-crypto';
 import { Text } from '@/components/Themed';
 import { PlantNetResult, SavedPlant } from '@/types';
+import { extractName } from '@/services/plantnet';
 import { getCareInfo } from '@/services/careDB';
 import { usePlantsStore } from '@/stores/plantsStore';
 
@@ -74,7 +76,8 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
     images?.[0]?.url ?? imageUri;
 
   // Care info lookup
-  const careInfo = getCareInfo(species.scientificName);
+  const scientificNameStr = extractName(species.scientificName);
+  const careInfo = getCareInfo(scientificNameStr);
   const lang = i18n.language === 'it' ? 'it' : 'en';
   const careTip = careInfo?.tips?.[lang as 'it' | 'en'] ?? null;
 
@@ -83,16 +86,22 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
     if (added) return;
 
     const plant: SavedPlant = {
-      id: crypto.randomUUID(),
-      species: species.scientificName,
-      scientificName: species.scientificName,
+      id: ExpoCrypto.randomUUID(),
+      species: scientificNameStr,
+      scientificName: scientificNameStr,
       commonName: species.commonNames?.[0],
       photo: imageUri,
       addedDate: new Date().toISOString(),
       waterHistory: [],
     };
 
-    addPlant(plant);
+    const success = addPlant(plant);
+    if (!success) {
+      // Collection full - do not set added state
+      // Upgrade modal will be shown by parent component
+      return;
+    }
+
     setAdded(true);
 
     if (onAddToCollection) {
@@ -124,7 +133,7 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
       {/* Card body */}
       <View style={styles.body}>
         {/* Scientific name */}
-        <Text style={styles.scientificName}>{species.scientificName}</Text>
+        <Text style={styles.scientificName}>{extractName(species.scientificName)}</Text>
 
         {/* Common names */}
         {species.commonNames?.length > 0 && (
@@ -134,7 +143,7 @@ export function ResultCard({ result, imageUri, onAddToCollection, width }: Resul
         )}
 
         {/* Family */}
-        <Text style={styles.family}>{species.family}</Text>
+        <Text style={styles.family}>{extractName(species.family)}</Text>
 
         {/* Confidence bar */}
         <ConfidenceBar score={score} />
