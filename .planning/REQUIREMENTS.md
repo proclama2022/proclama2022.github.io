@@ -55,8 +55,8 @@ Sono i requisiti di MVP che devono essere contenuti nella prima release. Ogni re
 
 - [ ] **AD-01**: AdMob banner ad displayed at bottom of Home screen
 - [ ] **AD-02**: Ad-free experience requires Pro unlock (€4.99 one-time in-app purchase)
-- [ ] **AD-03**: Pro status persists across reinstalls (tracked locally + via StoreKit)
-- [ ] **PRO-01**: Pro unlock removes ads from all screens
+- [x] **AD-03**: Pro status persists across reinstalls (tracked locally + via StoreKit)
+- [x] **PRO-01**: Pro unlock removes ads from all screens
 - [ ] **PRO-02**: Pro unlock increases daily limits: 5 → 15 scans/day
 - [ ] **PRO-03**: Pro unlock removes "save to collection" limit (free: 10 plants, Pro: unlimited)
 
@@ -154,8 +154,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RATE-05 | Phase 1 | Complete |
 | AD-01 | Phase 3 | Pending |
 | AD-02 | Phase 3 | Pending |
-| AD-03 | Phase 3 | Pending |
-| PRO-01 | Phase 3 | Pending |
+| AD-03 | Phase 3 | Complete |
+| PRO-01 | Phase 3 | Complete |
 | PRO-02 | Phase 3 | Pending |
 | PRO-03 | Phase 3 | Pending |
 | I18N-01 | Phase 1 | Complete |

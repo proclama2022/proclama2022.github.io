@@ -50,6 +50,7 @@ Progress: [██████████] 100% (3/3 plans)
 | Phase 01-foundation-and-core-loop P09 | 119 | 1 tasks | 3 files |
 | Phase 02 P01 | 212 | 4 tasks | 7 files |
 | Phase 02-care-features-and-notifications P02-02 | 503 | 6 tasks | 10 files |
+| Phase 03 P01 | 300 | 5 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,9 @@ Recent decisions affecting current work:
 - [Phase 02-03]: Fixed notification identifier 'daily-watering-digest' for reliable cancellation and rescheduling
 - [Phase 02-03]: Return early from scheduleDailyDigest if no plants due (don't show empty notifications)
 - [Phase 02-03]: Truncate plant list at 3 items: "Monstera, Ficus, and 2 more..." to avoid notification overflow
+- [Phase 03]: RevenueCat package purchases over direct product purchases for better offerings management
+- [Phase 03]: Default import for Purchases class per react-native-purchases v9 API
+- [Phase 03]: Cached Pro status fallback when RevenueCat unavailable ensures app works offline
 
 ### Pending Todos
 
