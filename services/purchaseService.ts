@@ -1,4 +1,4 @@
-import { Purchases } from 'react-native-purchases';
+import Purchases from 'react-native-purchases';
 import { useProStore } from '@/stores/proStore';
 import { PurchaseError } from '@/types';
 
