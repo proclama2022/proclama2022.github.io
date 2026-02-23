@@ -54,7 +54,43 @@
     "temperature": "Temperatura",
     "soil": "Terreno",
     "difficulty": "Difficoltà",
-    "toxicPets": "Tossica per Animali"
+    "toxicPets": "Tossica per Animali",
+    "tabs": {
+      "info": "Info",
+      "care": "Cura",
+      "history": "Cronologia",
+      "notes": "Note"
+    },
+    "care": {
+      "watering": "Annaffiatura",
+      "light": "Luce",
+      "temperature": "Temperatura",
+      "seasonalTemps": "Temperature Stagionali",
+      "fertilization": "Fertilizzazione",
+      "pruning": "Potatura",
+      "pests": "Parassiti e Rimedi",
+      "notAvailable": "Non disponibile per questa specie",
+      "tapToExpand": "Tocca per il rimedio",
+      "spring": "Primavera",
+      "summer": "Estate",
+      "autumn": "Autunno",
+      "winter": "Inverno",
+      "tempRange": "{{min}}–{{max}}°C"
+    },
+    "notes": {
+      "placeholder": "Aggiungi note su questa pianta...",
+      "saved": "Salvato ✓",
+      "charsRemaining": "{{count}} rimanenti",
+      "purchaseDate": "Data d'Acquisto",
+      "purchasePrice": "Prezzo",
+      "purchaseOrigin": "Luogo d'Acquisto",
+      "giftFrom": "Regalo da",
+      "metadataSection": "Dettagli Aggiuntivi"
+    },
+    "history": {
+      "comingSoon": "Cronologia in arrivo",
+      "comingSoonDetail": "La cronologia dell'annaffiatura e il monitoraggio della crescita appariranno qui."
+    }
   },
   "settings": {
     "title": "Impostazioni",

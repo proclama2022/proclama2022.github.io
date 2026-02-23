@@ -54,7 +54,43 @@
     "temperature": "Temperature",
     "soil": "Soil",
     "difficulty": "Difficulty",
-    "toxicPets": "Toxic to Pets"
+    "toxicPets": "Toxic to Pets",
+    "tabs": {
+      "info": "Info",
+      "care": "Care",
+      "history": "History",
+      "notes": "Notes"
+    },
+    "care": {
+      "watering": "Watering",
+      "light": "Light",
+      "temperature": "Temperature",
+      "seasonalTemps": "Seasonal Temperatures",
+      "fertilization": "Fertilization",
+      "pruning": "Pruning",
+      "pests": "Pests & Remedies",
+      "notAvailable": "Not available for this species",
+      "tapToExpand": "Tap for remedy",
+      "spring": "Spring",
+      "summer": "Summer",
+      "autumn": "Autumn",
+      "winter": "Winter",
+      "tempRange": "{{min}}–{{max}}°C"
+    },
+    "notes": {
+      "placeholder": "Add notes about this plant...",
+      "saved": "Saved ✓",
+      "charsRemaining": "{{count}} remaining",
+      "purchaseDate": "Purchase Date",
+      "purchasePrice": "Price",
+      "purchaseOrigin": "Where Purchased",
+      "giftFrom": "Gift From",
+      "metadataSection": "Additional Details"
+    },
+    "history": {
+      "comingSoon": "History coming soon",
+      "comingSoonDetail": "Watering history and growth tracking will appear here."
+    }
   },
   "settings": {
     "title": "Settings",
