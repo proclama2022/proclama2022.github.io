@@ -66,6 +66,10 @@ export interface SavedPlant {
   scheduledNotificationId?: string;
   waterHistory: WaterEvent[];
   notes?: string;
+  purchaseDate?: string;    // ISO date string or free text, user-entered
+  purchasePrice?: string;   // Free text (e.g. "€12.50")
+  purchaseOrigin?: string;  // Free text (e.g. "IKEA Milano")
+  giftFrom?: string;        // Free text (e.g. "Grandma")
 }
 
 export interface WaterEvent {
@@ -90,6 +94,32 @@ export interface PlantCareInfo {
     en: string;
   };
   aliases?: string[];
+  seasonalTemps?: SeasonalTemp[];
+  fertilization?: FertilizationInfo;
+  pruning?: PruningInfo;
+  pests?: PestEntry[];
+}
+
+export interface SeasonalTemp {
+  season: 'spring' | 'summer' | 'autumn' | 'winter';
+  minTemp: number; // Celsius
+  maxTemp: number; // Celsius
+}
+
+export interface FertilizationInfo {
+  schedule: { it: string; en: string }; // e.g. "Every 2 weeks in spring/summer"
+  type: { it: string; en: string };      // e.g. "Balanced liquid fertilizer"
+}
+
+export interface PruningInfo {
+  when: { it: string; en: string };
+  how: { it: string; en: string };
+}
+
+export interface PestEntry {
+  name: { it: string; en: string };
+  description: { it: string; en: string }; // Brief visible description
+  remedy: { it: string; en: string };       // Revealed on expand
 }
 
 export interface CacheEntry {
