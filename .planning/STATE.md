@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-20)
 ## Current Position
 
 Phase: 4 of 6 (Tabbed Layout and Content Reorganization)
-Plan: 2 of 5 complete
+Plan: 3 of 5 complete
 Status: In progress — Phase 4 underway
-Last activity: 2026-02-23 — Completed 04-02 (tab host screen, InfoTab, HistoryTab)
+Last activity: 2026-02-23 — Completed 04-03 (CareTab with 6 sections, extended Monstera careDB)
 
-Progress: [████████████░░░░░░░░] 56% (20/36 plans complete)
+Progress: [████████████░░░░░░░░] 58% (21/36 plans complete)
 
 ## Performance Metrics
 
@@ -30,7 +30,7 @@ Progress: [████████████░░░░░░░░] 56% (20
 | 01 | 11 | 1575s | 143s |
 | 02 | 3 | 902s | 301s |
 | 03 | 5 | 4640s | 928s |
-| 04 | 2 | 206s | 103s |
+| 04 | 3 | 310s | 103s |
 | 05 | 0 | 0s | - |
 | 06 | 0 | 0s | - |
 
@@ -57,6 +57,10 @@ Recent decisions affecting current work:
 - [04-02]: NavigationIndependentTree IS available in @react-navigation/native@7.1.x via @react-navigation/core re-export
 - [04-02]: useLocalSearchParams resolves correctly inside NavigationIndependentTree (expo-router uses its own React context)
 - [04-02]: plantId also passed via Tab.Screen initialParams as defensive fallback for future expo-router changes
+- [04-03]: CareSection always renders heading even when hasData=false — satisfies CARE-05 locked decision
+- [04-03]: Seasonal temps nested inside Temperature section under sub-label — avoids creating a 7th section
+- [04-03]: Pest remedy revealed in green card on tap — uses same F1F8E9 card pattern as CareInfo tip box
+- [04-03]: bilingual plant-specific text uses { it, en } object direct access, not extra i18n keys
 
 ### Pending Todos
 
@@ -72,5 +76,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 04-02-PLAN.md (tab host screen, InfoTab, HistoryTab)
+Stopped at: Completed 04-03-PLAN.md (CareTab with 6 sections, extended Monstera careDB)
 Resume file: None

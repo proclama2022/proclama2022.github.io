@@ -32,12 +32,12 @@
   3. User reads and writes expanded notes (up to 1000 characters) in dedicated Notes tab with auto-save on blur
   4. User adds optional custom metadata (purchase date, price, origin, gift from) that persists in Notes tab
   5. Only active tab content is rendered (lazy loading) to maintain smooth performance
-**Plans**: 4 plans
+**Plans**: 5 plans
 
 Plans:
 - [x] 04-01-PLAN.md — Install dependencies, extend TypeScript types, add i18n keys
-- [ ] 04-02-PLAN.md — Refactor [id].tsx into tab host, create InfoTab and HistoryTab
-- [ ] 04-03-PLAN.md — Build CareTab with extended care sections, extend careDB
+- [x] 04-02-PLAN.md — Refactor [id].tsx into tab host, create InfoTab and HistoryTab
+- [x] 04-03-PLAN.md — Build CareTab with extended care sections, extend careDB
 - [ ] 04-04-PLAN.md — Build NotesTab with auto-save, char counter, metadata fields
 
 #### Phase 5: Multi-Photo Gallery
