@@ -20,6 +20,7 @@ import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { InfoTab } from '@/components/Detail/InfoTab';
 import { HistoryTab } from '@/components/Detail/HistoryTab';
+import { CareTab } from '@/components/Detail/CareTab';
 
 // ---------------------------------------------------------------------------
 // Tab navigator
@@ -30,10 +31,6 @@ const Tab = createMaterialTopTabNavigator();
 // ---------------------------------------------------------------------------
 // Temporary stub components (replaced in Plans 03 and 04)
 // ---------------------------------------------------------------------------
-
-function CareTabPlaceholder() {
-  return <View style={{ flex: 1, backgroundColor: '#f5f5f5' }} />;
-}
 
 function NotesTabPlaceholder() {
   return <View style={{ flex: 1, backgroundColor: '#f5f5f5' }} />;
@@ -179,8 +176,9 @@ export default function PlantDetailScreen() {
               />
               <Tab.Screen
                 name="Care"
-                component={CareTabPlaceholder}
+                component={CareTab}
                 options={{ title: t('detail.tabs.care') }}
+                initialParams={{ plantId: plant.id }}
               />
               <Tab.Screen
                 name="History"

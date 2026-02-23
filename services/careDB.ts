@@ -18,6 +18,56 @@ export const CARE_DATA: PlantCareInfo[] = [
       en: 'Water when the top inch of soil is dry. Mist leaves to increase humidity. Wipe leaves with a damp cloth to keep them glossy.',
     },
     aliases: ['Monstera', 'Split-leaf philodendron'],
+    seasonalTemps: [
+      { season: 'spring', minTemp: 15, maxTemp: 22 },
+      { season: 'summer', minTemp: 20, maxTemp: 28 },
+      { season: 'autumn', minTemp: 15, maxTemp: 22 },
+      { season: 'winter', minTemp: 12, maxTemp: 18 },
+    ],
+    fertilization: {
+      schedule: {
+        it: 'Ogni 2 settimane in primavera e estate, sospendere in autunno e inverno.',
+        en: 'Every 2 weeks in spring and summer, pause in autumn and winter.',
+      },
+      type: {
+        it: 'Fertilizzante liquido bilanciato diluito a metà dose.',
+        en: 'Balanced liquid fertilizer diluted to half strength.',
+      },
+    },
+    pruning: {
+      when: {
+        it: 'Primavera o inizio estate, quando la pianta è in fase di crescita attiva.',
+        en: 'Spring or early summer, when the plant is actively growing.',
+      },
+      how: {
+        it: 'Rimuovere le foglie gialle o danneggiate alla base del picciolo con forbici pulite.',
+        en: 'Remove yellowed or damaged leaves at the base of the petiole with clean scissors.',
+      },
+    },
+    pests: [
+      {
+        name: { it: 'Ragnetto rosso', en: 'Spider Mite' },
+        description: {
+          it: 'Piccoli punti gialli sulle foglie, ragnatele sottili sul retro.',
+          en: 'Tiny yellow spots on leaves, fine webbing on leaf undersides.',
+        },
+        remedy: {
+          it: 'Aumentare l\'umidità. Trattare con sapone insetticida o neem oil diluito, coprendo bene il retro delle foglie.',
+          en: 'Increase humidity. Treat with insecticidal soap or diluted neem oil, covering leaf undersides well.',
+        },
+      },
+      {
+        name: { it: 'Cocciniglia', en: 'Mealybug' },
+        description: {
+          it: 'Masse cotonose bianche nelle ascelle delle foglie o lungo i gambi.',
+          en: 'White cottony masses in leaf axils or along stems.',
+        },
+        remedy: {
+          it: 'Rimuovere manualmente con un cotton fioc imbevuto di alcool isopropilico. Trattare poi con neem oil.',
+          en: 'Remove manually with an isopropyl alcohol-soaked cotton swab. Follow up with neem oil treatment.',
+        },
+      },
+    ],
   },
   {
     id: 'ficus-lyrata',
