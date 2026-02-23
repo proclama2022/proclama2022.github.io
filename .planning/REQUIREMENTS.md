@@ -7,11 +7,11 @@
 
 ### Tabbed Layout
 
-- [ ] **TAB-01**: User sees tabbed navigation at top of plant detail screen with 4 tabs (Info | Care | History | Notes)
-- [ ] **TAB-02**: User can swipe horizontally to switch between tabs
-- [ ] **TAB-03**: User can tap tab labels to switch between tabs
-- [ ] **TAB-04**: Tab state persists while viewing same plant (returns to last active tab)
-- [ ] **TAB-05**: Only active tab content is rendered (lazy loading for performance)
+- [x] **TAB-01**: User sees tabbed navigation at top of plant detail screen with 4 tabs (Info | Care | History | Notes)
+- [x] **TAB-02**: User can swipe horizontally to switch between tabs
+- [x] **TAB-03**: User can tap tab labels to switch between tabs
+- [x] **TAB-04**: Tab state persists while viewing same plant (returns to last active tab)
+- [x] **TAB-05**: Only active tab content is rendered (lazy loading for performance)
 
 ### Multi-Photo Gallery
 
@@ -26,22 +26,22 @@
 
 ### Extended Care Information
 
-- [ ] **CARE-01**: User sees seasonal temperature range (min/max per season) in Care tab
-- [ ] **CARE-02**: User sees fertilization schedule (when, type, frequency) in Care tab
-- [ ] **CARE-03**: User sees pruning instructions (when, how) in Care tab
-- [ ] **CARE-04**: User sees common pests and remedies in Care tab
-- [ ] **CARE-05**: User sees "Info not available" fallback when extended care data missing
-- [ ] **CARE-06**: Extended care data displays in bilingual IT/EN
+- [x] **CARE-01**: User sees seasonal temperature range (min/max per season) in Care tab
+- [x] **CARE-02**: User sees fertilization schedule (when, type, frequency) in Care tab
+- [x] **CARE-03**: User sees pruning instructions (when, how) in Care tab
+- [x] **CARE-04**: User sees common pests and remedies in Care tab
+- [x] **CARE-05**: User sees "Info not available" fallback when extended care data missing
+- [x] **CARE-06**: Extended care data displays in bilingual IT/EN
 
 ### Advanced Notes
 
-- [ ] **NOTE-01**: User can write expanded notes (multi-line textarea, 1000 char limit)
-- [ ] **NOTE-02**: User sees notes field in dedicated Notes tab
-- [ ] **NOTE-03**: Notes auto-save on blur (no explicit save button)
-- [ ] **NOTE-04**: User can add custom metadata: purchase date (optional)
-- [ ] **NOTE-05**: User can add custom metadata: purchase price (optional)
-- [ ] **NOTE-06**: User can add custom metadata: origin/location purchased (optional)
-- [ ] **NOTE-07**: User can add custom metadata: gift from (optional text field)
+- [x] **NOTE-01**: User can write expanded notes (multi-line textarea, 1000 char limit)
+- [x] **NOTE-02**: User sees notes field in dedicated Notes tab
+- [x] **NOTE-03**: Notes auto-save on blur (no explicit save button)
+- [x] **NOTE-04**: User can add custom metadata: purchase date (optional)
+- [x] **NOTE-05**: User can add custom metadata: purchase price (optional)
+- [x] **NOTE-06**: User can add custom metadata: origin/location purchased (optional)
+- [x] **NOTE-07**: User can add custom metadata: gift from (optional text field)
 
 ### Custom Reminders
 
@@ -91,11 +91,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TAB-01 | Phase 4 | Pending |
-| TAB-02 | Phase 4 | Pending |
-| TAB-03 | Phase 4 | Pending |
-| TAB-04 | Phase 4 | Pending |
-| TAB-05 | Phase 4 | Pending |
+| TAB-01 | Phase 4 | Complete |
+| TAB-02 | Phase 4 | Complete |
+| TAB-03 | Phase 4 | Complete |
+| TAB-04 | Phase 4 | Complete |
+| TAB-05 | Phase 4 | Complete |
 | PHOTO-01 | Phase 5 | Pending |
 | PHOTO-02 | Phase 5 | Pending |
 | PHOTO-03 | Phase 5 | Pending |
@@ -104,19 +104,19 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PHOTO-06 | Phase 5 | Pending |
 | PHOTO-07 | Phase 5 | Pending |
 | PHOTO-08 | Phase 5 | Pending |
-| CARE-01 | Phase 4 | Pending |
-| CARE-02 | Phase 4 | Pending |
-| CARE-03 | Phase 4 | Pending |
-| CARE-04 | Phase 4 | Pending |
-| CARE-05 | Phase 4 | Pending |
-| CARE-06 | Phase 4 | Pending |
-| NOTE-01 | Phase 4 | Pending |
-| NOTE-02 | Phase 4 | Pending |
-| NOTE-03 | Phase 4 | Pending |
-| NOTE-04 | Phase 4 | Pending |
-| NOTE-05 | Phase 4 | Pending |
-| NOTE-06 | Phase 4 | Pending |
-| NOTE-07 | Phase 4 | Pending |
+| CARE-01 | Phase 4 | Complete |
+| CARE-02 | Phase 4 | Complete |
+| CARE-03 | Phase 4 | Complete |
+| CARE-04 | Phase 4 | Complete |
+| CARE-05 | Phase 4 | Complete |
+| CARE-06 | Phase 4 | Complete |
+| NOTE-01 | Phase 4 | Complete |
+| NOTE-02 | Phase 4 | Complete |
+| NOTE-03 | Phase 4 | Complete |
+| NOTE-04 | Phase 4 | Complete |
+| NOTE-05 | Phase 4 | Complete |
+| NOTE-06 | Phase 4 | Complete |
+| NOTE-07 | Phase 4 | Complete |
 | REMIND-01 | Phase 6 | Pending |
 | REMIND-02 | Phase 6 | Pending |
 | REMIND-03 | Phase 6 | Pending |
