@@ -21,20 +21,13 @@ import { usePlantsStore } from '@/stores/plantsStore';
 import { InfoTab } from '@/components/Detail/InfoTab';
 import { HistoryTab } from '@/components/Detail/HistoryTab';
 import { CareTab } from '@/components/Detail/CareTab';
+import { NotesTab } from '@/components/Detail/NotesTab';
 
 // ---------------------------------------------------------------------------
 // Tab navigator
 // ---------------------------------------------------------------------------
 
 const Tab = createMaterialTopTabNavigator();
-
-// ---------------------------------------------------------------------------
-// Temporary stub components (replaced in Plans 03 and 04)
-// ---------------------------------------------------------------------------
-
-function NotesTabPlaceholder() {
-  return <View style={{ flex: 1, backgroundColor: '#f5f5f5' }} />;
-}
 
 // ---------------------------------------------------------------------------
 // Plant Detail Screen
@@ -187,8 +180,9 @@ export default function PlantDetailScreen() {
               />
               <Tab.Screen
                 name="Notes"
-                component={NotesTabPlaceholder}
+                component={NotesTab}
                 options={{ title: t('detail.tabs.notes') }}
+                initialParams={{ plantId: plant.id }}
               />
             </Tab.Navigator>
           </NavigationContainer>
