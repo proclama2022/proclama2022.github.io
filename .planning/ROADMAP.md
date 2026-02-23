@@ -38,7 +38,7 @@ Plans:
 - [x] 04-01-PLAN.md — Install dependencies, extend TypeScript types, add i18n keys
 - [x] 04-02-PLAN.md — Refactor [id].tsx into tab host, create InfoTab and HistoryTab
 - [x] 04-03-PLAN.md — Build CareTab with extended care sections, extend careDB
-- [ ] 04-04-PLAN.md — Build NotesTab with auto-save, char counter, metadata fields
+- [x] 04-04-PLAN.md — Build NotesTab with auto-save, char counter, metadata fields
 
 #### Phase 5: Multi-Photo Gallery
 **Goal**: Enable users to track plant growth over time with multiple photos per plant and full-screen lightbox viewing
@@ -96,6 +96,6 @@ Phases execute in numeric order: 4 → 5 → 6
 | 1. Foundation and Core Loop | v1.0 | 11/11 | Complete | 2026-02-19 |
 | 2. Care Features and Notifications | v1.0 | 3/3 | Complete | 2026-02-20 |
 | 3. Monetization | v1.0 | 5/5 | Complete | 2026-02-20 |
-| 4. Tabbed Layout and Content Reorganization | 2/4 | In Progress|  | - |
+| 4. Tabbed Layout and Content Reorganization | v1.1 | 4/5 | In Progress | - |
 | 5. Multi-Photo Gallery | v1.1 | 0/3 | Not started | - |
 | 6. Custom Reminders | v1.1 | 0/3 | Not started | - |

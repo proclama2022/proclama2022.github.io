@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-20)
 ## Current Position
 
 Phase: 4 of 6 (Tabbed Layout and Content Reorganization)
-Plan: 3 of 5 complete
+Plan: 4 of 5 complete
 Status: In progress — Phase 4 underway
-Last activity: 2026-02-23 — Completed 04-03 (CareTab with 6 sections, extended Monstera careDB)
+Last activity: 2026-02-23 — Completed 04-04 (NotesTab with auto-save, char counter, 4 metadata fields — Phase 4 human-verified)
 
-Progress: [████████████░░░░░░░░] 58% (21/36 plans complete)
+Progress: [█████████████░░░░░░░] 61% (22/36 plans complete)
 
 ## Performance Metrics
 
@@ -30,7 +30,7 @@ Progress: [████████████░░░░░░░░] 58% (21
 | 01 | 11 | 1575s | 143s |
 | 02 | 3 | 902s | 301s |
 | 03 | 5 | 4640s | 928s |
-| 04 | 3 | 310s | 103s |
+| 04 | 4 | 610s | 153s |
 | 05 | 0 | 0s | - |
 | 06 | 0 | 0s | - |
 
@@ -61,6 +61,9 @@ Recent decisions affecting current work:
 - [04-03]: Seasonal temps nested inside Temperature section under sub-label — avoids creating a 7th section
 - [04-03]: Pest remedy revealed in green card on tap — uses same F1F8E9 card pattern as CareInfo tip box
 - [04-03]: bilingual plant-specific text uses { it, en } object direct access, not extra i18n keys
+- [04-04]: KeyboardAvoidingView placed inside NotesTab wrapping ScrollView only — not around Tab.Navigator (prevents layout breaking other tabs)
+- [04-04]: saveTimeoutRef cleanup on unmount via useEffect — prevents setState warning when user navigates away while Saved flash timer is running
+- [04-04]: showSavedFlash is a shared useCallback used by all 5 save handlers (notes + 4 metadata fields)
 
 ### Pending Todos
 
@@ -76,5 +79,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 04-03-PLAN.md (CareTab with 6 sections, extended Monstera careDB)
+Stopped at: Completed 04-04-PLAN.md (NotesTab with auto-save, char counter, 4 metadata fields — Phase 4 human-verified)
 Resume file: None
