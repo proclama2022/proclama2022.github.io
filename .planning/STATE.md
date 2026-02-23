@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-02-20)
 ## Current Position
 
 Phase: 4 of 6 (Tabbed Layout and Content Reorganization)
-Plan: 1 of 5 complete
+Plan: 2 of 5 complete
 Status: In progress — Phase 4 underway
-Last activity: 2026-02-23 — Completed 04-01 (dependencies, types, i18n foundation)
+Last activity: 2026-02-23 — Completed 04-02 (tab host screen, InfoTab, HistoryTab)
 
-Progress: [███████████░░░░░░░░░] 53% (19/36 plans complete)
+Progress: [████████████░░░░░░░░] 56% (20/36 plans complete)
 
 ## Performance Metrics
 
@@ -30,7 +30,7 @@ Progress: [███████████░░░░░░░░░] 53% (19
 | 01 | 11 | 1575s | 143s |
 | 02 | 3 | 902s | 301s |
 | 03 | 5 | 4640s | 928s |
-| 04 | 1 | 92s | 92s |
+| 04 | 2 | 206s | 103s |
 | 05 | 0 | 0s | - |
 | 06 | 0 | 0s | - |
 
@@ -54,6 +54,9 @@ Recent decisions affecting current work:
 - [04-01]: Used expo install for react-native-pager-view to ensure SDK 54 version compatibility (6.9.1)
 - [04-01]: All new PlantCareInfo and SavedPlant fields are optional — zero migration needed for existing AsyncStorage data
 - [04-01]: PestEntry uses bilingual { it, en } objects, matching existing tips field pattern in PlantCareInfo
+- [04-02]: NavigationIndependentTree IS available in @react-navigation/native@7.1.x via @react-navigation/core re-export
+- [04-02]: useLocalSearchParams resolves correctly inside NavigationIndependentTree (expo-router uses its own React context)
+- [04-02]: plantId also passed via Tab.Screen initialParams as defensive fallback for future expo-router changes
 
 ### Pending Todos
 
@@ -69,5 +72,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 04-01-PLAN.md (tab navigation packages, extended types, i18n keys)
+Stopped at: Completed 04-02-PLAN.md (tab host screen, InfoTab, HistoryTab)
 Resume file: None
