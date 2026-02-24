@@ -2,9 +2,10 @@
 
 ## What This Is
 
-Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni sulla cura, e invia notifiche per l'annaffiatura. Completamente gratuita per l'utente finale con monetizzazione via ads non invasivi e unlock Pro opzionale (€4,99 una tantum).
+Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni dettagliate sulla cura (incluse temperature stagionali, fertilizzazione, potatura, parassiti), e invia notifiche per l'annaffiatura. Completamente gratuita con monetizzazione via ads e unlock Pro opzionale (€4,99 una tantum). Plant detail screen con layout a tab (Info | Care | History | Notes) e note personali con auto-save.
 
-**Now shipping v1.0 MVP** — Complete identification workflow, watering reminders, Pro monetization.
+**Shipped v1.1 Enhanced Plant Detail** — Tabbed layout, extended care info, notes with metadata.
+**Next:** Multi-photo gallery + custom reminders (v1.2).
 
 ## Core Value
 
@@ -36,9 +37,23 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Dettagli pianta: cura, storico annaffiature, prossima data, note — v1.0
 - ✓ Impostazioni: lingua, orario notifiche, statistiche, Pro unlock, info — v1.0
 
+**Plant Detail Enhancement (v1.1):**
+- ✓ Tabbed layout con navigazione orizzontale (Info | Care | History | Notes) — v1.1
+- ✓ Temperature stagionali (min/max per stagione) — v1.1
+- ✓ Info fertilizzazione (quando, tipo, frequenza) — v1.1
+- ✓ Info potatura (quando, come, tecniche) — v1.1
+- ✓ Parassiti comuni (sintomi, rimedi espandibili) — v1.1
+- ✓ Campo note espanso (1000 char, auto-save, flash conferma) — v1.1
+- ✓ Metadati personalizzati (data acquisto, prezzo, origine, regalo) — v1.1
+
 ### Active
 
-(No active requirements — plan next milestone with `/gsd:new-milestone`)
+**Multi-Photo & Reminders (v1.2 — deferred from v1.1):**
+- [ ] Multi-foto galleria per pianta con upload, thumbnail grid, lightbox
+- [ ] Set foto principale, elimina foto con conferma
+- [ ] Migrazione automatica da singola foto a array multi-foto
+- [ ] Reminder custom (rinvaso, fertilizzazione, potatura, custom) con notifica push
+- [ ] Lista reminder attivi/completati in tab History
 
 ### Out of Scope
 
@@ -62,13 +77,14 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - RevenueCat for IAP
 - react-native-google-mobile-ads for AdMob
 
-**Codebase Stato (v1.0):**
-- 8,988 lines TypeScript/TSX
-- 19 plans executed across 3 phases
-- 5 main screens: Home, Camera, Results, Plant Detail, Settings
+**Codebase Stato (v1.1):**
+- ~9,836 lines TypeScript/TSX (+848 from v1.0)
+- 23 plans executed across 4 phases (phases 1–4)
+- 5 main screens + 4 Detail tab components (InfoTab, CareTab, HistoryTab, NotesTab)
 - Bilingual (IT/EN) with i18next
-- Services: plantnet, cache, rateLimiter, watering, notification, purchase
-- Stores: plantsStore, settingsStore, proStore
+- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB
+- Stores: plantsStore (extended: purchaseDate/Price/Origin/giftFrom), settingsStore, proStore
+- Tab navigation: MaterialTopTabNavigator inside NavigationIndependentTree (expo-router compat pattern)
 
 **Database Cure Piante:**
 - 100 species with care info (extensible to 500)
@@ -95,7 +111,10 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 | Monetizzazione ads + Pro uno-tanto | Competitive vs subscription (PictureThis/Planta), marketing angle "forever free" | ✓ Working — RevenueCat IAP, AdMob banners |
 | RevenueCat over react-native-iap | react-native-iap deprecated, RevenueCat has official Expo plugin | ✓ Working — Server-side receipt validation |
 | Manual notification opt-in | Less intrusive, better UX than auto-prompting | ✓ Working — Settings toggle, limit-based triggers |
+| NavigationIndependentTree for tab navigator | expo-router uses its own NavigationContainer — nested navigators need isolation to avoid "navigator already registered" error | ✓ Working — `NavigationIndependentTree` from @react-navigation/native wraps MaterialTopTabNavigator in [id].tsx |
+| CareSection always renders heading | Even when PlantNet data is absent, section heading + "Not available" is more honest than hiding the section | ✓ Working — CareSection component renders regardless of data presence |
+| v1.1 shipped as Phase 4 only | Phases 5 (Multi-Photo) and 6 (Custom Reminders) not completed — shipped tabbed layout as standalone release | ⚠️ Deferred — Phases 5+6 move to v1.2 |
 
 ---
 
-*Last updated: 2026-02-20 after v1.0 MVP milestone*
+*Last updated: 2026-02-24 after v1.1 milestone (Phase 4 only — Phases 5+6 deferred to v1.2)*

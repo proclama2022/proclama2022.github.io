@@ -9,3 +9,13 @@
 
 ---
 
+
+## v1.1 Enhanced Plant Detail (Shipped: 2026-02-24)
+
+**Phases completed:** 4 phases, 23 plans, 3 tasks
+
+**Key accomplishments:**
+- (none recorded)
+
+---
+
