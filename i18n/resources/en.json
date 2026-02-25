@@ -90,6 +90,20 @@
     "history": {
       "comingSoon": "History coming soon",
       "comingSoonDetail": "Watering history and growth tracking will appear here."
+    },
+    "gallery": {
+      "title": "Photos",
+      "addPhoto": "Add Photo",
+      "emptyState": "No photos yet",
+      "emptyHint": "Tap + to add your first photo",
+      "setPrimary": "Set as Primary",
+      "deletePhoto": "Delete Photo",
+      "deleteWarning": "This photo will be permanently removed.",
+      "deleteOnlyWarning": "This is the only photo. Deleting it will remove the primary image.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "photoCount": "{count} photo",
+      "photoCount_plural": "{count} photos"
     }
   },
   "settings": {

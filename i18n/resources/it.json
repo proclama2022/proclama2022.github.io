@@ -90,6 +90,20 @@
     "history": {
       "comingSoon": "Cronologia in arrivo",
       "comingSoonDetail": "La cronologia dell'annaffiatura e il monitoraggio della crescita appariranno qui."
+    },
+    "gallery": {
+      "title": "Foto",
+      "addPhoto": "Aggiungi Foto",
+      "emptyState": "Nessuna foto",
+      "emptyHint": "Tocca + per aggiungere la prima foto",
+      "setPrimary": "Imposta come principale",
+      "deletePhoto": "Elimina foto",
+      "deleteWarning": "Questa foto verrà rimossa permanentemente.",
+      "deleteOnlyWarning": "Questa è l'unica foto. L'eliminazione rimuoverà l'immagine principale.",
+      "cancel": "Annulla",
+      "delete": "Elimina",
+      "photoCount": "{count} foto",
+      "photoCount_plural": "{count} foto"
     }
   },
   "settings": {
