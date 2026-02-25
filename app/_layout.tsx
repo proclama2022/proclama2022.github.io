@@ -52,6 +52,15 @@ export default function RootLayout() {
     });
   }, []);
 
+  // Migrate plants from photo to photos array on app startup
+  useEffect(() => {
+    try {
+      usePlantsStore.getState().migrateToPhotos();
+    } catch (err) {
+      console.error('Failed to migrate plants to photos array:', err);
+    }
+  }, []);
+
   // Schedule daily digest at startup if notifications enabled
   useEffect(() => {
     if (!notificationEnabled || plants.length === 0) {
