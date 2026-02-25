@@ -1,6 +1,7 @@
 import { scheduleReminderNotification, cancelReminderNotification } from './notificationService';
 import { Reminder } from '@/types';
 import { usePlantsStore } from '@/stores/plantsStore';
+import { useSettingsStore } from '@/stores/settingsStore';
 import * as Haptics from 'expo-haptics';
 
 /**
@@ -16,7 +17,7 @@ export async function createReminder(
   if (!plant) throw new Error('Plant not found');
 
   // Get notification time from settings
-  const notificationTime = '08:00'; // Will be replaced with settingsStore in actual implementation
+  const notificationTime = useSettingsStore.getState().notificationTime;
 
   // Schedule notification
   const notificationId = await scheduleReminderNotification({
@@ -68,8 +69,10 @@ export async function updateReminder(
     await cancelReminderNotification(reminder.notificationId);
   }
 
+  // Get notification time from settings
+  const notificationTime = useSettingsStore.getState().notificationTime;
+
   // Schedule new notification
-  const notificationTime = '08:00'; // Will be replaced with settingsStore
   const newNotificationId = await scheduleReminderNotification({
     plantId,
     plantName: plant.nickname || plant.commonName || plant.species,
