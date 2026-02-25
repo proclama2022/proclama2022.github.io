@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { SavedPlant } from '@/types';
+import { SavedPlant, Reminder } from '@/types';
 
 // Configure notification handler
 Notifications.setNotificationHandler({
@@ -213,4 +213,105 @@ export async function scheduleDailyDigest(
     trigger,
     identifier: 'daily-watering-digest',
   });
+}
+
+export interface ReminderScheduleInput {
+  plantId: string;
+  plantName: string;
+  reminderType: 'fertilize' | 'repot' | 'prune' | 'custom';
+  customLabel?: string;
+  reminderDate: Date;
+  notificationTime: string; // "HH:mm" format from Settings
+}
+
+/**
+ * Schedule a one-time reminder notification for custom care tasks
+ * @param input - Reminder scheduling parameters
+ * @returns The notification ID for cancellation later
+ */
+export async function scheduleReminderNotification(
+  input: ReminderScheduleInput
+): Promise<string> {
+  const { plantId, plantName, reminderType, customLabel, reminderDate, notificationTime } = input;
+
+  // Parse notification time (e.g., "08:00")
+  const [hourStr, minuteStr] = notificationTime.split(':');
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  // Combine reminder date with notification time
+  const scheduledDate = new Date(reminderDate);
+  scheduledDate.setHours(hour, minute, 0, 0);
+
+  // Don't schedule if date is in the past
+  if (scheduledDate < new Date()) {
+    throw new Error('Cannot schedule reminder in the past');
+  }
+
+  // Platform-specific trigger (one-time, not recurring)
+  let trigger: Notifications.NotificationTriggerInput;
+
+  if (Platform.OS === 'android') {
+    trigger = {
+      type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+      year: scheduledDate.getFullYear(),
+      month: scheduledDate.getMonth() + 1,
+      day: scheduledDate.getDate(),
+      hour,
+      minute,
+    };
+  } else {
+    trigger = {
+      type: Notifications.SchedulableTriggerInputTypes.CALENDAR,
+      repeats: false,
+      year: scheduledDate.getFullYear(),
+      month: scheduledDate.getMonth() + 1,
+      day: scheduledDate.getDate(),
+      hour,
+      minute,
+    };
+  }
+
+  // Build notification content
+  const typeLabel = customLabel || reminderType.charAt(0).toUpperCase() + reminderType.slice(1);
+  const notificationContent: Notifications.NotificationContentInput = {
+    title: `${typeLabel} Reminder`,
+    body: `Time to ${typeLabel.toLowerCase()} ${plantName}`,
+    data: {
+      plantId,
+      reminderType,
+      reminderId: `${plantId}-${reminderType}-${Date.now()}`,
+    },
+    sound: 'default',
+    categoryIdentifier: 'reminder',
+  };
+
+  const notificationId = await Notifications.scheduleNotificationAsync({
+    content: notificationContent,
+    trigger,
+  });
+
+  return notificationId;
+}
+
+/**
+ * Cancel a reminder notification
+ * @param notificationId - ID of the notification to cancel
+ */
+export async function cancelReminderNotification(notificationId: string): Promise<void> {
+  await Notifications.cancelScheduledNotificationAsync(notificationId);
+}
+
+/**
+ * Reschedule a reminder notification (cancel old, create new)
+ * @param oldNotificationId - ID of the old notification to cancel
+ * @param newInput - New reminder scheduling parameters
+ * @returns The new notification ID
+ */
+export async function rescheduleReminderNotification(
+  oldNotificationId: string,
+  newInput: ReminderScheduleInput
+): Promise<string> {
+  await cancelReminderNotification(oldNotificationId);
+  return scheduleReminderNotification(newInput);
 }
