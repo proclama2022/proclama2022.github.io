@@ -4,8 +4,8 @@
 
 Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni dettagliate sulla cura (incluse temperature stagionali, fertilizzazione, potatura, parassiti), e invia notifiche per l'annaffiatura. Completamente gratuita con monetizzazione via ads e unlock Pro opzionale (€4,99 una tantum). Plant detail screen con layout a tab (Info | Care | History | Notes) e note personali con auto-save.
 
-**Shipped v1.1 Enhanced Plant Detail** — Tabbed layout, extended care info, notes with metadata.
-**Next:** Multi-photo gallery + custom reminders (v1.2).
+**Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
+**Next:** Planning v1.3 (TBD).
 
 ## Core Value
 
@@ -46,14 +46,16 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Campo note espanso (1000 char, auto-save, flash conferma) — v1.1
 - ✓ Metadati personalizzati (data acquisto, prezzo, origine, regalo) — v1.1
 
+**Multi-Photo & Reminders (v1.2):**
+- ✓ Multi-foto galleria per pianta con upload, thumbnail grid, lightbox — v1.2
+- ✓ Set foto principale, elimina foto con conferma — v1.2
+- ✓ Migrazione automatica da singola foto a array multi-foto — v1.2
+- ✓ Reminder custom (rinvaso, fertilizzazione, potatura, custom) con notifica push — v1.2
+- ✓ Lista reminder attivi/completati in tab History — v1.2
+
 ### Active
 
-**Multi-Photo & Reminders (v1.2 — deferred from v1.1):**
-- [ ] Multi-foto galleria per pianta con upload, thumbnail grid, lightbox
-- [ ] Set foto principale, elimina foto con conferma
-- [ ] Migrazione automatica da singola foto a array multi-foto
-- [ ] Reminder custom (rinvaso, fertilizzazione, potatura, custom) con notifica push
-- [ ] Lista reminder attivi/completati in tab History
+(No active requirements — planning next milestone)
 
 ### Out of Scope
 
@@ -77,14 +79,16 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - RevenueCat for IAP
 - react-native-google-mobile-ads for AdMob
 
-**Codebase Stato (v1.1):**
-- ~9,836 lines TypeScript/TSX (+848 from v1.0)
-- 23 plans executed across 4 phases (phases 1–4)
+**Codebase Stato (v1.2):**
+- ~11,200 lines TypeScript/TSX (+1,364 from v1.1)
+- 29 plans executed across 6 phases (phases 1–6)
 - 5 main screens + 4 Detail tab components (InfoTab, CareTab, HistoryTab, NotesTab)
 - Bilingual (IT/EN) with i18next
-- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB
-- Stores: plantsStore (extended: purchaseDate/Price/Origin/giftFrom), settingsStore, proStore
+- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService
+- Stores: plantsStore (extended: purchaseDate/Price/Origin/giftFrom, photos, reminders), settingsStore, proStore
 - Tab navigation: MaterialTopTabNavigator inside NavigationIndependentTree (expo-router compat pattern)
+- Photo system: PhotoGallery, PhotoLightbox, AddPhotoButton with expo-image-manipulator
+- Reminder system: ReminderModal, ReminderFab, unified History timeline
 
 **Database Cure Piante:**
 - 100 species with care info (extensible to 500)
@@ -114,7 +118,11 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 | NavigationIndependentTree for tab navigator | expo-router uses its own NavigationContainer — nested navigators need isolation to avoid "navigator already registered" error | ✓ Working — `NavigationIndependentTree` from @react-navigation/native wraps MaterialTopTabNavigator in [id].tsx |
 | CareSection always renders heading | Even when PlantNet data is absent, section heading + "Not available" is more honest than hiding the section | ✓ Working — CareSection component renders regardless of data presence |
 | v1.1 shipped as Phase 4 only | Phases 5 (Multi-Photo) and 6 (Custom Reminders) not completed — shipped tabbed layout as standalone release | ⚠️ Deferred — Phases 5+6 move to v1.2 |
+| Zustand onRehydrateStorage migration | Automatic data migration on app load, version tracking prevents re-runs | ✓ Working — photo array migration transparent to user |
+| React Native Modal for bottom sheet | No external library needed for ReminderModal, native-feeling slide animation | ✓ Working — matches ProUpgradeModal pattern |
+| CalendarTrigger for reminders | One-time notifications (not recurring), uses global Settings time | ✓ Working — extends Phase 2 notification infrastructure |
+| Unified History timeline | Watering events + reminders in one chronological list | ✓ Working — tap-to-complete, long-press edit/delete |
 
 ---
 
-*Last updated: 2026-02-24 after v1.1 milestone (Phase 4 only — Phases 5+6 deferred to v1.2)*
+*Last updated: 2026-02-25 after v1.2 milestone (Phases 5+6 — Multi-Photo Gallery + Custom Reminders)*

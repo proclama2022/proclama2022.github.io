@@ -19,3 +19,13 @@
 
 ---
 
+
+## v1.2 Multi-Photo Gallery + Custom Reminders (Shipped: 2026-02-25)
+
+**Phases completed:** 6 phases, 29 plans, 6 tasks
+
+**Key accomplishments:**
+- (none recorded)
+
+---
+
