@@ -81,6 +81,9 @@ export default function PlantDetailScreen() {
 
   const displayName = plant.nickname || plant.commonName || plant.species;
 
+  // Get primary photo from photos array, or fall back to deprecated photo field
+  const primaryPhotoUri = plant.photos?.find(p => p.isPrimary)?.uri || plant.photo;
+
   // ------------------------------------------------------------------
   // Render
   // ------------------------------------------------------------------
@@ -114,7 +117,7 @@ export default function PlantDetailScreen() {
         {/* Compact plant header — thumbnail + name + scientific name */}
         <View style={styles.compactHeader}>
           <Image
-            source={{ uri: plant.photo }}
+            source={{ uri: primaryPhotoUri }}
             style={styles.thumbnail}
             resizeMode="cover"
             accessibilityLabel={`Thumbnail of ${displayName}`}

@@ -15,6 +15,7 @@ import * as Haptics from 'expo-haptics';
 
 import { Text } from '@/components/Themed';
 import { usePlantsStore } from '@/stores/plantsStore';
+import { PhotoGallery } from './PhotoGallery';
 
 // ---------------------------------------------------------------------------
 // InfoTab
@@ -97,16 +98,6 @@ export function InfoTab({ plantId: plantIdProp }: InfoTabProps) {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Identification photo */}
-        <View style={styles.photoContainer}>
-          <Image
-            source={{ uri: plant.photo }}
-            style={styles.photo}
-            resizeMode="cover"
-            accessibilityLabel={`Photo of ${displayName}`}
-          />
-        </View>
-
         {/* Names block */}
         <View style={styles.card}>
           <Text style={styles.primaryName}>{displayName}</Text>
@@ -118,6 +109,9 @@ export function InfoTab({ plantId: plantIdProp }: InfoTabProps) {
           ) : null}
           <Text style={styles.addedDate}>{t('detail.addedOn', { date: formattedDate })}</Text>
         </View>
+
+        {/* Photo gallery */}
+        <PhotoGallery plantId={resolvedId} />
 
         {/* Editable fields */}
         <View style={styles.card}>
@@ -192,17 +186,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: 32,
-  },
-
-  // Photo
-  photoContainer: {
-    width: '100%',
-    height: 220,
-    backgroundColor: '#e0e0e0',
-  },
-  photo: {
-    width: '100%',
-    height: '100%',
   },
 
   // Cards

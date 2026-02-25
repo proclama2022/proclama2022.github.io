@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   FlatList,
@@ -16,6 +16,7 @@ import { Text } from '@/components/Themed';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { PlantPhoto } from '@/types';
 import { AddPhotoButton } from './AddPhotoButton';
+import { PhotoLightbox } from './PhotoLightbox';
 
 // ---------------------------------------------------------------------------
 // PhotoGallery
@@ -29,11 +30,9 @@ const ITEM_SIZE = (SCREEN_WIDTH - PADDING * 2 - GAP * (COLUMNS - 1)) / COLUMNS;
 
 interface PhotoGalleryProps {
   plantId?: string;
-  onPhotoPress: (index: number) => void;
-  onAddPress: () => void;
 }
 
-export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }: PhotoGalleryProps) {
+export function PhotoGallery({ plantId: plantIdProp }: PhotoGalleryProps) {
   const { t } = useTranslation();
 
   // Try expo-router params first; fall back to prop
@@ -41,6 +40,10 @@ export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }:
   const resolvedId = params.id ?? plantIdProp ?? '';
 
   const plant = usePlantsStore((s) => s.getPlant(resolvedId));
+
+  // Lightbox state
+  const [lightboxVisible, setLightboxVisible] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   // ------------------------------------------------------------------
   // Backward compatibility: convert photo string to PlantPhoto array
@@ -60,13 +63,30 @@ export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }:
   }
 
   // ------------------------------------------------------------------
+  // Lightbox handlers
+  // ------------------------------------------------------------------
+
+  const handlePhotoPress = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setLightboxVisible(true);
+  }, []);
+
+  const handleCloseLightbox = useCallback(() => {
+    setLightboxVisible(false);
+  }, []);
+
+  const handlePhotoAdded = useCallback(() => {
+    // Plant data will refresh automatically from store
+  }, []);
+
+  // ------------------------------------------------------------------
   // Render helpers
   // ------------------------------------------------------------------
 
   const renderThumbnail = ({ item, index }: { item: PlantPhoto; index: number }) => (
     <TouchableOpacity
       style={styles.thumbnail}
-      onPress={() => onPhotoPress(index)}
+      onPress={() => handlePhotoPress(index)}
       activeOpacity={0.9}
       accessibilityRole="imagebutton"
       accessibilityLabel={`Photo ${index + 1}`}
@@ -82,7 +102,7 @@ export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }:
 
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <AddPhotoButton onPress={onAddPress} size={120} />
+      <AddPhotoButton plantId={resolvedId} onPhotoAdded={handlePhotoAdded} size={120} />
       <Text style={styles.emptyText}>{t('detail.gallery.emptyState')}</Text>
       <Text style={styles.emptyHint}>{t('detail.gallery.emptyHint')}</Text>
     </View>
@@ -91,7 +111,7 @@ export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }:
   const renderFooter = () => {
     if (photos.length === 0) return null;
     return (
-      <AddPhotoButton onPress={onAddPress} size={ITEM_SIZE} />
+      <AddPhotoButton plantId={resolvedId} onPhotoAdded={handlePhotoAdded} size={ITEM_SIZE} />
     );
   };
 
@@ -117,16 +137,27 @@ export function PhotoGallery({ plantId: plantIdProp, onPhotoPress, onAddPress }:
   }
 
   return (
-    <FlatList
-      data={photos}
-      keyExtractor={(item, index) => `${item.uri}-${index}`}
-      renderItem={renderThumbnail}
-      numColumns={COLUMNS}
-      contentContainerStyle={styles.gridContent}
-      columnWrapperStyle={styles.row}
-      ListFooterComponent={renderFooter}
-      showsVerticalScrollIndicator={false}
-    />
+    <>
+      <FlatList
+        data={photos}
+        keyExtractor={(item, index) => `${item.uri}-${index}`}
+        renderItem={renderThumbnail}
+        numColumns={COLUMNS}
+        contentContainerStyle={styles.gridContent}
+        columnWrapperStyle={styles.row}
+        ListFooterComponent={renderFooter}
+        showsVerticalScrollIndicator={false}
+      />
+
+      {/* Lightbox modal */}
+      <PhotoLightbox
+        visible={lightboxVisible}
+        photos={photos}
+        initialIndex={lightboxIndex}
+        plantId={resolvedId}
+        onClose={handleCloseLightbox}
+      />
+    </>
   );
 }
 
