@@ -4,8 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/Themed';
-import { createReminder } from '@/services/reminderService';
+import { createReminder, updateReminder } from '@/services/reminderService';
 import * as Haptics from 'expo-haptics';
+import { Reminder } from '@/types';
 
 type ReminderType = 'fertilize' | 'repot' | 'prune' | 'custom';
 
@@ -15,6 +16,7 @@ interface ReminderModalProps {
   onCreate: () => void;
   plantId: string;
   plantName: string;
+  reminder?: Reminder;
 }
 
 export function ReminderModal({
@@ -23,6 +25,7 @@ export function ReminderModal({
   onCreate,
   plantId,
   plantName,
+  reminder,
 }: ReminderModalProps) {
   const insets = useSafeAreaInsets();
   const [selectedType, setSelectedType] = useState<ReminderType>('fertilize');
@@ -30,6 +33,20 @@ export function ReminderModal({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [customLabel, setCustomLabel] = useState('');
   const [isCreating, setIsCreating] = useState(false);
+
+  // Initialize form when editing
+  React.useEffect(() => {
+    if (reminder) {
+      setSelectedType(reminder.type);
+      setSelectedDate(new Date(reminder.date));
+      setCustomLabel(reminder.customLabel || '');
+    } else {
+      // Reset form for new reminder
+      setSelectedType('fertilize');
+      setSelectedDate(new Date());
+      setCustomLabel('');
+    }
+  }, [reminder, visible]);
 
   const types: { key: ReminderType; icon: keyof typeof Ionicons.glyphMap; label: string }[] = [
     { key: 'fertilize', icon: 'flask', label: 'Fertilize' },
@@ -65,12 +82,22 @@ export function ReminderModal({
 
     setIsCreating(true);
     try {
-      await createReminder(
-        plantId,
-        selectedType,
-        selectedDate,
-        selectedType === 'custom' ? customLabel : undefined
-      );
+      if (reminder) {
+        // EDIT: update existing reminder
+        await updateReminder(plantId, reminder.id, {
+          type: selectedType,
+          date: selectedDate,
+          customLabel: selectedType === 'custom' ? customLabel : undefined,
+        });
+      } else {
+        // CREATE: new reminder
+        await createReminder(
+          plantId,
+          selectedType,
+          selectedDate,
+          selectedType === 'custom' ? customLabel : undefined
+        );
+      }
 
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 
@@ -82,7 +109,7 @@ export function ReminderModal({
       onCreate();
       onClose();
     } catch (error) {
-      Alert.alert('Error', 'Failed to create reminder. Please try again.');
+      Alert.alert('Error', 'Failed to save reminder. Please try again.');
     } finally {
       setIsCreating(false);
     }
@@ -100,7 +127,7 @@ export function ReminderModal({
           <View style={[styles.modalContainer, { paddingBottom: insets.bottom }]}>
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.title}>Add Reminder</Text>
+              <Text style={styles.title}>{reminder ? 'Edit Reminder' : 'Add Reminder'}</Text>
               <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                 <Ionicons name="close" size={28} color="#666" />
               </TouchableOpacity>
@@ -182,11 +209,13 @@ export function ReminderModal({
               disabled={isCreating}
             >
               {isCreating ? (
-                <Text style={styles.createButtonText}>Creating...</Text>
+                <Text style={styles.createButtonText}>Saving...</Text>
               ) : (
                 <>
-                  <Ionicons name="add" size={20} color="#fff" />
-                  <Text style={styles.createButtonText}>Create Reminder</Text>
+                  <Ionicons name={reminder ? 'checkmark' : 'add'} size={20} color="#fff" />
+                  <Text style={styles.createButtonText}>
+                    {reminder ? 'Save Changes' : 'Create Reminder'}
+                  </Text>
                 </>
               )}
             </TouchableOpacity>
