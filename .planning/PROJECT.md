@@ -5,7 +5,17 @@
 Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni dettagliate sulla cura (incluse temperature stagionali, fertilizzazione, potatura, parassiti), e invia notifiche per l'annaffiatura. Completamente gratuita con monetizzazione via ads e unlock Pro opzionale (€4,99 una tantum). Plant detail screen con layout a tab (Info | Care | History | Notes) e note personali con auto-save.
 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
-**Next:** Planning v1.3 (TBD).
+**Next:** v1.3 — Search & Filter, Statistics Dashboard, Care Calendar, UI Polish.
+
+## Current Milestone: v1.3 Enhanced UX
+
+**Goal:** Improve discoverability and engagement with search, statistics, calendar, and polish
+
+**Target features:**
+- Search & Filter — Search plants by name, filter by watering needs, tags, care difficulty
+- Statistics Dashboard — Track watering streaks, identification count, reminder completion
+- Care Calendar — Calendar view of all care tasks (watering + reminders)
+- UI Polish — Dark mode, improved onboarding, settings reorganization
 
 ## Core Value
 

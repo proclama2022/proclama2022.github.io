@@ -18,7 +18,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-25)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance — accessible to anyone without a €30/year paywall
-**Current focus:** Planning v1.3 — Run `/gsd:new-milestone` to start
+**Current focus:** v1.3 Enhanced UX — Research phase
+
+## Current Position
+
+Milestone: v1.3 started
+Status: Research phase — run `/gsd:new-milestone` to continue
+Last activity: 2026-02-25 — v1.3 scope defined (Search, Stats, Calendar, UI Polish)
 
 ## Current Position
 
