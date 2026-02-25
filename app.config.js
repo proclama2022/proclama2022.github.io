@@ -16,6 +16,7 @@ export default {
       backgroundColor: "#ffffff"
     },
     ios: {
+      bundleIdentifier: "com.plantid.app",
       supportsTablet: true
     },
     android: {
@@ -33,6 +34,7 @@ export default {
     },
     plugins: [
       "expo-router",
+      "@react-native-community/datetimepicker",
       [
         "react-native-google-mobile-ads",
         {
