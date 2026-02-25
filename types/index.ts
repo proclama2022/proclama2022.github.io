@@ -66,6 +66,7 @@ export interface SavedPlant {
   nextWateringDate?: string;
   scheduledNotificationId?: string;
   waterHistory: WaterEvent[];
+  reminders?: Reminder[];        // NEW: custom care reminders
   notes?: string;
   purchaseDate?: string;    // ISO date string or free text, user-entered
   purchasePrice?: string;   // Free text (e.g. "€12.50")
@@ -82,6 +83,15 @@ export interface PlantPhoto {
   uri: string;              // File URI (not base64)
   addedDate: string;        // ISO timestamp
   isPrimary: boolean;       // true for main photo
+}
+
+export interface Reminder {
+  id: string;                    // UUID for reminder
+  type: 'fertilize' | 'repot' | 'prune' | 'custom';
+  customLabel?: string;          // User-defined label when type='custom'
+  date: string;                  // ISO date string for reminder date
+  completed: boolean;            // true if marked as done
+  notificationId?: string;       // expo-notifications ID for cancellation
 }
 
 export interface PlantCareInfo {
