@@ -1,3 +1,16 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: unknown
+last_updated: "2026-02-25T17:12:10.781Z"
+progress:
+  total_phases: 6
+  completed_phases: 5
+  total_plans: 29
+  completed_plans: 27
+---
+
 # Project State
 
 ## Project Reference
@@ -39,6 +52,7 @@ Progress: [████████████████░░░░] 69% (25
 - Trend: steady
 
 *Updated after each plan completion*
+| Phase 06-custom-reminders P01 | 420 | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -83,6 +97,10 @@ Recent decisions affecting current work:
 - [05-03]: FileSystem.copyAsync persists photos in document directory with timestamp-based filenames
 - [05-03]: FileSystem.deleteAsync with idempotent flag for cleanup on delete operations
 - [05-03]: Plant detail header uses primaryPhotoUri from photos array, falls back to deprecated photo field
+- [Phase 06-custom-reminders]: iOS CalendarTrigger uses flat year/month/day structure (not dateComponents) for type compatibility
+- [Phase 06-custom-reminders]: Dynamic import of cancelReminderNotification in plantsStore to avoid circular dependency
+- [Phase 06-custom-reminders]: notificationTime hardcoded to '08:00' - will connect to settingsStore in Plan 02-03
+- [Phase 06-custom-reminders]: Completed reminders cancel notifications to prevent future alerts for done tasks
 
 ### Pending Todos
 
