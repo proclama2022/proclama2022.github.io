@@ -32,13 +32,18 @@
 
 ### 📋 v1.2 (Planned)
 
-- [ ] Phase 5: Multi-Photo Gallery — 3 plans (data migration, gallery components, lightbox & integration)
-- [ ] Phase 6: Custom Reminders — fertilize/repot/prune notifications, History tab
+- [x] Phase 5: Multi-Photo Gallery — 3 plans (data migration, gallery components, lightbox & integration)
+- [x] Phase 6: Custom Reminders — 3 plans (fertilize/repot/prune notifications, History tab)
 
 **Phase 5 Plans:**
 - [x] 05-01-PLAN.md — Data model migration (PlantPhoto type, photos array, migration logic)
 - [x] 05-02-PLAN.md — PhotoGallery thumbnail grid + AddPhotoButton component
 - [x] 05-03-PLAN.md — PhotoLightbox viewer + add/set primary/delete operations + InfoTab integration
+
+**Phase 6 Plans:**
+- [x] 06-01-PLAN.md — Reminder type and service layer (create, update, delete, toggle complete)
+- [x] 06-02-PLAN.md — ReminderModal and ReminderFab with settings integration
+- [x] 06-03-PLAN.md — History Tab unified timeline with edit/delete interactions
 
 ---
 
@@ -53,4 +58,4 @@
 | 3. Monetization | v1.0 | 5/5 | Complete | 2026-02-20 |
 | 4. Tabbed Layout and Content Reorganization | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 5. Multi-Photo Gallery | v1.2 | 3/3 | Complete | 2026-02-25 |
-| 6. Custom Reminders | v1.2 | 2/3 | In Progress | - |
+| 6. Custom Reminders | v1.2 | 3/3 | Awaiting Verification | - |
