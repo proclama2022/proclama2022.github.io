@@ -1,21 +1,24 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SavedPlant } from '@/types';
+import { SavedPlant, PlantPhoto } from '@/types';
 import { cancelPlantNotification, cancelAllPlantNotifications } from '@/services/notificationService';
 import { useProStore } from '@/stores/proStore';
 
 const MAX_PLANTS_FREE = 10;
+const MIGRATION_VERSION = 1;
 
 interface PlantsState {
   plants: SavedPlant[];
   notificationTimePreference: string;
+  _version: number;
   setNotificationTimePreference: (time: string) => void;
   addPlant: (plant: SavedPlant) => boolean;
   removePlant: (id: string) => Promise<void>;
   getPlant: (id: string) => SavedPlant | undefined;
   updatePlant: (id: string, updates: Partial<SavedPlant>) => void;
   cancelAllNotifications: () => Promise<void>;
+  migrateToPhotos: () => void;
 }
 
 export const usePlantsStore = create<PlantsState>()(
@@ -23,6 +26,7 @@ export const usePlantsStore = create<PlantsState>()(
     (set, get) => ({
       plants: [],
       notificationTimePreference: '08:00',
+      _version: MIGRATION_VERSION,
       setNotificationTimePreference: (time) => set({ notificationTimePreference: time }),
       /**
        * Add plant to collection. Returns false if free user has reached limit (10 plants).
@@ -61,10 +65,42 @@ export const usePlantsStore = create<PlantsState>()(
           .filter((id): id is string => id !== undefined);
         await cancelAllPlantNotifications(notificationIds);
       },
+      migrateToPhotos: () => {
+        const state = get();
+        // Already migrated
+        if (state._version >= MIGRATION_VERSION) {
+          return;
+        }
+
+        // Migrate plants from photo string to photos array
+        const migratedPlants = state.plants.map(plant => {
+          // Skip if already migrated
+          if (plant.photos && plant.photos.length > 0) {
+            return plant;
+          }
+
+          // Transform photo string to photos array
+          const photos: PlantPhoto[] = [{
+            uri: plant.photo,
+            addedDate: plant.addedDate,
+            isPrimary: true
+          }];
+
+          return { ...plant, photos };
+        });
+
+        set({
+          plants: migratedPlants,
+          _version: MIGRATION_VERSION
+        });
+      },
     }),
     {
       name: 'plantid-plants-storage',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.migrateToPhotos();
+      },
     }
   )
 );
