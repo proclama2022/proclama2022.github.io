@@ -45,9 +45,22 @@ export const usePlantsStore = create<PlantsState>()(
       },
       removePlant: async (id) => {
         const plant = get().plants.find(p => p.id === id);
+
+        // Cancel watering notification
         if (plant?.scheduledNotificationId) {
           await cancelPlantNotification(plant.scheduledNotificationId);
         }
+
+        // NEW: Cancel all reminder notifications
+        if (plant?.reminders) {
+          const { cancelReminderNotification } = await import('@/services/notificationService');
+          await Promise.all(
+            plant.reminders
+              .filter(r => r.notificationId)
+              .map(r => cancelReminderNotification(r.notificationId!))
+          );
+        }
+
         set((state) => ({
           plants: state.plants.filter(p => p.id !== id)
         }));
