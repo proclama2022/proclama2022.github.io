@@ -86,7 +86,7 @@ export function ReminderModal({
         // EDIT: update existing reminder
         await updateReminder(plantId, reminder.id, {
           type: selectedType,
-          date: selectedDate,
+          date: selectedDate.toISOString(),
           customLabel: selectedType === 'custom' ? customLabel : undefined,
         });
       } else {

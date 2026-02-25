@@ -7,7 +7,7 @@ import { Text } from '@/components/Themed';
 import { ReminderFab } from './ReminderFab';
 import { ReminderModal } from '@/components/ReminderModal';
 import { toggleReminderComplete, deleteReminder, updateReminder } from '@/services/reminderService';
-import { Reminder } from '@/types';
+import { Reminder, WaterEvent } from '@/types';
 import * as Haptics from 'expo-haptics';
 
 type TimelineItem = (WaterEvent & { itemType: 'water' }) | (Reminder & { itemType: 'reminder' });
