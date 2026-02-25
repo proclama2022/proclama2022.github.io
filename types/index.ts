@@ -60,6 +60,7 @@ export interface SavedPlant {
   nickname?: string;
   location?: string;
   photo: string;
+  photos?: PlantPhoto[];
   addedDate: string;
   lastWatered?: string;
   nextWateringDate?: string;
@@ -75,6 +76,12 @@ export interface SavedPlant {
 export interface WaterEvent {
   date: string;
   notes?: string;
+}
+
+export interface PlantPhoto {
+  uri: string;              // File URI (not base64)
+  addedDate: string;        // ISO timestamp
+  isPrimary: boolean;       // true for main photo
 }
 
 export interface PlantCareInfo {
