@@ -65,7 +65,7 @@ export function AddPhotoButton({ plantId, onPhotoAdded, size = 110 }: AddPhotoBu
 
       // Copy compressed result to document directory for persistence
       const filename = `plant_${plantId}_${Date.now()}.jpg`;
-      const destUri = FileSystem.documentDirectory + filename;
+      const destUri = `${FileSystem.documentDirectory!}${filename}`;
 
       await FileSystem.copyAsync({
         from: manipulatedImage.uri,
