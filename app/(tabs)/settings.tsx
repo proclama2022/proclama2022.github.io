@@ -190,17 +190,28 @@ export default function SettingsScreen() {
           )}
         </View>
 
-        {/* Statistics link */}
+        {/* Statistics & Calendar links */}
         <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.statistics')}</Text>
           <TouchableOpacity
-            style={[styles.linkRow, { borderBottomColor: colors.borderLight }]}
+            style={styles.linkRow}
             onPress={() => router.push('/statistics' as const)}
             accessibilityRole="button"
           >
             <View style={styles.linkRowInner}>
               <Ionicons name="bar-chart-outline" size={20} color={colors.tint} />
               <Text style={[styles.linkText, { color: colors.text }]}>{t('settings.viewStats')}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.linkRow}
+            onPress={() => router.push('/calendar' as const)}
+            accessibilityRole="button"
+          >
+            <View style={styles.linkRowInner}>
+              <Ionicons name="calendar-outline" size={20} color={colors.tint} />
+              <Text style={[styles.linkText, { color: colors.text }]}>{t('calendar.title')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
           </TouchableOpacity>
