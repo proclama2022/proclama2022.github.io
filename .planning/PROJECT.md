@@ -5,17 +5,15 @@
 Una app mobile cross-platform (iOS + Android) che identifica piante fotografate tramite PlantNet API, fornisce informazioni dettagliate sulla cura (incluse temperature stagionali, fertilizzazione, potatura, parassiti), e invia notifiche per l'annaffiatura. Completamente gratuita con monetizzazione via ads e unlock Pro opzionale (€4,99 una tantum). Plant detail screen con layout a tab (Info | Care | History | Notes) e note personali con auto-save.
 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
-**Next:** v1.3 — Search & Filter, Statistics Dashboard, Care Calendar, UI Polish.
+**Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 
-## Current Milestone: v1.3 Enhanced UX
+## Current Milestone: v1.3 Enhanced UX — COMPLETE
 
-**Goal:** Improve discoverability and engagement with search, statistics, calendar, and polish
-
-**Target features:**
-- Search & Filter — Search plants by name, filter by watering needs, tags, care difficulty
-- Statistics Dashboard — Track watering streaks, identification count, reminder completion
-- Care Calendar — Calendar view of all care tasks (watering + reminders)
-- UI Polish — Dark mode, improved onboarding, settings reorganization
+**Delivered features:**
+- Search & Filter — Fuzzy search by name, filter by watering status and care difficulty
+- Statistics Dashboard — Watering streaks, identification count, reminder completion, weekly chart
+- Care Calendar — Monthly calendar with watering/reminder indicators, task completion
+- UI Polish — Dark mode support, improved onboarding with animations, settings reorganization
 
 ## Core Value
 
@@ -63,9 +61,17 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Reminder custom (rinvaso, fertilizzazione, potatura, custom) con notifica push — v1.2
 - ✓ Lista reminder attivi/completati in tab History — v1.2
 
+**Enhanced UX (v1.3):**
+- ✓ Search & filter plants by name, watering status, care difficulty — v1.3
+- ✓ Statistics dashboard with watering streak, identifications, reminder completion — v1.3
+- ✓ Care calendar with monthly view, colored indicators, task completion — v1.3
+- ✓ Dark mode support across all screens — v1.3
+- ✓ Improved onboarding with Ionicons and entrance animations — v1.3
+- ✓ Settings reorganized into card sections — v1.3
+
 ### Active
 
-(No active requirements — planning next milestone)
+(No active requirements — v1.3 complete)
 
 ### Out of Scope
 
@@ -89,14 +95,15 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - RevenueCat for IAP
 - react-native-google-mobile-ads for AdMob
 
-**Codebase Stato (v1.2):**
-- ~11,200 lines TypeScript/TSX (+1,364 from v1.1)
-- 29 plans executed across 6 phases (phases 1–6)
-- 5 main screens + 4 Detail tab components (InfoTab, CareTab, HistoryTab, NotesTab)
+**Codebase Stato (v1.3):**
+- ~13,000 lines TypeScript/TSX
+- 10 phases executed across 4 milestones (v1.0–v1.3)
+- 7 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail) + 4 Detail tab components
 - Bilingual (IT/EN) with i18next
+- Dark mode support via extended Colors.ts + useThemeColors hook
 - Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService
-- Stores: plantsStore (extended: purchaseDate/Price/Origin/giftFrom, photos, reminders), settingsStore, proStore
-- Tab navigation: MaterialTopTabNavigator inside NavigationIndependentTree (expo-router compat pattern)
+- Stores: plantsStore, settingsStore, proStore, onboardingStore
+- Components: SearchFilterBar, PlantGrid, PlantCard, Onboarding (animated), BarChart
 - Photo system: PhotoGallery, PhotoLightbox, AddPhotoButton with expo-image-manipulator
 - Reminder system: ReminderModal, ReminderFab, unified History timeline
 
