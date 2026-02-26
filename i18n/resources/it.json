@@ -43,6 +43,44 @@
     "plantAdded": "Pianta aggiunta alla collezione",
     "plantDeleted": "Pianta rimossa dalla collezione"
   },
+  "search": {
+    "placeholder": "Cerca piante...",
+    "noResults": "Nessuna pianta corrisponde alla ricerca",
+    "filters": "Filtri",
+    "clearFilters": "Cancella",
+    "wateringStatus": "Annaffiatura",
+    "needsWater": "Da annaffiare",
+    "waterOk": "Annaffiata",
+    "difficulty": "Difficoltà",
+    "easy": "Facile",
+    "medium": "Media",
+    "hard": "Difficile",
+    "all": "Tutti"
+  },
+  "stats": {
+    "title": "Statistiche",
+    "wateringStreak": "Streak Annaffiatura",
+    "days": "giorni",
+    "totalIdentifications": "Identificazioni Totali",
+    "reminderCompletion": "Completamento Promemoria",
+    "weeklyWatering": "Annaffiature Settimanali",
+    "noData": "Nessun dato",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mer",
+    "thu": "Gio",
+    "fri": "Ven",
+    "sat": "Sab",
+    "sun": "Dom"
+  },
+  "calendar": {
+    "title": "Calendario Cura",
+    "noTasks": "Nessun compito per questo giorno",
+    "watering": "Annaffiatura",
+    "reminder": "Promemoria",
+    "complete": "Completa",
+    "completed": "Completato"
+  },
   "detail": {
     "title": "Dettagli Pianta",
     "addedOn": "Aggiunta il {{date}}",

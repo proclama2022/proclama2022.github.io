@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,15 +7,91 @@ import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/Themed';
 import Onboarding from '@/components/Onboarding';
 import PlantGrid from '@/components/PlantGrid';
+import SearchFilterBar, { WateringFilter, DifficultyFilter } from '@/components/SearchFilterBar';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { getCareInfo } from '@/services/careDB';
+import { SavedPlant } from '@/types';
+
+/** Simple fuzzy match: checks if all query characters appear in order in the target */
+function fuzzyMatch(target: string, query: string): boolean {
+  const t = target.toLowerCase();
+  const q = query.toLowerCase();
+  let ti = 0;
+  for (let qi = 0; qi < q.length; qi++) {
+    const idx = t.indexOf(q[qi], ti);
+    if (idx === -1) return false;
+    ti = idx + 1;
+  }
+  return true;
+}
+
+function plantMatchesSearch(plant: SavedPlant, query: string): boolean {
+  if (!query.trim()) return true;
+  const q = query.trim();
+  const fields = [
+    plant.nickname,
+    plant.commonName,
+    plant.scientificName,
+    plant.species,
+    plant.location,
+  ].filter(Boolean) as string[];
+
+  return fields.some(field => fuzzyMatch(field, q));
+}
+
+function plantMatchesWateringFilter(plant: SavedPlant, filter: WateringFilter): boolean {
+  if (filter === 'all') return true;
+
+  const care = plant.scientificName ? getCareInfo(plant.scientificName) : null;
+  if (!care) return filter === 'all';
+
+  const now = new Date();
+  const lastWatered = plant.lastWatered ? new Date(plant.lastWatered) : null;
+
+  if (!lastWatered) {
+    return filter === 'needsWater';
+  }
+
+  const daysSinceWatered = (now.getTime() - lastWatered.getTime()) / (1000 * 60 * 60 * 24);
+  const needsWater = daysSinceWatered >= care.waterFrequencyDays;
+
+  return filter === 'needsWater' ? needsWater : !needsWater;
+}
+
+function plantMatchesDifficultyFilter(plant: SavedPlant, filter: DifficultyFilter): boolean {
+  if (filter === 'all') return true;
+
+  const care = plant.scientificName ? getCareInfo(plant.scientificName) : null;
+  if (!care) return false;
+
+  return care.difficulty === filter;
+}
 
 export default function HomeScreen() {
   const plants = usePlantsStore((state) => state.plants);
   const hasSeenOnboarding = useOnboardingStore((state) => state.hasSeenOnboarding);
   const router = useRouter();
   const { t } = useTranslation();
+
+  const [searchQuery, setSearchQuery] = useState('');
+  const [wateringFilter, setWateringFilter] = useState<WateringFilter>('all');
+  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
+
+  const handleSearchChange = useCallback((q: string) => setSearchQuery(q), []);
+  const handleWateringChange = useCallback((f: WateringFilter) => setWateringFilter(f), []);
+  const handleDifficultyChange = useCallback((f: DifficultyFilter) => setDifficultyFilter(f), []);
+
+  const filteredPlants = useMemo(() => {
+    return plants.filter(plant =>
+      plantMatchesSearch(plant, searchQuery) &&
+      plantMatchesWateringFilter(plant, wateringFilter) &&
+      plantMatchesDifficultyFilter(plant, difficultyFilter)
+    );
+  }, [plants, searchQuery, wateringFilter, difficultyFilter]);
+
+  const hasActiveFilters = searchQuery.trim() !== '' || wateringFilter !== 'all' || difficultyFilter !== 'all';
 
   // Show onboarding until dismissed
   if (!hasSeenOnboarding) {
@@ -48,7 +124,7 @@ export default function HomeScreen() {
     );
   }
 
-  // Collection view with FAB
+  // Collection view with search, filters, and FAB
   return (
     <>
       <SafeAreaView style={styles.safeArea}>
@@ -56,7 +132,23 @@ export default function HomeScreen() {
           <Text style={styles.screenTitle}>{t('collection.title')}</Text>
         </View>
 
-        <PlantGrid plants={plants} />
+        <SearchFilterBar
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
+          wateringFilter={wateringFilter}
+          onWateringFilterChange={handleWateringChange}
+          difficultyFilter={difficultyFilter}
+          onDifficultyFilterChange={handleDifficultyChange}
+        />
+
+        {filteredPlants.length === 0 && hasActiveFilters ? (
+          <View style={styles.noResultsContainer}>
+            <Ionicons name="search-outline" size={48} color="#ccc" />
+            <Text style={styles.noResultsText}>{t('search.noResults')}</Text>
+          </View>
+        ) : (
+          <PlantGrid plants={filteredPlants} />
+        )}
 
         {/* Camera FAB */}
         <TouchableOpacity
@@ -135,6 +227,19 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
+  },
+
+  // No results state
+  noResultsContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  noResultsText: {
+    fontSize: 16,
+    color: '#999',
+    textAlign: 'center',
   },
 
   // Floating action button

@@ -43,6 +43,44 @@
     "plantAdded": "Plant added to collection",
     "plantDeleted": "Plant removed from collection"
   },
+  "search": {
+    "placeholder": "Search plants...",
+    "noResults": "No plants match your search",
+    "filters": "Filters",
+    "clearFilters": "Clear",
+    "wateringStatus": "Watering",
+    "needsWater": "Needs water",
+    "waterOk": "Watered",
+    "difficulty": "Difficulty",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard",
+    "all": "All"
+  },
+  "stats": {
+    "title": "Statistics",
+    "wateringStreak": "Watering Streak",
+    "days": "days",
+    "totalIdentifications": "Total Identifications",
+    "reminderCompletion": "Reminder Completion",
+    "weeklyWatering": "Weekly Watering",
+    "noData": "No data yet",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  },
+  "calendar": {
+    "title": "Care Calendar",
+    "noTasks": "No tasks for this day",
+    "watering": "Watering",
+    "reminder": "Reminder",
+    "complete": "Complete",
+    "completed": "Completed"
+  },
   "detail": {
     "title": "Plant Details",
     "addedOn": "Added on {{date}}",

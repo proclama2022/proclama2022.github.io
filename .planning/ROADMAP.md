@@ -5,7 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 1-3 (shipped 2026-02-20)
 - ✅ **v1.1 Enhanced Plant Detail** — Phase 4 (shipped 2026-02-24)
 - ✅ **v1.2 Multi-Photo + Reminders** — Phases 5-6 (shipped 2026-02-25)
-- 📋 **v1.3** — TBD (planning needed)
+- 🚧 **v1.3 Enhanced UX** — Phases 7-10 (in progress)
 
 ## Phases
 
@@ -35,9 +35,14 @@
 
 ---
 
-### 📋 v1.3 (Planned)
+### 🚧 v1.3 Enhanced UX (Phases 7-10)
 
-*No phases defined yet — run `/gsd:new-milestone` to plan*
+**Goal:** Improve discoverability and engagement with search, statistics, calendar, and polish
+
+- [ ] Phase 7: Search & Filter — Search plants by name, filter by watering status and care difficulty
+- [ ] Phase 10: UI Polish — Dark mode, improved onboarding, settings reorganization, micro-animations
+- [ ] Phase 8: Statistics Dashboard — Watering streaks, identification count, reminder completion tracking
+- [ ] Phase 9: Care Calendar — Monthly calendar view of all care tasks
 
 ---
 
@@ -53,3 +58,7 @@
 | 4. Tabbed Layout and Content Reorganization | v1.1 | 4/4 | Complete | 2026-02-23 |
 | 5. Multi-Photo Gallery | v1.2 | 3/3 | Complete | 2026-02-25 |
 | 6. Custom Reminders | v1.2 | 3/3 | Complete | 2026-02-25 |
+| 7. Search & Filter | v1.3 | — | In Progress | — |
+| 10. UI Polish | v1.3 | — | Planned | — |
+| 8. Statistics Dashboard | v1.3 | — | Planned | — |
+| 9. Care Calendar | v1.3 | — | Planned | — |
