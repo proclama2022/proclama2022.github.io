@@ -7,9 +7,20 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 
-## Current Status: v1.3 Shipped — Ready for v2.0 Planning
+## Current Milestone: v2.0 Community
 
-**All milestones complete.** App is feature-complete for current scope.
+**Goal:** Add social/community features with Supabase backend — transform from personal plant tracker to plant community platform.
+
+**Target features:**
+- Community Feed — Share plant photos/identifications publicly
+- Plant Tips/Wiki — Community-contributed care advice
+- User Profiles & Follow — Follow plant enthusiasts, view collections
+- Comments & Likes — Engage with shared content
+- Auth System — Email + OAuth (Google/Apple) via Supabase
+- Report System — Flag inappropriate content, admin review
+
+**Tech additions:**
+- Supabase (PostgreSQL, Auth, Storage, Realtime)
 
 ## Core Value
 
