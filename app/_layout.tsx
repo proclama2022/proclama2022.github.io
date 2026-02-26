@@ -105,6 +105,8 @@ function RootLayoutNav() {
         <Stack.Screen name="privacy" options={{ title: 'Privacy Policy' }} />
         <Stack.Screen name="results" options={{ headerShown: false }} />
         <Stack.Screen name="plant/[id]" options={{ headerShown: false }} />
+        <Stack.Screen name="statistics" options={{ headerShown: true }} />
+        <Stack.Screen name="calendar" options={{ headerShown: true }} />
       </Stack>
     </ThemeProvider>
   );
