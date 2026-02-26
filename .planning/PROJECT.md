@@ -7,13 +7,9 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 
-## Current Milestone: v1.3 Enhanced UX — COMPLETE
+## Current Status: v1.3 Shipped — Ready for v2.0 Planning
 
-**Delivered features:**
-- Search & Filter — Fuzzy search by name, filter by watering status and care difficulty
-- Statistics Dashboard — Watering streaks, identification count, reminder completion, weekly chart
-- Care Calendar — Monthly calendar with watering/reminder indicators, task completion
-- UI Polish — Dark mode support, improved onboarding with animations, settings reorganization
+**All milestones complete.** App is feature-complete for current scope.
 
 ## Core Value
 
@@ -142,4 +138,4 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 
 ---
 
-*Last updated: 2026-02-25 after v1.2 milestone (Phases 5+6 — Multi-Photo Gallery + Custom Reminders)*
+*Last updated: 2026-02-26 after v1.3 milestone (Phases 7-10 — Enhanced UX)*

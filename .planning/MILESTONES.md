@@ -29,3 +29,16 @@
 
 ---
 
+
+## v1.3 Enhanced UX (Shipped: 2026-02-26)
+
+**Phases completed:** 4 phases (7-10), executed directly without formal planning
+
+**Key accomplishments:**
+- Search & Filter — Fuzzy search by name, filter by watering status and care difficulty
+- Statistics Dashboard — Watering streaks, identification count, reminder completion, weekly chart
+- Care Calendar — Monthly calendar with watering/reminder indicators, task completion
+- UI Polish — Dark mode support, improved onboarding with animations, settings reorganization
+
+---
+
