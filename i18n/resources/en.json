@@ -149,7 +149,15 @@
     "language": "Language",
     "about": "About",
     "privacy": "Privacy Policy",
-    "attribution": "Powered by Pl@ntNet"
+    "attribution": "Powered by Pl@ntNet",
+    "appearance": "Appearance",
+    "darkMode": "Dark Mode",
+    "systemDefault": "System Default",
+    "general": "General",
+    "notifications": "Notifications",
+    "statistics": "Statistics",
+    "viewStats": "View Statistics",
+    "legalInfo": "Legal & Info"
   },
   "rateLimit": {
     "title": "Daily Limit Reached",

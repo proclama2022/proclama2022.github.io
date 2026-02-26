@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useCallback } from 'react';
-import { View, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -11,10 +11,10 @@ import SearchFilterBar, { WateringFilter, DifficultyFilter } from '@/components/
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { getCareInfo } from '@/services/careDB';
 import { SavedPlant } from '@/types';
 
-/** Simple fuzzy match: checks if all query characters appear in order in the target */
 function fuzzyMatch(target: string, query: string): boolean {
   const t = target.toLowerCase();
   const q = query.toLowerCase();
@@ -31,41 +31,26 @@ function plantMatchesSearch(plant: SavedPlant, query: string): boolean {
   if (!query.trim()) return true;
   const q = query.trim();
   const fields = [
-    plant.nickname,
-    plant.commonName,
-    plant.scientificName,
-    plant.species,
-    plant.location,
+    plant.nickname, plant.commonName, plant.scientificName, plant.species, plant.location,
   ].filter(Boolean) as string[];
-
   return fields.some(field => fuzzyMatch(field, q));
 }
 
 function plantMatchesWateringFilter(plant: SavedPlant, filter: WateringFilter): boolean {
   if (filter === 'all') return true;
-
   const care = plant.scientificName ? getCareInfo(plant.scientificName) : null;
   if (!care) return filter === 'all';
-
   const now = new Date();
   const lastWatered = plant.lastWatered ? new Date(plant.lastWatered) : null;
-
-  if (!lastWatered) {
-    return filter === 'needsWater';
-  }
-
+  if (!lastWatered) return filter === 'needsWater';
   const daysSinceWatered = (now.getTime() - lastWatered.getTime()) / (1000 * 60 * 60 * 24);
-  const needsWater = daysSinceWatered >= care.waterFrequencyDays;
-
-  return filter === 'needsWater' ? needsWater : !needsWater;
+  return filter === 'needsWater' ? daysSinceWatered >= care.waterFrequencyDays : daysSinceWatered < care.waterFrequencyDays;
 }
 
 function plantMatchesDifficultyFilter(plant: SavedPlant, filter: DifficultyFilter): boolean {
   if (filter === 'all') return true;
-
   const care = plant.scientificName ? getCareInfo(plant.scientificName) : null;
   if (!care) return false;
-
   return care.difficulty === filter;
 }
 
@@ -74,10 +59,22 @@ export default function HomeScreen() {
   const hasSeenOnboarding = useOnboardingStore((state) => state.hasSeenOnboarding);
   const router = useRouter();
   const { t } = useTranslation();
+  const colors = useThemeColors();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [wateringFilter, setWateringFilter] = useState<WateringFilter>('all');
   const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
+
+  // FAB entrance animation
+  const fabScale = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.spring(fabScale, {
+      toValue: 1,
+      tension: 50,
+      friction: 7,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handleSearchChange = useCallback((q: string) => setSearchQuery(q), []);
   const handleWateringChange = useCallback((f: WateringFilter) => setWateringFilter(f), []);
@@ -93,22 +90,20 @@ export default function HomeScreen() {
 
   const hasActiveFilters = searchQuery.trim() !== '' || wateringFilter !== 'all' || difficultyFilter !== 'all';
 
-  // Show onboarding until dismissed
   if (!hasSeenOnboarding) {
     return <Onboarding />;
   }
 
-  // Empty state
   if (plants.length === 0) {
     return (
       <>
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
           <View style={styles.emptyContainer}>
-            <Ionicons name="leaf-outline" size={72} color="#c8e6c9" />
-            <Text style={styles.emptyTitle}>{t('collection.empty')}</Text>
-            <Text style={styles.emptyCTA}>{t('collection.emptyCTA')}</Text>
+            <Ionicons name="leaf-outline" size={72} color={colors.tint} />
+            <Text style={[styles.emptyTitle, { color: colors.textSecondary }]}>{t('collection.empty')}</Text>
+            <Text style={[styles.emptyCTA, { color: colors.textMuted }]}>{t('collection.emptyCTA')}</Text>
             <TouchableOpacity
-              style={styles.cameraButton}
+              style={[styles.cameraButton, { backgroundColor: colors.fab }]}
               onPress={() => router.push('/camera' as const)}
               activeOpacity={0.85}
               accessibilityRole="button"
@@ -124,12 +119,11 @@ export default function HomeScreen() {
     );
   }
 
-  // Collection view with search, filters, and FAB
   return (
     <>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.titleBar}>
-          <Text style={styles.screenTitle}>{t('collection.title')}</Text>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+        <View style={[styles.titleBar, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.screenTitle, { color: colors.text }]}>{t('collection.title')}</Text>
         </View>
 
         <SearchFilterBar
@@ -143,23 +137,24 @@ export default function HomeScreen() {
 
         {filteredPlants.length === 0 && hasActiveFilters ? (
           <View style={styles.noResultsContainer}>
-            <Ionicons name="search-outline" size={48} color="#ccc" />
-            <Text style={styles.noResultsText}>{t('search.noResults')}</Text>
+            <Ionicons name="search-outline" size={48} color={colors.textMuted} />
+            <Text style={[styles.noResultsText, { color: colors.textMuted }]}>{t('search.noResults')}</Text>
           </View>
         ) : (
           <PlantGrid plants={filteredPlants} />
         )}
 
-        {/* Camera FAB */}
-        <TouchableOpacity
-          style={styles.fab}
-          onPress={() => router.push('/camera' as const)}
-          activeOpacity={0.85}
-          accessibilityRole="button"
-          accessibilityLabel={t('camera.title')}
-        >
-          <Ionicons name="camera" size={26} color="#fff" />
-        </TouchableOpacity>
+        <Animated.View style={[styles.fab, { backgroundColor: colors.fab, transform: [{ scale: fabScale }] }]}>
+          <TouchableOpacity
+            style={styles.fabTouch}
+            onPress={() => router.push('/camera' as const)}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel={t('camera.title')}
+          >
+            <Ionicons name="camera" size={26} color="#fff" />
+          </TouchableOpacity>
+        </Animated.View>
       </SafeAreaView>
       <BannerAdWrapper />
     </>
@@ -167,14 +162,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-
-  // Title bar (collection has plants)
+  safeArea: { flex: 1 },
   titleBar: {
-    backgroundColor: '#fff',
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 0,
@@ -183,11 +172,8 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1a1a1a',
     paddingBottom: 10,
   },
-
-  // Empty state
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
@@ -198,13 +184,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#555',
     textAlign: 'center',
     marginTop: 8,
   },
   emptyCTA: {
     fontSize: 15,
-    color: '#888',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -213,7 +197,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginTop: 16,
-    backgroundColor: '#2e7d32',
     paddingVertical: 14,
     paddingHorizontal: 28,
     borderRadius: 14,
@@ -228,8 +211,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
-
-  // No results state
   noResultsContainer: {
     flex: 1,
     alignItems: 'center',
@@ -238,11 +219,8 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: 16,
-    color: '#999',
     textAlign: 'center',
   },
-
-  // Floating action button
   fab: {
     position: 'absolute',
     bottom: 24,
@@ -250,13 +228,17 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#2e7d32',
-    alignItems: 'center',
-    justifyContent: 'center',
     shadowColor: '#2e7d32',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 8,
     elevation: 6,
+  },
+  fabTouch: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
@@ -17,6 +19,9 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface OnboardingScreen {
   icon: string;
+  ionicon: keyof typeof Ionicons.glyphMap;
+  iconColor: string;
+  bgGradientStart: string;
   title: string;
   description: string;
 }
@@ -27,19 +32,39 @@ export default function Onboarding() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
 
+  // Entrance animation
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(30)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
+      Animated.timing(slideAnim, { toValue: 0, duration: 600, useNativeDriver: true }),
+    ]).start();
+  }, [currentIndex]);
+
   const screens: OnboardingScreen[] = [
     {
-      icon: '🌱',
+      icon: '',
+      ionicon: 'leaf',
+      iconColor: '#16A34A',
+      bgGradientStart: '#e8f5e9',
       title: t('onboarding.screen1.title'),
       description: t('onboarding.screen1.description'),
     },
     {
-      icon: '📷',
+      icon: '',
+      ionicon: 'camera',
+      iconColor: '#2563EB',
+      bgGradientStart: '#e3f2fd',
       title: t('onboarding.screen2.title'),
       description: t('onboarding.screen2.description'),
     },
     {
-      icon: '🌿',
+      icon: '',
+      ionicon: 'heart',
+      iconColor: '#DC2626',
+      bgGradientStart: '#fce4ec',
       title: t('onboarding.screen3.title'),
       description: t('onboarding.screen3.description'),
     },
@@ -51,6 +76,8 @@ export default function Onboarding() {
     const offsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(offsetX / SCREEN_WIDTH);
     if (index !== currentIndex) {
+      fadeAnim.setValue(0);
+      slideAnim.setValue(30);
       setCurrentIndex(index);
     }
   };
@@ -60,10 +87,9 @@ export default function Onboarding() {
       setOnboardingComplete();
     } else {
       const nextIndex = currentIndex + 1;
-      scrollViewRef.current?.scrollTo({
-        x: nextIndex * SCREEN_WIDTH,
-        animated: true,
-      });
+      scrollViewRef.current?.scrollTo({ x: nextIndex * SCREEN_WIDTH, animated: true });
+      fadeAnim.setValue(0);
+      slideAnim.setValue(30);
       setCurrentIndex(nextIndex);
     }
   };
@@ -74,14 +100,12 @@ export default function Onboarding() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Skip button */}
       {!isLastScreen && (
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
           <Text style={styles.skipText}>{t('onboarding.skip')}</Text>
         </TouchableOpacity>
       )}
 
-      {/* Swipeable screens */}
       <ScrollView
         ref={scrollViewRef}
         horizontal
@@ -93,14 +117,24 @@ export default function Onboarding() {
       >
         {screens.map((screen, index) => (
           <View key={index} style={styles.screen}>
-            <Text style={styles.icon}>{screen.icon}</Text>
-            <Text style={styles.title}>{screen.title}</Text>
-            <Text style={styles.description}>{screen.description}</Text>
+            <View style={[styles.iconCircle, { backgroundColor: screen.bgGradientStart }]}>
+              <Ionicons name={screen.ionicon} size={64} color={screen.iconColor} />
+            </View>
+            {index === currentIndex ? (
+              <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+                <Text style={styles.title}>{screen.title}</Text>
+                <Text style={styles.description}>{screen.description}</Text>
+              </Animated.View>
+            ) : (
+              <View>
+                <Text style={styles.title}>{screen.title}</Text>
+                <Text style={styles.description}>{screen.description}</Text>
+              </View>
+            )}
           </View>
         ))}
       </ScrollView>
 
-      {/* Page dots */}
       <View style={styles.dotsContainer}>
         {screens.map((_, index) => (
           <View
@@ -113,11 +147,11 @@ export default function Onboarding() {
         ))}
       </View>
 
-      {/* Next / Get Started button */}
-      <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+      <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.85}>
         <Text style={styles.nextButtonText}>
           {isLastScreen ? t('onboarding.getStarted') : t('onboarding.next')}
         </Text>
+        {!isLastScreen && <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 6 }} />}
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -138,9 +172,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#6B7280',
   },
-  scrollView: {
-    flex: 1,
-  },
+  scrollView: { flex: 1 },
   screen: {
     width: SCREEN_WIDTH,
     flex: 1,
@@ -148,9 +180,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
-  icon: {
-    fontSize: 96,
-    marginBottom: 32,
+  iconCircle: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 40,
   },
   title: {
     fontSize: 28,
@@ -173,7 +209,6 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   dot: {
-    width: 8,
     height: 8,
     borderRadius: 4,
   },
@@ -183,15 +218,18 @@ const styles = StyleSheet.create({
   },
   dotInactive: {
     backgroundColor: '#D1D5DB',
+    width: 8,
   },
   nextButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#16A34A',
     borderRadius: 14,
     paddingVertical: 16,
     paddingHorizontal: 48,
     marginBottom: 32,
     minWidth: 200,
-    alignItems: 'center',
   },
   nextButtonText: {
     color: '#FFFFFF',

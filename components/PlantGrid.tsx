@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { View, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import React, { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { Text } from '@/components/Themed';
-import PlantCard from './PlantCard';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { SavedPlant } from '@/types';
+import PlantCard from './PlantCard';
 
 type ViewMode = 'grid' | 'list';
 
@@ -16,23 +18,29 @@ interface Props {
 export default function PlantGrid({ plants }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const { t } = useTranslation();
+  const colors = useThemeColors();
 
-  // Sort newest first (by addedDate descending)
+  const handleSetViewMode = useCallback((mode: ViewMode) => {
+    if (mode !== viewMode) {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      setViewMode(mode);
+    }
+  }, [viewMode]);
+
   const sorted = [...plants].sort(
     (a, b) => new Date(b.addedDate).getTime() - new Date(a.addedDate).getTime()
   );
 
   return (
-    <View style={styles.container}>
-      {/* Header with plant count and view toggle */}
-      <View style={styles.header}>
-        <Text style={styles.countText}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+        <Text style={[styles.countText, { color: colors.textMuted }]}>
           {sorted.length} {sorted.length === 1 ? 'plant' : 'plants'}
         </Text>
-        <View style={styles.toggleGroup}>
+        <View style={[styles.toggleGroup, { backgroundColor: colors.chipBg }]}>
           <TouchableOpacity
-            style={[styles.toggleButton, viewMode === 'grid' && styles.toggleActive]}
-            onPress={() => setViewMode('grid')}
+            style={[styles.toggleButton, viewMode === 'grid' && [styles.toggleActive, { backgroundColor: colors.surface }]]}
+            onPress={() => handleSetViewMode('grid')}
             accessibilityRole="button"
             accessibilityLabel={t('collection.gridView')}
             accessibilityState={{ selected: viewMode === 'grid' }}
@@ -40,12 +48,12 @@ export default function PlantGrid({ plants }: Props) {
             <Ionicons
               name="grid-outline"
               size={18}
-              color={viewMode === 'grid' ? '#2e7d32' : '#999'}
+              color={viewMode === 'grid' ? colors.tint : colors.textMuted}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.toggleButton, viewMode === 'list' && styles.toggleActive]}
-            onPress={() => setViewMode('list')}
+            style={[styles.toggleButton, viewMode === 'list' && [styles.toggleActive, { backgroundColor: colors.surface }]]}
+            onPress={() => handleSetViewMode('list')}
             accessibilityRole="button"
             accessibilityLabel={t('collection.listView')}
             accessibilityState={{ selected: viewMode === 'list' }}
@@ -53,16 +61,15 @@ export default function PlantGrid({ plants }: Props) {
             <Ionicons
               name="list-outline"
               size={18}
-              color={viewMode === 'list' ? '#2e7d32' : '#999'}
+              color={viewMode === 'list' ? colors.tint : colors.textMuted}
             />
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Collection list/grid */}
       <FlatList
         data={sorted}
-        key={viewMode} // Force remount when switching columns
+        key={viewMode}
         numColumns={viewMode === 'grid' ? 2 : 1}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -79,31 +86,22 @@ export default function PlantGrid({ plants }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-
-  // Header
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
   },
   countText: {
     fontSize: 14,
-    color: '#777',
     fontWeight: '500',
   },
   toggleGroup: {
     flexDirection: 'row',
     gap: 4,
-    backgroundColor: '#f0f0f0',
     borderRadius: 8,
     padding: 3,
   },
@@ -112,18 +110,13 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   toggleActive: {
-    backgroundColor: '#fff',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 2,
     elevation: 1,
   },
-
-  // List content
-  listContent: {
-    paddingBottom: 100, // Space for FAB
-  },
+  listContent: { paddingBottom: 100 },
   gridContent: {
     paddingHorizontal: 10,
     paddingTop: 10,

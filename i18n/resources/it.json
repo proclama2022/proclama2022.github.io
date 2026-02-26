@@ -149,7 +149,15 @@
     "language": "Lingua",
     "about": "Informazioni",
     "privacy": "Privacy Policy",
-    "attribution": "Grazie a Pl@ntNet"
+    "attribution": "Grazie a Pl@ntNet",
+    "appearance": "Aspetto",
+    "darkMode": "Modalita Scura",
+    "systemDefault": "Predefinito Sistema",
+    "general": "Generale",
+    "notifications": "Notifiche",
+    "statistics": "Statistiche",
+    "viewStats": "Vedi Statistiche",
+    "legalInfo": "Legale & Info"
   },
   "rateLimit": {
     "title": "Limite Giornaliero Raggiunto",
