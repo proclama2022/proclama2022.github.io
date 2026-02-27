@@ -24,6 +24,8 @@ export default function SettingsScreen() {
   const plants = usePlantsStore((state) => state.plants);
   const isPro = useProStore((state) => state.isPro);
   const user = useAuthStore((state) => state.user);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const error = useAuthStore((state) => state.error);
   const isAuthenticated = Boolean(user);
   const { restore, loading: restoreLoading } = useProStatus();
   const { t } = useTranslation();
@@ -149,6 +151,24 @@ export default function SettingsScreen() {
         <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
           <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>Account</Text>
 
+          {/* Loading indicator */}
+          {isLoading && (
+            <View style={[styles.row, { justifyContent: 'center' }]}>
+              <Text style={[styles.statusText, { color: colors.textSecondary }]}>Signing in...</Text>
+            </View>
+          )}
+
+          {/* Error display */}
+          {error && !isLoading && (
+            <View style={[styles.errorContainer, { backgroundColor: `${colors.danger}15` }]}>
+              <Ionicons name="alert-circle" size={16} color={colors.danger} />
+              <Text style={[styles.errorText, { color: colors.danger, flex: 1 }]}>{error}</Text>
+              <TouchableOpacity onPress={() => setAuthModalVisible(true)}>
+                <Text style={[styles.errorLink, { color: colors.danger }]}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
           {isAuthenticated && user ? (
             <>
               {/* User info */}
@@ -170,6 +190,16 @@ export default function SettingsScreen() {
                 <Ionicons name="log-out-outline" size={18} color={colors.danger} />
                 <Text style={[styles.secondaryButtonText, { color: colors.danger }]}>Sign Out</Text>
               </TouchableOpacity>
+
+              {/* Debug section (dev only) */}
+              {__DEV__ && (
+                <View style={[styles.debugSection, { backgroundColor: colors.chipBg, marginTop: 12 }]}>
+                  <Text style={[styles.debugTitle, { color: colors.textMuted }]}>Auth State (Dev)</Text>
+                  <Text style={[styles.debugText, { color: colors.textSecondary }]}>
+                    Signed in as: {user?.email}
+                  </Text>
+                </View>
+              )}
             </>
           ) : (
             <>
@@ -551,5 +581,38 @@ const styles = StyleSheet.create({
   timePickerCancelText: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  errorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+  },
+  errorText: {
+    fontSize: 13,
+    flex: 1,
+  },
+  errorLink: {
+    fontSize: 13,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
+  debugSection: {
+    padding: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  debugTitle: {
+    fontSize: 11,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    marginBottom: 4,
+  },
+  debugText: {
+    fontSize: 12,
   },
 });
