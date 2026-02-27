@@ -9,6 +9,7 @@ import 'react-native-reanimated';
 import { useColorScheme } from '@/components/useColorScheme';
 import { initI18n } from '@/i18n';
 import { initNotificationService, checkPermission, scheduleDailyDigest } from '@/services/notificationService';
+import { initializeAuth } from '@/services/authService';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { usePlantsStore } from '@/stores/plantsStore';
 
@@ -75,6 +76,36 @@ export default function RootLayout() {
       }
     });
   }, [notificationEnabled, notificationTime, plants]);
+
+  /**
+   * Initialize authentication state on app launch
+   *
+   * Restores user session from Supabase SecureStore and sets up
+   * auth state change listener. This is non-blocking — if Supabase
+   * is not configured or unreachable, the app continues without auth.
+   *
+   * Auth state is managed centrally in authStore (Zustand).
+   * Session persists across app restarts via Expo SecureStore.
+   *
+   * Reference: Phase 11 Plan 04 - Auth state initialization
+   */
+  useEffect(() => {
+    let unsubscribe: (() => void) | null = null;
+
+    const initAuth = async () => {
+      try {
+        unsubscribe = await initializeAuth();
+      } catch (err) {
+        console.warn('Auth initialization skipped (Supabase not configured):', err);
+      }
+    };
+
+    initAuth();
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
