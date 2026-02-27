@@ -8,6 +8,7 @@ import { Text } from '@/components/Themed';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { ProUpgradeModal } from '@/components/ProUpgradeModal';
 import { AuthModal } from '@/components/auth';
+import { MigrationScreen } from '@/components/auth/MigrationScreen';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useProStore } from '@/stores/proStore';
@@ -17,6 +18,7 @@ import { useProStatus } from '@/hooks/useProStatus';
 import { changeLanguage } from '@/i18n';
 import { resetRateLimit } from '@/services/rateLimiter';
 import { signOut } from '@/services/authService';
+import { getMigrationFlag, clearMigrationFlag } from '@/services/migrationService';
 import * as NotificationService from '@/services/notificationService';
 
 export default function SettingsScreen() {
@@ -36,10 +38,17 @@ export default function SettingsScreen() {
   const [showTimePicker, setShowTimePicker] = React.useState(false);
   const [showProUpgradeModal, setShowProUpgradeModal] = React.useState(false);
   const [authModalVisible, setAuthModalVisible] = React.useState(false);
+  const [migrationVisible, setMigrationVisible] = React.useState(false);
+  const [migrationFlag, setMigrationFlag] = React.useState<{ timestamp: string; plantCount: number } | null>(null);
 
   React.useEffect(() => {
     NotificationService.checkPermission().then(setPermissionStatus);
-  }, []);
+
+    // Load migration flag if authenticated
+    if (isAuthenticated) {
+      getMigrationFlag().then(setMigrationFlag);
+    }
+  }, [isAuthenticated]);
 
   const handleLanguageChange = async (lang: 'en' | 'it') => {
     setLanguage(lang);
@@ -179,6 +188,47 @@ export default function SettingsScreen() {
                   <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>Signed in</Text>
                 </View>
               </View>
+
+              {/* Migration section */}
+              {!migrationFlag && plants.length > 0 && (
+                <TouchableOpacity
+                  style={[styles.secondaryButton, { backgroundColor: colors.chipBg }]}
+                  onPress={() => setMigrationVisible(true)}
+                  accessibilityRole="button"
+                  accessibilityLabel="Sync your plants to the cloud"
+                >
+                  <Ionicons name="cloud-upload-outline" size={18} color={colors.tint} />
+                  <Text style={[styles.secondaryButtonText, { color: colors.tint }]}>Sync Your Plants</Text>
+                </TouchableOpacity>
+              )}
+
+              {migrationFlag && (
+                <View style={[styles.row, { paddingVertical: 12 }]}>
+                  <Ionicons name="cloud-checkmark" size={18} color={colors.success} />
+                  <View style={{ marginLeft: 12, flex: 1 }}>
+                    <Text style={[styles.rowLabel, { color: colors.text }]}>Last synced</Text>
+                    <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>
+                      {new Date(migrationFlag.timestamp).toLocaleDateString()}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {/* Debug: Reset migration button (dev only) */}
+              {__DEV__ && migrationFlag && (
+                <TouchableOpacity
+                  style={[styles.secondaryButton, { backgroundColor: colors.chipBg, marginTop: 8 }]}
+                  onPress={async () => {
+                    await clearMigrationFlag();
+                    setMigrationFlag(null);
+                    Alert.alert('Dev', 'Migration flag cleared. You can sync again.');
+                  }}
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="refresh-outline" size={18} color={colors.warning} />
+                  <Text style={[styles.secondaryButtonText, { color: colors.warning }]}>Reset Sync (Dev)</Text>
+                </TouchableOpacity>
+              )}
 
               {/* Sign out button */}
               <TouchableOpacity
@@ -375,6 +425,23 @@ export default function SettingsScreen() {
       <AuthModal
         visible={authModalVisible}
         onClose={() => setAuthModalVisible(false)}
+        onSignedIn={async () => {
+          // Refresh migration flag after sign-in
+          const flag = await getMigrationFlag();
+          setMigrationFlag(flag);
+        }}
+      />
+
+      {/* Migration Screen */}
+      <MigrationScreen
+        visible={migrationVisible}
+        onComplete={async () => {
+          setMigrationVisible(false);
+          // Refresh migration flag after completion
+          const flag = await getMigrationFlag();
+          setMigrationFlag(flag);
+        }}
+        onSkip={() => setMigrationVisible(false)}
       />
 
       <BannerAdWrapper />
