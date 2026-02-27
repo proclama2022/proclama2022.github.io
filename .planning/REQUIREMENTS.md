@@ -13,9 +13,9 @@ Requirements for Community milestone. Each maps to roadmap phases.
 - [ ] **AUTH-02**: User can sign in with Google OAuth (single tap)
 - [ ] **AUTH-03**: User can sign in with Apple (required for iOS App Store)
 - [ ] **AUTH-04**: User can reset password via email link
-- [ ] **AUTH-05**: User session persists across app launches
+- [x] **AUTH-05**: User session persists across app launches
 - [ ] **AUTH-06**: User can sign out from Settings
-- [ ] **AUTH-07**: v1.x features (camera, plant ID, local collection) work WITHOUT auth — offline-first preserved
+- [x] **AUTH-07**: v1.x features (camera, plant ID, local collection) work WITHOUT auth — offline-first preserved
 
 ### User Profiles
 
@@ -131,9 +131,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | Phase 11 | Pending |
 | AUTH-03 | Phase 11 | Pending |
 | AUTH-04 | Phase 11 | Pending |
-| AUTH-05 | Phase 11 | Pending |
+| AUTH-05 | Phase 11 | Complete |
 | AUTH-06 | Phase 11 | Pending |
-| AUTH-07 | Phase 11 | Pending |
+| AUTH-07 | Phase 11 | Complete |
 | PROF-01 | Phase 12 | Pending |
 | PROF-02 | Phase 12 | Pending |
 | PROF-03 | Phase 12 | Pending |
