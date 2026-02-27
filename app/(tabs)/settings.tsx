@@ -16,6 +16,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useProStatus } from '@/hooks/useProStatus';
 import { changeLanguage } from '@/i18n';
 import { resetRateLimit } from '@/services/rateLimiter';
+import { authService } from '@/services/authService';
 import * as NotificationService from '@/services/notificationService';
 
 export default function SettingsScreen() {
@@ -88,6 +89,26 @@ export default function SettingsScreen() {
     Alert.alert(success ? t('pro.restoreSuccess') : t('pro.restoreFailed'));
   };
 
+  const handleSignOut = async () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: async () => {
+            const result = await authService.signOut();
+            if (!result.success && result.error) {
+              Alert.alert('Sign Out Failed', result.error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <>
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
@@ -138,6 +159,17 @@ export default function SettingsScreen() {
                   <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>Signed in</Text>
                 </View>
               </View>
+
+              {/* Sign out button */}
+              <TouchableOpacity
+                style={[styles.secondaryButton, { backgroundColor: colors.chipBg }]}
+                onPress={handleSignOut}
+                accessibilityRole="button"
+                accessibilityLabel="Sign out"
+              >
+                <Ionicons name="log-out-outline" size={18} color={colors.danger} />
+                <Text style={[styles.secondaryButtonText, { color: colors.danger }]}>Sign Out</Text>
+              </TouchableOpacity>
             </>
           ) : (
             <>
