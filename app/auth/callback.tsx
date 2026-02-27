@@ -19,13 +19,13 @@
  * @module app/auth/callback
  */
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Platform } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { useAuthStore } from '@/stores/authStore';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 /**
  * OAuth callback screen component
@@ -36,19 +36,22 @@ import { ThemedView } from '@/components/ThemedView';
 export default function AuthCallbackScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const colorScheme = useColorScheme();
+  const colors = Colors[colorScheme ?? 'light'];
 
   // Local state for error display
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(true);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | null = null;
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     /**
      * Handle OAuth callback
      *
-     * Extracts session from URL parameters (or initial URL),
-     * stores session in authStore, and redirects to main app.
+     * In React Native, Supabase handles OAuth sessions via URL hash fragments.
+     * The auth state change listener will capture the session automatically.
+     * We just need to wait for the session to be available.
      */
     const handleCallback = async () => {
       try {
@@ -66,18 +69,18 @@ export default function AuthCallbackScreen() {
         // Get Supabase client (lazy initialization)
         const supabase = getSupabaseClient();
 
-        // Extract session from URL
-        // Supabase parses OAuth callback URL and returns session
-        const { data, error: sessionError } = await supabase.auth.getSessionFromUrl(url);
+        // Wait for session - Supabase auto-detects OAuth callback URL
+        // In React Native with detectSessionInUrl: false, we need to check session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
         if (sessionError) {
           throw sessionError;
         }
 
-        if (data.session) {
+        if (session) {
           // Success: Store session in authStore
           const { setSession } = useAuthStore.getState();
-          setSession(data.session);
+          setSession(session);
 
           // Redirect to main app tabs after short delay
           // (allows user to see "Signing you in..." message)
@@ -85,9 +88,27 @@ export default function AuthCallbackScreen() {
             router.replace('/(tabs)');
           }, 1000);
         } else {
-          // No session in callback - may be email confirmation flow
-          // or user cancelled OAuth
-          throw new Error('No session found in callback');
+          // No session yet - listen for auth state change
+          // This handles the case where session isn't immediately available
+          const { setSession: setSessionInStore } = useAuthStore.getState();
+          const { data: { subscription } } = supabase.auth.onAuthStateChange(
+            (_event, newSession) => {
+              if (newSession) {
+                setSessionInStore(newSession);
+                timeoutId = setTimeout(() => {
+                  router.replace('/(tabs)');
+                }, 1000);
+              } else {
+                // No session after auth state change
+                throw new Error('No session found in callback');
+              }
+            }
+          );
+
+          // Cleanup listener after delay
+          setTimeout(() => {
+            subscription.unsubscribe();
+          }, 5000);
         }
       } catch (err) {
         // Error handling
@@ -123,48 +144,48 @@ export default function AuthCallbackScreen() {
    * User is automatically redirected when complete.
    */
   return (
-    <ThemedView style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
         {processing ? (
           // Loading state
           <>
             <ActivityIndicator
               size="large"
-              color="#2d5a27"
+              color={colors.tint}
               style={styles.spinner}
             />
-            <ThemedText style={styles.message}>
+            <Text style={[styles.message, { color: colors.text }]}>
               Signing you in...
-            </ThemedText>
+            </Text>
           </>
         ) : error ? (
           // Error state
           <>
-            <ThemedText style={styles.errorTitle}>
+            <Text style={[styles.errorTitle, { color: colors.text }]}>
               Sign-in Failed
-            </ThemedText>
-            <ThemedText style={styles.errorMessage}>
+            </Text>
+            <Text style={[styles.errorMessage, { color: colors.textSecondary }]}>
               {error}
-            </ThemedText>
-            <ThemedText style={styles.redirectNote}>
+            </Text>
+            <Text style={[styles.redirectNote, { color: colors.textMuted }]}>
               Redirecting to settings...
-            </ThemedText>
+            </Text>
           </>
         ) : (
           // Success state (before redirect)
           <>
             <ActivityIndicator
               size="large"
-              color="#2d5a27"
+              color={colors.tint}
               style={styles.spinner}
             />
-            <ThemedText style={styles.message}>
+            <Text style={[styles.message, { color: colors.text }]}>
               Sign-in successful!
-            </ThemedText>
+            </Text>
           </>
         )}
       </View>
-    </ThemedView>
+    </View>
   );
 }
 
