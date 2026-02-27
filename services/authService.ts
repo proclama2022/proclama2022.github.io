@@ -1,0 +1,288 @@
+/**
+ * Authentication Service
+ *
+ * Core authentication operations for Plantid v2.0 Community features.
+ * Integrates with Supabase Auth for email/password and OAuth sign-in.
+ *
+ * All functions return structured { success, error?, data? } responses
+ * for consistent error handling in UI components.
+ *
+ * Usage:
+ *   import { signUpWithEmail, signInWithEmail } from '@/services/authService';
+ *
+ *   const result = await signUpWithEmail('user@example.com', 'password123');
+ *   if (result.success) {
+ *     // Navigate to home or show confirmation message
+ *   } else {
+ *     // Display result.error to user
+ *   }
+ *
+ * @module services/authService
+ */
+import { getSupabaseClient } from '@/lib/supabase/client';
+import { useAuthStore } from '@/stores/authStore';
+
+/**
+ * Auth operation result type
+ *
+ * All auth functions return this structure for consistent error handling.
+ * success: true if operation succeeded, false if failed
+ * error: User-friendly error message (only present if success=false)
+ */
+type AuthResult = {
+  success: boolean;
+  error?: string;
+};
+
+/**
+ * Sign up result with session
+ *
+ * Returned by signUpWithEmail when email confirmation is not required
+ * or when user clicks confirmation link and is redirected to app.
+ */
+type SignUpResult = AuthResult & {
+  requiresConfirmation?: boolean;
+  message?: string;
+  session?: object; // Supabase Session — using object to avoid circular type import
+};
+
+/**
+ * Sign in result with session
+ *
+ * Returned by signInWithEmail on successful authentication.
+ */
+type SignInResult = AuthResult & {
+  session?: object; // Supabase Session
+};
+
+/**
+ * OAuth sign in result
+ *
+ * Returned by signInWithGoogle and signInWithApple.
+ * URL is the OAuth authorization URL that opens in browser.
+ */
+type OAuthResult = AuthResult & {
+  url?: string;
+};
+
+// ============================================================================
+// Email/Password Authentication
+// ============================================================================
+
+/**
+ * Sign up with email and password
+ *
+ * Creates a new user account with email/password authentication.
+ * If email confirmation is enabled in Supabase, user must click link
+ * in confirmation email before signing in.
+ *
+ * @param email - User's email address
+ * @param password - User's password (min 6 characters enforced by Supabase)
+ * @returns SignUpResult with success status, session (if no confirmation required), or confirmation message
+ *
+ * Example:
+ *   const result = await signUpWithEmail('user@example.com', 'password123');
+ *   if (result.success) {
+ *     if (result.requiresConfirmation) {
+ *       // Show "Check your email for confirmation link" message
+ *     } else {
+ *       // User is signed in, navigate to home
+ *     }
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const signUpWithEmail = async (
+  email: string,
+  password: string
+): Promise<SignUpResult> => {
+  const supabase = getSupabaseClient();
+  const { setLoading, setError } = useAuthStore.getState();
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: 'plantidtemp://auth/callback',
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    // Email confirmation required
+    if (data.session === null) {
+      return {
+        success: true,
+        requiresConfirmation: true,
+        message: 'Check your email for confirmation link',
+      };
+    }
+
+    // Auto-sign-in successful (email confirmation disabled)
+    if (data.session) {
+      const { setSession } = useAuthStore.getState();
+      setSession(data.session as any); // Cast to avoid circular import
+      return { success: true, session: data.session };
+    }
+
+    // Fallback (should not happen)
+    return {
+      success: true,
+      requiresConfirmation: true,
+      message: 'Account created. Please check your email for confirmation link.',
+    };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  } finally {
+    setLoading(false);
+  }
+};
+
+/**
+ * Sign in with email and password
+ *
+ * Authenticates an existing user with email and password.
+ * User must have confirmed their email if confirmation is enabled.
+ *
+ * @param email - User's email address
+ * @param password - User's password
+ * @returns SignInResult with success status and session (if successful)
+ *
+ * Example:
+ *   const result = await signInWithEmail('user@example.com', 'password123');
+ *   if (result.success) {
+ *     // User is signed in, navigate to home
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const signInWithEmail = async (
+  email: string,
+  password: string
+): Promise<SignInResult> => {
+  const supabase = getSupabaseClient();
+  const { setLoading, setError } = useAuthStore.getState();
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    if (data.session) {
+      const { setSession } = useAuthStore.getState();
+      setSession(data.session as any); // Cast to avoid circular import
+      return { success: true, session: data.session };
+    }
+
+    // Fallback (should not happen)
+    return { success: false, error: 'Sign in failed. Please try again.' };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  } finally {
+    setLoading(false);
+  }
+};
+
+/**
+ * Reset password via email
+ *
+ * Sends a password reset email to the user. User clicks link in email
+ * to set a new password. Link redirects to app with deep link.
+ *
+ * @param email - User's email address
+ * @returns AuthResult with success status and message
+ *
+ * Example:
+ *   const result = await resetPassword('user@example.com');
+ *   if (result.success) {
+ *     // Show "Password reset email sent. Check your inbox." message
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const resetPassword = async (email: string): Promise<AuthResult> => {
+  const supabase = getSupabaseClient();
+  const { setError } = useAuthStore.getState();
+
+  setError(null);
+
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'plantidtemp://auth/reset-password',
+    });
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    return {
+      success: true,
+    };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  }
+};
+
+/**
+ * Sign out current user
+ *
+ * Signs out the current user and clears auth state.
+ * Session is removed from Supabase and local secure storage.
+ *
+ * @returns AuthResult with success status
+ *
+ * Example:
+ *   const result = await signOut();
+ *   if (result.success) {
+ *     // Navigate to sign in screen or show signed out message
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const signOut = async (): Promise<AuthResult> => {
+  const supabase = getSupabaseClient();
+  const { clearAuth, setError } = useAuthStore.getState();
+
+  setError(null);
+
+  try {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    // Clear auth state from store
+    clearAuth();
+
+    return { success: true };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  }
+};
