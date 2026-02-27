@@ -651,3 +651,31 @@ export const getCurrentUser = (): object | null => {
 export const isAuthenticated = (): boolean => {
   return Boolean(useAuthStore.getState().session);
 };
+
+// ============================================================================
+// Migration Status
+// ============================================================================
+
+/**
+ * Check if user has completed plant migration
+ *
+ * Checks AsyncStorage for migration completion flag.
+ * Use this to determine whether to show migration prompt after sign-up.
+ *
+ * @returns Promise<boolean> - true if migration completed, false otherwise
+ *
+ * Example:
+ *   const migrated = await hasMigrated();
+ *   if (!migrated && hasLocalPlants) {
+ *     // Show migration prompt
+ *   }
+ */
+export const hasMigrated = async (): Promise<boolean> => {
+  try {
+    const { hasMigrated: checkMigrated } = await import('@/services/migrationService');
+    return await checkMigrated();
+  } catch (err) {
+    console.error('Failed to check migration status:', err);
+    return false;
+  }
+};

@@ -23,7 +23,7 @@
  *
  * @module components/auth/AuthModal
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -37,7 +37,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/components/useColorScheme';
 import { OAuthButtons } from './OAuthButtons';
 import { EmailAuthForm } from './EmailAuthForm';
+import { MigrationScreen } from './MigrationScreen';
 import Colors from '@/constants/Colors';
+import { usePlantsStore } from '@/stores/plantsStore';
+import { hasMigrated } from '@/services/authService';
 
 /**
  * Auth modal props
@@ -51,6 +54,8 @@ export interface AuthModalProps {
   initialMode?: 'signIn' | 'signUp';
   /** Success callback - called after successful authentication */
   onSuccess?: () => void;
+  /** Callback after auth success and optional migration - for parent navigation */
+  onSignedIn?: () => void;
 }
 
 /**
@@ -64,6 +69,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'signIn',
   onSuccess,
+  onSignedIn,
 }) => {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
@@ -74,16 +80,35 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   // Error state - displays at top of modal
   const [error, setError] = useState<string | null>(null);
 
+  // Migration prompt state
+  const [showMigration, setShowMigration] = useState(false);
+
+  // Get local plants for migration check
+  const localPlants = usePlantsStore((state) => state.plants);
+
   /**
    * Handle successful authentication
    *
    * Closes modal and calls onSuccess callback.
+   * Checks for local plants and migration status, shows migration prompt if needed.
    * Parent component should handle navigation (e.g., to Settings or Community).
    */
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
     setError(null);
     onClose();
     onSuccess?.();
+
+    // Check if user has local plants and hasn't migrated yet
+    const hasLocalPlants = localPlants.length > 0;
+    const migrated = await hasMigrated();
+
+    if (hasLocalPlants && !migrated) {
+      // Show migration prompt
+      setShowMigration(true);
+    }
+
+    // Call onSignedIn callback for parent navigation
+    onSignedIn?.();
   };
 
   /**
@@ -253,6 +278,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      {/* Migration Screen (shown after successful sign-up if user has plants) */}
+      <MigrationScreen
+        visible={showMigration}
+        onComplete={() => {
+          setShowMigration(false);
+          onSignedIn?.();
+        }}
+        onSkip={() => {
+          setShowMigration(false);
+          onSignedIn?.();
+        }}
+      />
     </Modal>
   );
 };
