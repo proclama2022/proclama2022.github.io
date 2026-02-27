@@ -7,10 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/Themed';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { ProUpgradeModal } from '@/components/ProUpgradeModal';
+import { AuthModal } from '@/components/auth';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useProStore } from '@/stores/proStore';
 import { usePlantsStore } from '@/stores/plantsStore';
+import { useAuthStore } from '@/stores/authStore';
 import { useProStatus } from '@/hooks/useProStatus';
 import { changeLanguage } from '@/i18n';
 import { resetRateLimit } from '@/services/rateLimiter';
@@ -20,6 +22,8 @@ export default function SettingsScreen() {
   const { language, setLanguage, notificationEnabled, setNotificationEnabled, notificationTime, setNotificationTime } = useSettingsStore();
   const plants = usePlantsStore((state) => state.plants);
   const isPro = useProStore((state) => state.isPro);
+  const user = useAuthStore((state) => state.user);
+  const isAuthenticated = Boolean(user);
   const { restore, loading: restoreLoading } = useProStatus();
   const { t } = useTranslation();
   const colors = useThemeColors();
@@ -28,6 +32,7 @@ export default function SettingsScreen() {
   const [permissionStatus, setPermissionStatus] = React.useState<'granted' | 'denied' | 'undetermined'>('undetermined');
   const [showTimePicker, setShowTimePicker] = React.useState(false);
   const [showProUpgradeModal, setShowProUpgradeModal] = React.useState(false);
+  const [authModalVisible, setAuthModalVisible] = React.useState(false);
 
   React.useEffect(() => {
     NotificationService.checkPermission().then(setPermissionStatus);
@@ -117,6 +122,40 @@ export default function SettingsScreen() {
               {restoreLoading ? t('common.loading') : t('pro.restorePurchases')}
             </Text>
           </TouchableOpacity>
+        </View>
+
+        {/* Account */}
+        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>Account</Text>
+
+          {isAuthenticated && user ? (
+            <>
+              {/* User info */}
+              <View style={[styles.row, { paddingVertical: 16 }]}>
+                <Ionicons name="person" size={20} color={colors.tint} />
+                <View style={{ marginLeft: 12, flex: 1 }}>
+                  <Text style={[styles.rowLabel, { color: colors.text }]}>{user.email}</Text>
+                  <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>Signed in</Text>
+                </View>
+              </View>
+            </>
+          ) : (
+            <>
+              {/* Sign in button */}
+              <TouchableOpacity
+                style={[styles.actionButton, { backgroundColor: colors.tint }]}
+                onPress={() => setAuthModalVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel="Sign in or create account"
+              >
+                <Ionicons name="log-in-outline" size={20} color="#fff" />
+                <Text style={styles.actionButtonText}>Sign In / Create Account</Text>
+              </TouchableOpacity>
+              <Text style={[styles.hintText, { color: colors.textMuted }]}>
+                Sign in to access community features
+              </Text>
+            </>
+          )}
         </View>
 
         {/* General */}
@@ -269,6 +308,13 @@ export default function SettingsScreen() {
       </Modal>
 
       <ProUpgradeModal visible={showProUpgradeModal} onClose={() => setShowProUpgradeModal(false)} triggerReason="manual" />
+
+      {/* Auth Modal */}
+      <AuthModal
+        visible={authModalVisible}
+        onClose={() => setAuthModalVisible(false)}
+      />
+
       <BannerAdWrapper />
     </>
   );
