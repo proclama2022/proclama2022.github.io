@@ -114,6 +114,12 @@ export const getAuthErrorMessage = (error: unknown): string => {
     case 'Email rate limit exceeded':
       return 'Too many attempts. Please try again later.';
 
+    case 'Unable to connect. Check your internet connection.':
+      return 'Unable to connect. Please check your internet connection and try again.';
+
+    case 'Timeout':
+      return 'Unable to connect. Please check your internet connection and try again.';
+
     default:
       // Return original message if no match, or generic error
       return errorMessage || 'An unknown error occurred';
@@ -167,49 +173,51 @@ export const signUpWithEmail = async (
   email: string,
   password: string
 ): Promise<SignUpResult> => {
-  const supabase = getSupabaseClient();
   const { setLoading, setError } = useAuthStore.getState();
 
   setLoading(true);
   setError(null);
 
   try {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: 'plantidtemp://auth/callback',
-      },
-    });
+    return await withOfflineCheck(async () => {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: 'plantidtemp://auth/callback',
+        },
+      });
 
-    if (error) {
-      const userMessage = getAuthErrorMessage(error);
-      setError(userMessage);
-      return { success: false, error: userMessage };
-    }
+      if (error) {
+        const userMessage = getAuthErrorMessage(error);
+        setError(userMessage);
+        return { success: false, error: userMessage };
+      }
 
-    // Email confirmation required
-    if (data.session === null) {
+      // Email confirmation required
+      if (data.session === null) {
+        return {
+          success: true,
+          requiresConfirmation: true,
+          message: 'Check your email for confirmation link',
+        };
+      }
+
+      // Auto-sign-in successful (email confirmation disabled)
+      if (data.session) {
+        const { setSession } = useAuthStore.getState();
+        setSession(data.session as any); // Cast to avoid circular import
+        return { success: true, session: data.session };
+      }
+
+      // Fallback (should not happen)
       return {
         success: true,
         requiresConfirmation: true,
-        message: 'Check your email for confirmation link',
+        message: 'Account created. Please check your email for confirmation link.',
       };
-    }
-
-    // Auto-sign-in successful (email confirmation disabled)
-    if (data.session) {
-      const { setSession } = useAuthStore.getState();
-      setSession(data.session as any); // Cast to avoid circular import
-      return { success: true, session: data.session };
-    }
-
-    // Fallback (should not happen)
-    return {
-      success: true,
-      requiresConfirmation: true,
-      message: 'Account created. Please check your email for confirmation link.',
-    };
+    });
   } catch (err) {
     const userMessage = getAuthErrorMessage(err);
     setError(userMessage);
@@ -241,32 +249,34 @@ export const signInWithEmail = async (
   email: string,
   password: string
 ): Promise<SignInResult> => {
-  const supabase = getSupabaseClient();
   const { setLoading, setError } = useAuthStore.getState();
 
   setLoading(true);
   setError(null);
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    return await withOfflineCheck(async () => {
+      const supabase = getSupabaseClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        const userMessage = getAuthErrorMessage(error);
+        setError(userMessage);
+        return { success: false, error: userMessage };
+      }
+
+      if (data.session) {
+        const { setSession } = useAuthStore.getState();
+        setSession(data.session as any); // Cast to avoid circular import
+        return { success: true, session: data.session };
+      }
+
+      // Fallback (should not happen)
+      return { success: false, error: 'Sign in failed. Please try again.' };
     });
-
-    if (error) {
-      const userMessage = getAuthErrorMessage(error);
-      setError(userMessage);
-      return { success: false, error: userMessage };
-    }
-
-    if (data.session) {
-      const { setSession } = useAuthStore.getState();
-      setSession(data.session as any); // Cast to avoid circular import
-      return { success: true, session: data.session };
-    }
-
-    // Fallback (should not happen)
-    return { success: false, error: 'Sign in failed. Please try again.' };
   } catch (err) {
     const userMessage = getAuthErrorMessage(err);
     setError(userMessage);
@@ -294,25 +304,27 @@ export const signInWithEmail = async (
  *   }
  */
 export const resetPassword = async (email: string): Promise<AuthResult> => {
-  const supabase = getSupabaseClient();
   const { setError } = useAuthStore.getState();
 
   setError(null);
 
   try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'plantidtemp://auth/reset-password',
+    return await withOfflineCheck(async () => {
+      const supabase = getSupabaseClient();
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: 'plantidtemp://auth/reset-password',
+      });
+
+      if (error) {
+        const userMessage = getAuthErrorMessage(error);
+        setError(userMessage);
+        return { success: false, error: userMessage };
+      }
+
+      return {
+        success: true,
+      };
     });
-
-    if (error) {
-      const userMessage = getAuthErrorMessage(error);
-      setError(userMessage);
-      return { success: false, error: userMessage };
-    }
-
-    return {
-      success: true,
-    };
   } catch (err) {
     const userMessage = getAuthErrorMessage(err);
     setError(userMessage);
@@ -337,12 +349,13 @@ export const resetPassword = async (email: string): Promise<AuthResult> => {
  *   }
  */
 export const signOut = async (): Promise<AuthResult> => {
-  const supabase = getSupabaseClient();
   const { clearAuth, setError } = useAuthStore.getState();
 
   setError(null);
 
   try {
+    // Sign out doesn't require online check - clears local session
+    const supabase = getSupabaseClient();
     const { error } = await supabase.auth.signOut();
 
     if (error) {
@@ -650,6 +663,72 @@ export const getCurrentUser = (): object | null => {
  */
 export const isAuthenticated = (): boolean => {
   return Boolean(useAuthStore.getState().session);
+};
+
+// ============================================================================
+// Offline Detection
+// ============================================================================
+
+/**
+ * Check if Supabase is reachable (online check)
+ *
+ * Pings Supabase auth with a lightweight getSession call.
+ * Returns true if reachable, false if network error or timeout.
+ *
+ * @param timeout - Timeout in milliseconds (default 5000ms)
+ * @returns Promise<boolean> - true if online, false if offline or error
+ *
+ * Example:
+ *   const online = await isOnline();
+ *   if (!online) {
+ *     // Show "Connect to internet to view community" placeholder
+ *   }
+ */
+export const isOnline = async (timeout: number = 5000): Promise<boolean> => {
+  try {
+    const supabase = getSupabaseClient();
+
+    // Race between getSession and timeout
+    const result = await Promise.race([
+      supabase.auth.getSession(),
+      new Promise<{ data: { session: null }; error: Error }>((resolve) =>
+        setTimeout(() => resolve({ data: { session: null }, error: new Error('Timeout') }), timeout)
+      ),
+    ]);
+
+    // If we got a session or no-error null response, we're online
+    return !result.error;
+  } catch (err) {
+    console.warn('Online check failed:', err);
+    return false;
+  }
+};
+
+/**
+ * Offline check wrapper for auth operations
+ *
+ * Higher-order function that checks connectivity before executing auth operation.
+ * Returns offline error message if Supabase is unreachable.
+ *
+ * @param operation - Async function to execute if online
+ * @returns Promise<T> - Result of operation or offline error
+ *
+ * Example:
+ *   const result = await withOfflineCheck(() => signInWithEmail(email, password));
+ *   if (!result.success && result.error === 'Unable to connect...') {
+ *     // Show offline error
+ *   }
+ */
+const withOfflineCheck = async <T,>(
+  operation: () => Promise<T>
+): Promise<T> => {
+  const online = await isOnline();
+
+  if (!online) {
+    throw new Error('Unable to connect. Check your internet connection.');
+  }
+
+  return operation();
 };
 
 // ============================================================================
