@@ -286,3 +286,166 @@ export const signOut = async (): Promise<AuthResult> => {
     return { success: false, error: errorMessage };
   }
 };
+
+// ============================================================================
+// OAuth Authentication
+// ============================================================================
+
+/**
+ * Sign in with Google OAuth
+ *
+ * Initiates Google OAuth sign-in flow. User is redirected to Google's
+ * authorization page in browser, then redirected back to app with session.
+ *
+ * OAuth flow:
+ * 1. User taps "Sign in with Google" button
+ * 2. This function returns Google OAuth URL
+ * 3. App opens URL in browser (user completes sign-in on Google's page)
+ * 4. Google redirects to plantidtemp://auth/callback
+ * 5. Callback screen (app/auth/callback.tsx) calls getSession() to retrieve session
+ *
+ * @returns OAuthResult with authorization URL for browser redirect
+ *
+ * Example:
+ *   const result = await signInWithGoogle();
+ *   if (result.success && result.url) {
+ *     // Open result.url in browser
+ *     WebBrowser.openAuthSessionAsync(result.url);
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const signInWithGoogle = async (): Promise<OAuthResult> => {
+  const supabase = getSupabaseClient();
+  const { setLoading, setError } = useAuthStore.getState();
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'plantidtemp://auth/callback',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    // Return OAuth URL for browser redirect
+    return { success: true, url: data.url };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  } finally {
+    setLoading(false);
+  }
+};
+
+/**
+ * Sign in with Apple OAuth (iOS only)
+ *
+ * Initiates Apple Sign-In flow. User is redirected to Apple's
+ * authorization page, then redirected back to app with session.
+ *
+ * IMPORTANT: Apple Sign In is required for iOS App Store approval
+ * when offering third-party sign-in options (like Google).
+ *
+ * Only show this button on iOS devices (check Platform.OS === 'ios').
+ * Requires Apple Developer account and Supabase Apple provider configuration.
+ *
+ * OAuth flow:
+ * 1. User taps "Sign in with Apple" button (iOS only)
+ * 2. This function returns Apple OAuth URL
+ * 3. App opens URL in browser (user completes sign-in on Apple's page)
+ * 4. Apple redirects to plantidtemp://auth/callback
+ * 5. Callback screen (app/auth/callback.tsx) calls getSession() to retrieve session
+ *
+ * @returns OAuthResult with authorization URL for browser redirect
+ *
+ * Example:
+ *   const result = await signInWithApple();
+ *   if (result.success && result.url) {
+ *     // Open result.url in browser
+ *     WebBrowser.openAuthSessionAsync(result.url);
+ *   } else {
+ *     // Show error: result.error
+ *   }
+ */
+export const signInWithApple = async (): Promise<OAuthResult> => {
+  const supabase = getSupabaseClient();
+  const { setLoading, setError } = useAuthStore.getState();
+
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: 'plantidtemp://auth/callback',
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    }
+
+    // Return OAuth URL for browser redirect
+    return { success: true, url: data.url };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    setError(errorMessage);
+    return { success: false, error: errorMessage };
+  } finally {
+    setLoading(false);
+  }
+};
+
+/**
+ * Get current session from Supabase
+ *
+ * Retrieves the current active session from Supabase.
+ * Used by OAuth callback screen to get session after browser redirect.
+ *
+ * Also useful for checking if user is authenticated without relying on store.
+ *
+ * @returns Session object or null if not authenticated, plus error if any
+ *
+ * Example:
+ *   const { session, error } = await getSession();
+ *   if (session) {
+ *     // User is signed in, update store
+ *     useAuthStore.getState().setSession(session);
+ *   } else if (error) {
+ *     // Handle error
+ *   }
+ */
+export const getSession = async (): Promise<{
+  session: object | null;
+  error: string | null;
+}> => {
+  const supabase = getSupabaseClient();
+
+  try {
+    const { data, error } = await supabase.auth.getSession();
+
+    if (error) {
+      return { session: null, error: error.message };
+    }
+
+    return { session: data.session, error: null };
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    return { session: null, error: errorMessage };
+  }
+};
