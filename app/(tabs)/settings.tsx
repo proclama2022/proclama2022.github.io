@@ -16,7 +16,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useProStatus } from '@/hooks/useProStatus';
 import { changeLanguage } from '@/i18n';
 import { resetRateLimit } from '@/services/rateLimiter';
-import { authService } from '@/services/authService';
+import { signOut } from '@/services/authService';
 import * as NotificationService from '@/services/notificationService';
 
 export default function SettingsScreen() {
@@ -101,7 +101,7 @@ export default function SettingsScreen() {
           text: 'Sign Out',
           style: 'destructive',
           onPress: async () => {
-            const result = await authService.signOut();
+            const result = await signOut();
             if (!result.success && result.error) {
               Alert.alert('Sign Out Failed', result.error);
             }
