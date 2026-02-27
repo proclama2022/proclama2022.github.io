@@ -204,7 +204,7 @@ export default function SettingsScreen() {
 
               {migrationFlag && (
                 <View style={[styles.row, { paddingVertical: 12 }]}>
-                  <Ionicons name="cloud-checkmark" size={18} color={colors.success} />
+                  <Ionicons name="cloud-done" size={18} color={colors.success} />
                   <View style={{ marginLeft: 12, flex: 1 }}>
                     <Text style={[styles.rowLabel, { color: colors.text }]}>Last synced</Text>
                     <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>

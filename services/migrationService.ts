@@ -26,6 +26,7 @@ import { getSupabaseClient } from '@/lib/supabase/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { SavedPlant } from '@/types';
+import type { Action } from 'expo-image-manipulator';
 
 // ============================================================================
 // Types
@@ -296,10 +297,12 @@ const compressImage = async (uri: string): Promise<string> => {
       uri,
       [
         // Resize to max dimension while preserving aspect ratio
-        ImageManipulator.Action.resize({
-          width: MAX_PHOTO_DIMENSION,
-          height: MAX_PHOTO_DIMENSION,
-        }),
+        {
+          resize: {
+            width: MAX_PHOTO_DIMENSION,
+            height: MAX_PHOTO_DIMENSION,
+          },
+        } as Action,
       ],
       {
         compress: PHOTO_COMPRESS_QUALITY,
