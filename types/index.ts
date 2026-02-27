@@ -214,3 +214,47 @@ export type AuthError =
   | 'email_not_confirmed'
   | 'session_expired'
   | 'unknown';
+
+/**
+ * Migration progress tracking data
+ *
+ * Passed to onProgress callback during plant migration to update UI.
+ */
+export interface MigrationProgress {
+  /** Total number of plants to migrate */
+  total: number;
+  /** Number of plants successfully migrated so far */
+  completed: number;
+  /** Name of the plant currently being migrated */
+  currentPlantName: string;
+  /** Whether migration has been cancelled by user */
+  isCancelled: boolean;
+  /** Number of plants that failed to migrate */
+  failed: number;
+}
+
+/**
+ * Migration result data
+ *
+ * Returned by migratePlantsToSupabase when migration completes or is cancelled.
+ */
+export interface MigrationResult {
+  /** Number of plants successfully migrated */
+  success: number;
+  /** Number of plants that failed to migrate */
+  failed: number;
+  /** Whether migration was cancelled by user */
+  cancelled: boolean;
+}
+
+/**
+ * Migration completion flag stored in AsyncStorage
+ *
+ * Tracks whether user has completed migration and when.
+ */
+export interface MigrationFlag {
+  /** ISO timestamp of when migration was completed */
+  timestamp: string;
+  /** Number of plants that were migrated */
+  plantCount: number;
+}
