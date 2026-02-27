@@ -449,3 +449,129 @@ export const getSession = async (): Promise<{
     return { session: null, error: errorMessage };
   }
 };
+
+// ============================================================================
+// Session State Management
+// ============================================================================
+
+/**
+ * Auth state change listener subscription
+ *
+ * Returned by initializeAuth() for cleanup. Call unsubscribe() when
+ * component unmounts to prevent memory leaks.
+ */
+type AuthSubscription = {
+  unsubscribe: () => void;
+};
+
+/**
+ * Initialize auth state on app launch
+ *
+ * Checks for existing session and sets up auth state change listener.
+ * Call this in app root layout (app/_layout.tsx) to restore session
+ * when app launches and listen for auth changes.
+ *
+ * Auth state change events:
+ * - INITIAL_SESSION: First session check on app launch
+ * - SIGNED_IN: User signed in (email/password or OAuth)
+ * - SIGNED_OUT: User signed out
+ * - TOKEN_REFRESHED: JWT token refreshed automatically
+ * - USER_UPDATED: User metadata updated
+ *
+ * @returns Unsubscribe function for cleanup (call on app unmount)
+ *
+ * Example:
+ *   // In app/_layout.tsx
+ *   useEffect(() => {
+ *     const unsubscribe = initializeAuth();
+ *     return () => unsubscribe?.();
+ *   }, []);
+ */
+export const initializeAuth = (): (() => void) | null => {
+  try {
+    const supabase = getSupabaseClient();
+    const { setSession, clearAuth, setUser } = useAuthStore.getState();
+
+    // Check for existing session on app launch
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setSession(session as any);
+      }
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        switch (event) {
+          case 'INITIAL_SESSION':
+          case 'SIGNED_IN':
+          case 'TOKEN_REFRESHED':
+            // Set session in store (also updates user from session.user)
+            if (session) {
+              setSession(session as any);
+            }
+            break;
+
+          case 'SIGNED_OUT':
+            // Clear all auth state
+            clearAuth();
+            break;
+
+          case 'USER_UPDATED':
+            // Update user metadata without changing session
+            if (session?.user) {
+              setUser(session.user as any);
+            }
+            break;
+        }
+      }
+    );
+
+    // Return unsubscribe function for cleanup
+    return () => {
+      subscription.unsubscribe();
+    };
+  } catch (err) {
+    // Supabase not configured or unreachable
+    // Continue without auth — v1.x features remain functional
+    console.warn('Auth initialization skipped:', err);
+    return null;
+  }
+};
+
+/**
+ * Get current authenticated user
+ *
+ * Convenience getter that returns the current user from auth store.
+ * Use this to access user metadata without accessing store directly.
+ *
+ * @returns User object or null if not authenticated
+ *
+ * Example:
+ *   const user = getCurrentUser();
+ *   if (user) {
+ *     console.log('Signed in as:', user.email);
+ *   }
+ */
+export const getCurrentUser = (): object | null => {
+  return useAuthStore.getState().user;
+};
+
+/**
+ * Check if user is authenticated
+ *
+ * Convenience checker that returns true if user has an active session.
+ * Use this to gate auth-required features (like community posting).
+ *
+ * @returns true if user is authenticated, false otherwise
+ *
+ * Example:
+ *   if (isAuthenticated()) {
+ *     // Show community features
+ *   } else {
+ *     // Show sign in prompt
+ *   }
+ */
+export const isAuthenticated = (): boolean => {
+  return Boolean(useAuthStore.getState().session);
+};
