@@ -238,10 +238,14 @@ Plans:
   3. User can reset password via email link and sign out from Settings
   4. All v1.x features (camera, plant ID, local collection) work WITHOUT authentication — offline-first preserved
   5. Existing v1.x users can migrate local plants to community account with progress indicator
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 11-01: TBD
+- [x] 11-01: Supabase Client Infrastructure
+- [x] 11-02: Auth State Management & Service Layer
+- [ ] 11-03: Auth UI Components
+- [ ] 11-04: Auth Integration
+- [ ] 11-05: Local-to-Cloud Migration
 
 #### Phase 12: Database Schema & User Profiles
 **Goal**: Users can create profiles, upload avatars, and view public profiles

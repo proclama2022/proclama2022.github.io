@@ -9,12 +9,12 @@ Requirements for Community milestone. Each maps to roadmap phases.
 
 ### Authentication
 
-- [ ] **AUTH-01**: User can sign up with email and password
-- [ ] **AUTH-02**: User can sign in with Google OAuth (single tap)
-- [ ] **AUTH-03**: User can sign in with Apple (required for iOS App Store)
-- [ ] **AUTH-04**: User can reset password via email link
+- [x] **AUTH-01**: User can sign up with email and password
+- [x] **AUTH-02**: User can sign in with Google OAuth (single tap)
+- [x] **AUTH-03**: User can sign in with Apple (required for iOS App Store)
+- [x] **AUTH-04**: User can reset password via email link
 - [x] **AUTH-05**: User session persists across app launches
-- [ ] **AUTH-06**: User can sign out from Settings
+- [x] **AUTH-06**: User can sign out from Settings
 - [x] **AUTH-07**: v1.x features (camera, plant ID, local collection) work WITHOUT auth — offline-first preserved
 
 ### User Profiles
@@ -127,12 +127,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 11 | Pending |
-| AUTH-02 | Phase 11 | Pending |
-| AUTH-03 | Phase 11 | Pending |
-| AUTH-04 | Phase 11 | Pending |
+| AUTH-01 | Phase 11 | Complete |
+| AUTH-02 | Phase 11 | Complete |
+| AUTH-03 | Phase 11 | Complete |
+| AUTH-04 | Phase 11 | Complete |
 | AUTH-05 | Phase 11 | Complete |
-| AUTH-06 | Phase 11 | Pending |
+| AUTH-06 | Phase 11 | Complete |
 | AUTH-07 | Phase 11 | Complete |
 | PROF-01 | Phase 12 | Pending |
 | PROF-02 | Phase 12 | Pending |
