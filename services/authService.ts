@@ -66,6 +66,77 @@ type OAuthResult = AuthResult & {
 };
 
 // ============================================================================
+// Error Handling Utilities
+// ============================================================================
+
+/**
+ * Translate Supabase auth errors to user-friendly messages
+ *
+ * Converts raw Supabase error messages into clear, actionable text
+ * for display in the UI. Use this in all auth functions before
+ * returning errors.
+ *
+ * @param error - Error object from Supabase or Error instance
+ * @returns User-friendly error message
+ *
+ * Example:
+ *   const message = getAuthErrorMessage(error);
+ *   // "Invalid email or password" instead of "Invalid login credentials"
+ */
+export const getAuthErrorMessage = (error: unknown): string => {
+  // Extract error message
+  const errorMessage = error instanceof Error ? error.message : String(error);
+
+  // Translate common Supabase errors to user-friendly messages
+  switch (errorMessage) {
+    case 'Invalid login credentials':
+      return 'Invalid email or password';
+
+    case 'Email not confirmed':
+      return 'Please check your email for confirmation link';
+
+    case 'User already registered':
+      return 'An account with this email already exists';
+
+    case 'Network request failed':
+    case 'Failed to fetch':
+      return 'Unable to connect. Check your internet connection.';
+
+    case 'Invalid email':
+      return 'Please enter a valid email address';
+
+    case 'Password should be at least 6 characters':
+      return 'Password must be at least 6 characters';
+
+    case 'Signups not allowed':
+      return 'Account creation is currently disabled';
+
+    case 'Email rate limit exceeded':
+      return 'Too many attempts. Please try again later.';
+
+    default:
+      // Return original message if no match, or generic error
+      return errorMessage || 'An unknown error occurred';
+  }
+};
+
+/**
+ * Clear error state from auth store
+ *
+ * Removes the current error message from the auth store.
+ * Call this before starting a new auth operation or when
+ * user dismisses an error message.
+ *
+ * Example:
+ *   clearError(); // Clear previous error before sign in
+ *   const result = await signInWithEmail(email, password);
+ */
+export const clearError = (): void => {
+  const { setError } = useAuthStore.getState();
+  setError(null);
+};
+
+// ============================================================================
 // Email/Password Authentication
 // ============================================================================
 
@@ -112,8 +183,9 @@ export const signUpWithEmail = async (
     });
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     // Email confirmation required
@@ -139,9 +211,9 @@ export const signUpWithEmail = async (
       message: 'Account created. Please check your email for confirmation link.',
     };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    setError(errorMessage);
-    return { success: false, error: errorMessage };
+    const userMessage = getAuthErrorMessage(err);
+    setError(userMessage);
+    return { success: false, error: userMessage };
   } finally {
     setLoading(false);
   }
@@ -182,8 +254,9 @@ export const signInWithEmail = async (
     });
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     if (data.session) {
@@ -195,9 +268,9 @@ export const signInWithEmail = async (
     // Fallback (should not happen)
     return { success: false, error: 'Sign in failed. Please try again.' };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    setError(errorMessage);
-    return { success: false, error: errorMessage };
+    const userMessage = getAuthErrorMessage(err);
+    setError(userMessage);
+    return { success: false, error: userMessage };
   } finally {
     setLoading(false);
   }
@@ -232,17 +305,18 @@ export const resetPassword = async (email: string): Promise<AuthResult> => {
     });
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     return {
       success: true,
     };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    setError(errorMessage);
-    return { success: false, error: errorMessage };
+    const userMessage = getAuthErrorMessage(err);
+    setError(userMessage);
+    return { success: false, error: userMessage };
   }
 };
 
@@ -272,8 +346,9 @@ export const signOut = async (): Promise<AuthResult> => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     // Clear auth state from store
@@ -335,16 +410,17 @@ export const signInWithGoogle = async (): Promise<OAuthResult> => {
     });
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     // Return OAuth URL for browser redirect
     return { success: true, url: data.url };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    setError(errorMessage);
-    return { success: false, error: errorMessage };
+    const userMessage = getAuthErrorMessage(err);
+    setError(userMessage);
+    return { success: false, error: userMessage };
   } finally {
     setLoading(false);
   }
@@ -396,16 +472,17 @@ export const signInWithApple = async (): Promise<OAuthResult> => {
     });
 
     if (error) {
-      setError(error.message);
-      return { success: false, error: error.message };
+      const userMessage = getAuthErrorMessage(error);
+      setError(userMessage);
+      return { success: false, error: userMessage };
     }
 
     // Return OAuth URL for browser redirect
     return { success: true, url: data.url };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    setError(errorMessage);
-    return { success: false, error: errorMessage };
+    const userMessage = getAuthErrorMessage(err);
+    setError(userMessage);
+    return { success: false, error: userMessage };
   } finally {
     setLoading(false);
   }
@@ -440,13 +517,12 @@ export const getSession = async (): Promise<{
     const { data, error } = await supabase.auth.getSession();
 
     if (error) {
-      return { session: null, error: error.message };
+      return { session: null, error: getAuthErrorMessage(error) };
     }
 
     return { session: data.session, error: null };
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
-    return { session: null, error: errorMessage };
+    return { session: null, error: getAuthErrorMessage(err) };
   }
 };
 
