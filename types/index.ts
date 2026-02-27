@@ -175,3 +175,42 @@ export type PurchaseError =
   | { type: 'product_not_available' }
   | { type: 'verification_failed'; message: string }
   | { type: 'unknown'; message: string };
+
+// Auth & Supabase Types
+import { User, Session } from '@supabase/supabase-js';
+
+/**
+ * Storage adapter interface for Supabase session persistence
+ * Used by Expo SecureStore adapter to encrypt auth tokens
+ */
+export interface StorageAdapter {
+  getItem: (key: string) => Promise<string | null>;
+  setItem: (key: string, value: string) => Promise<void>;
+  removeItem: (key: string) => Promise<void>;
+}
+
+/**
+ * Auth state for Zustand auth store
+ * Manages user authentication state across the app
+ */
+export interface AuthState {
+  user: User | null;
+  session: Session | null;
+  isLoading: boolean;
+  error: string | null;
+  setUser: (user: User | null) => void;
+  setSession: (session: Session | null) => void;
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  clearAuth: () => void;
+}
+
+/**
+ * Auth error types for error handling
+ */
+export type AuthError =
+  | 'network_error'
+  | 'invalid_credentials'
+  | 'email_not_confirmed'
+  | 'session_expired'
+  | 'unknown';
