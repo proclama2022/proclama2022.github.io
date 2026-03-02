@@ -21,7 +21,7 @@ Requirements for Community milestone. Each maps to roadmap phases.
 
 - [x] **PROF-01**: User can create profile with display name (required, max 50 chars)
 - [x] **PROF-02**: User can upload avatar image (optional, max 2MB, auto-compressed)
-- [ ] **PROF-03**: User can write bio (optional, max 500 chars)
+- [x] **PROF-03**: User can write bio (optional, max 500 chars)
 - [x] **PROF-04**: User can view own profile with stats (plants identified, tips shared, followers, following)
 - [ ] **PROF-05**: User can view other users' public profiles
 - [x] **PROF-06**: User can edit display name, avatar, and bio
@@ -136,7 +136,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-07 | Phase 11 | Complete |
 | PROF-01 | Phase 12 | Complete |
 | PROF-02 | Phase 12 | Complete |
-| PROF-03 | Phase 12 | Pending |
+| PROF-03 | Phase 12 | Complete |
 | PROF-04 | Phase 12 | Complete |
 | PROF-05 | Phase 12 | Pending |
 | PROF-06 | Phase 12 | Complete |

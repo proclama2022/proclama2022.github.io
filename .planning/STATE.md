@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: unknown
-last_updated: "2026-03-02T19:14:14.305Z"
+last_updated: "2026-03-02T19:18:43.544Z"
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 46
-  completed_plans: 45
+  completed_plans: 46
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 (Database Schema & User Profiles) — In Progress
-Plan: 2 of 5 complete
-Status: Plan 12-02 complete — Avatar upload & profile services
-Last activity: 2026-03-02 — Completed Plan 12-02 (Avatar Upload & Profile Services)
+Plan: 4 of 5 complete
+Status: Plan 12-04 complete — Profile Tab & Edit UI
+Last activity: 2026-03-02 — Completed Plan 12-04 (Profile Tab & Edit UI)
 
-Progress: [████░░░░░░] 40% (Phase 12: 2/5 plans complete)
+Progress: [█████░░░░░] 80% (Phase 12: 4/5 plans complete)
 
 ## Milestone Goals
 
@@ -72,6 +72,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 10 P02 | 5 | 1 tasks | 1 files |
 | Phase 12 P01 | 63 | 5 tasks | 5 files |
 | Phase 12 P02 | 4 | 5 tasks | 7 files |
+| Phase 12 P04 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -115,6 +116,12 @@ Recent decisions affecting current work:
 - [Phase 12-01]: Profile store without persist middleware — fresh fetch on app launch follows authStore pattern for consistency
 - [Phase 12-01]: PostgreSQL helper functions for profile stats (get_follower_count, get_following_count, get_plants_count) — efficient aggregation without complex queries
 - [Phase 12-01]: Dynamic imports in profileStore to avoid circular dependencies with lib/supabase/profiles — maintains clean module structure
+- [Phase 12-04]: Profile tab positioned as 4th tab (after Home, Camera, Settings) — follows Instagram-style tab layout
+- [Phase 12-04]: Modal-based edit flow instead of inline editing — prevents accidental edits, better UX
+- [Phase 12-04]: Stats refresh on tab focus via useFocusEffect (not real-time subscriptions) — reduces network load while keeping counts fresh
+- [Phase 12-04]: Avatar upload uses action sheet pattern (gallery/camera) — iOS ActionSheetIOS, Android Alert with manual handling
+- [Phase 12-04]: Auth-gated screen with sign in prompt — profile features require authentication, show prompt if not signed in
+- [Phase 12-04]: Character count validation shows current/maximum (e.g., 25/50) — provides clear feedback to users
 
 ### Pending Todos
 
@@ -129,5 +136,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 12-database-schema-user-profiles/12-02-PLAN.md — Avatar Upload & Profile Services
-Resume file: .planning/phases/12-database-schema-user-profiles/12-02-SUMMARY.md
+Stopped at: Completed 12-database-schema-user-profiles/12-04-PLAN.md — Profile Tab & Edit UI
+Resume file: .planning/phases/12-database-schema-user-profiles/12-04-SUMMARY.md

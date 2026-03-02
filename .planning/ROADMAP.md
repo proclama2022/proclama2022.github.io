@@ -31,7 +31,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 9: Care Calendar** - Monthly calendar with task indicators and completion
 - [x] **Phase 10: UI Polish & Dark Mode** - Dark mode support and enhanced onboarding (shipped 2026-03-02)
 - [x] **Phase 11: Auth Infrastructure & Supabase Setup** - User authentication with optional access (completed 2026-02-27)
-- [ ] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats
+- [x] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats (completed 2026-03-02)
 - [ ] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation
 - [ ] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed
 
@@ -309,7 +309,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 9. Care Calendar | v1.3 | Complete    | 2026-03-02 | - |
 | 10. UI Polish & Dark Mode | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 6/5 | Complete    | 2026-02-27 |
-| 12. Database Schema & User Profiles | 3/5 | In Progress|  | - |
+| 12. Database Schema & User Profiles | 5/5 | Complete   | 2026-03-02 | - |
 | 13. Community Feed Core & Moderation | v2.0 | 0/TBD | Not started | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
