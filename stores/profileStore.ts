@@ -113,7 +113,7 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
    * Algorithm:
    * 1. Set loading state
    * 2. Clear previous errors
-   * 3. Call profileService to fetch profile with stats
+   * 3. Call profileService.fetchProfile(userId)
    * 4. Update currentProfile with result
    * 5. Handle errors gracefully
    *
@@ -131,30 +131,15 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       setError(null);
 
       // Import profileService dynamically to avoid circular dependency
-      const { getProfileWithStats } = await import('@/lib/supabase/profiles');
+      const { fetchProfile: fetchProfileService } = await import('@/services/profileService');
 
-      const profile = await getProfileWithStats(userId);
+      const result = await fetchProfileService(userId);
 
-      if (!profile) {
-        throw new Error('Profile not found');
+      if (result.success && result.data) {
+        setCurrentProfile(result.data);
+      } else {
+        setError(result.error || 'Failed to fetch profile');
       }
-
-      // Transform to ProfileWithStats format (stats nested)
-      const profileWithStats: ProfileWithStats = {
-        id: profile.id,
-        display_name: profile.display_name,
-        bio: profile.bio,
-        avatar_url: profile.avatar_url,
-        created_at: profile.created_at,
-        updated_at: profile.updated_at,
-        stats: {
-          plants_identified: profile.plants_identified,
-          followers_count: profile.followers_count,
-          following_count: profile.following_count,
-        },
-      };
-
-      setCurrentProfile(profileWithStats);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch profile';
       setError(errorMessage);
@@ -168,13 +153,13 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
    * Update profile fields
    *
    * Updates display_name and/or bio in Supabase.
-   * Refreshes currentProfile after successful update.
+   * Merges updated data into currentProfile state.
    *
    * Algorithm:
    * 1. Set loading state
    * 2. Clear previous errors
-   * 3. Call profileService to update profile
-   * 4. Re-fetch profile to get updated data
+   * 3. Call profileService.updateProfile(userId, updates)
+   * 4. Merge updated data into currentProfile
    * 5. Handle errors gracefully
    *
    * @param updates - Fields to update (display_name, bio)
@@ -196,12 +181,21 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       setError(null);
 
       // Import profileService dynamically
-      const { updateProfile: updateProfileService } = await import('@/lib/supabase/profiles');
+      const { updateProfile: updateProfileService } = await import('@/services/profileService');
 
-      await updateProfileService(currentProfile.id, updates);
+      const result = await updateProfileService(currentProfile.id, updates);
 
-      // Re-fetch profile to get updated data
-      await get().fetchCurrentProfile(currentProfile.id);
+      if (result.success && result.data) {
+        // Merge updated data into current profile
+        setCurrentProfile({
+          ...currentProfile,
+          ...result.data,
+          // Preserve stats which aren't returned by update
+          stats: currentProfile.stats,
+        });
+      } else {
+        setError(result.error || 'Failed to update profile');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to update profile';
       setError(errorMessage);
@@ -220,14 +214,9 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
    * Algorithm:
    * 1. Set loading state
    * 2. Clear previous errors
-   * 3. Launch image picker (gallery or camera)
-   * 4. Compress and upload image to Supabase Storage
-   * 5. Update profile.avatar_url with public URL
-   * 6. Refresh profile data
-   * 7. Handle errors gracefully
-   *
-   * Note: This is a placeholder for Phase 13 (Profile UI).
-   * The actual implementation will use expo-image-picker.
+   * 3. Call profileService.uploadAvatarAndUpdateProfile(userId, source)
+   * 4. Update currentProfile.avatar_url with new URL
+   * 5. Handle errors gracefully
    *
    * @param source - Avatar source ('gallery' or 'camera')
    *
@@ -247,14 +236,21 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
       setLoading(true);
       setError(null);
 
-      // TODO: Phase 13 - Implement avatar upload with expo-image-picker
-      // 1. Launch image picker (ImagePicker.launchImageLibraryAsync or launchCameraAsync)
-      // 2. Compress image with ImageManipulator
-      // 3. Upload to Supabase Storage (avatars bucket)
-      // 4. Update profile.avatar_url
-      // 5. Refresh profile data
+      // Import profileService dynamically
+      const { uploadAvatarAndUpdateProfile } = await import('@/services/profileService');
 
-      throw new Error('Avatar upload not yet implemented - coming in Phase 13');
+      const result = await uploadAvatarAndUpdateProfile(currentProfile.id, source);
+
+      if (result.success && result.data) {
+        // Update avatar URL in current profile
+        setCurrentProfile({
+          ...currentProfile,
+          avatar_url: result.data,
+        });
+      } else if (result.error) {
+        setError(result.error);
+      }
+      // If result.data is empty string, user cancelled - no error
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to upload avatar';
       setError(errorMessage);
