@@ -12,6 +12,8 @@ import { initNotificationService, checkPermission, scheduleDailyDigest } from '@
 import { initializeAuth } from '@/services/authService';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { usePlantsStore } from '@/stores/plantsStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useProfileStore } from '@/stores/profileStore';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -105,6 +107,27 @@ export default function RootLayout() {
     return () => {
       unsubscribe?.();
     };
+  }, []);
+
+  /**
+   * Fetch user profile on authentication
+   *
+   * When user signs in, automatically fetch their profile with stats.
+   * This is non-blocking — profile fetch happens silently in background.
+   *
+   * Reference: Phase 12 Plan 02 - Profile initialization
+   */
+  useEffect(() => {
+    const user = useAuthStore.getState().user;
+    const currentProfile = useProfileStore.getState().currentProfile;
+
+    // Only fetch if user is authenticated and profile not already loaded
+    if (user && !currentProfile) {
+      useProfileStore.getState().fetchCurrentProfile(user.id).catch((err) => {
+        console.error('Failed to fetch profile:', err);
+        // Don't block app launch if profile fetch fails
+      });
+    }
   }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
