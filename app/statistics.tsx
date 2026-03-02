@@ -65,6 +65,25 @@ function computeStats(plants: ReturnType<typeof usePlantsStore.getState>['plants
     weeklyData.push(count);
   }
 
+  // Weekly reminder data (last 7 days — completed reminders only, grouped by reminder.date)
+  const weeklyRemindersData: number[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    let count = 0;
+    plants.forEach(p => {
+      if (p.reminders) {
+        p.reminders.forEach(r => {
+          if (r.completed && new Date(r.date).toISOString().split('T')[0] === dateStr) {
+            count++;
+          }
+        });
+      }
+    });
+    weeklyRemindersData.push(count);
+  }
+
   // Day labels for the week
   const dayLabels: string[] = [];
   for (let i = 6; i >= 0; i--) {
@@ -80,6 +99,7 @@ function computeStats(plants: ReturnType<typeof usePlantsStore.getState>['plants
     totalReminders,
     completedReminders,
     weeklyData,
+    weeklyRemindersData,
     dayLabels,
   };
 }
