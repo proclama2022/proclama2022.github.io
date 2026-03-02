@@ -29,7 +29,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 7: Search & Filter** - Fuzzy search and filtering by care status
 - [x] **Phase 8: Statistics Dashboard** - Watering streaks, identification counts, activity charts
 - [x] **Phase 9: Care Calendar** - Monthly calendar with task indicators and completion
-- [x] **Phase 10: UI Polish & Dark Mode** - Dark mode support and enhanced onboarding
+- [x] **Phase 10: UI Polish & Dark Mode** - Dark mode support and enhanced onboarding (shipped 2026-03-02)
 - [x] **Phase 11: Auth Infrastructure & Supabase Setup** - User authentication with optional access (completed 2026-02-27)
 - [ ] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats
 - [ ] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation
@@ -219,7 +219,7 @@ Plans:
 
 Plans:
 - [x] 10-01: Dark mode implementation across all screens
-- [x] 10-02: Enhanced onboarding and settings reorganization
+- [x] 10-02: Skeleton loading grid for Home screen
 
 </details>
 
@@ -307,7 +307,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 7. Search & Filter | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 8. Statistics Dashboard | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 9. Care Calendar | v1.3 | Complete    | 2026-03-02 | - |
-| 10. UI Polish & Dark Mode | 1/2 | In Progress|  | 2026-02-26 |
+| 10. UI Polish & Dark Mode | 2/2 | Complete | 2026-03-02 | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 6/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | v2.0 | 0/TBD | Not started | - |
 | 13. Community Feed Core & Moderation | v2.0 | 0/TBD | Not started | - |
