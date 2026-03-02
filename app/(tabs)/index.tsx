@@ -94,6 +94,16 @@ export default function HomeScreen() {
 
   const hasActiveFilters = searchQuery.trim() !== '' || wateringFilter !== 'all' || difficultyFilter !== 'all';
 
+  const emptyStateMessage = (() => {
+    if (searchQuery.trim()) {
+      return t('search.noResultsQuery', { query: searchQuery.trim() });
+    }
+    if (wateringFilter === 'needsWater') return t('search.noResultsNeedsWater');
+    if (wateringFilter === 'waterOk') return t('search.noResultsWaterOk');
+    if (difficultyFilter !== 'all') return t('search.noResultsDifficulty', { level: t(`search.${difficultyFilter}`) });
+    return t('search.noResults');
+  })();
+
   if (!hasSeenOnboarding) {
     return <Onboarding />;
   }
@@ -145,6 +155,12 @@ export default function HomeScreen() {
           difficultyFilter={difficultyFilter}
           onDifficultyFilterChange={handleDifficultyChange}
         />
+
+        {hasActiveFilters && (
+          <Text style={[styles.resultsCount, { color: colors.textMuted }]}>
+            {t('search.resultsCount', { count: filteredPlants.length, total: plants.length })}
+          </Text>
+        )}
 
         {filteredPlants.length === 0 && hasActiveFilters ? (
           <View style={styles.noResultsContainer}>
@@ -252,6 +268,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 17,
     fontWeight: '700',
+  },
+  resultsCount: {
+    fontSize: 13,
+    fontWeight: '500',
+    textAlign: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 8,
   },
   noResultsContainer: {
     flex: 1,
