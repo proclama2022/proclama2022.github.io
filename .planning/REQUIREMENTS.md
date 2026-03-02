@@ -19,13 +19,13 @@ Requirements for Community milestone. Each maps to roadmap phases.
 
 ### User Profiles
 
-- [ ] **PROF-01**: User can create profile with display name (required, max 50 chars)
+- [x] **PROF-01**: User can create profile with display name (required, max 50 chars)
 - [ ] **PROF-02**: User can upload avatar image (optional, max 2MB, auto-compressed)
 - [ ] **PROF-03**: User can write bio (optional, max 500 chars)
-- [ ] **PROF-04**: User can view own profile with stats (plants identified, tips shared, followers, following)
+- [x] **PROF-04**: User can view own profile with stats (plants identified, tips shared, followers, following)
 - [ ] **PROF-05**: User can view other users' public profiles
 - [ ] **PROF-06**: User can edit display name, avatar, and bio
-- [ ] **PROF-07**: Profile shows joined date
+- [x] **PROF-07**: Profile shows joined date
 - [ ] **PROF-08**: Existing v1.x users can migrate local plants to community account (optional, with progress indicator)
 
 ### Community Feed
@@ -134,13 +134,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-05 | Phase 11 | Complete |
 | AUTH-06 | Phase 11 | Complete |
 | AUTH-07 | Phase 11 | Complete |
-| PROF-01 | Phase 12 | Pending |
+| PROF-01 | Phase 12 | Complete |
 | PROF-02 | Phase 12 | Pending |
 | PROF-03 | Phase 12 | Pending |
-| PROF-04 | Phase 12 | Pending |
+| PROF-04 | Phase 12 | Complete |
 | PROF-05 | Phase 12 | Pending |
 | PROF-06 | Phase 12 | Pending |
-| PROF-07 | Phase 12 | Pending |
+| PROF-07 | Phase 12 | Complete |
 | PROF-08 | Phase 12 | Pending |
 | FEED-01 | Phase 13 | Pending |
 | FEED-02 | Phase 13 | Pending |

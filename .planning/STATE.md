@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: unknown
-last_updated: "2026-03-02T18:18:52.264Z"
+last_updated: "2026-03-02T19:11:37.831Z"
 progress:
-  total_phases: 11
+  total_phases: 12
   completed_phases: 11
-  total_plans: 41
-  completed_plans: 42
+  total_plans: 46
+  completed_plans: 44
 ---
 
 # Project State
@@ -70,6 +70,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 09-care-calendar P01 | 5 | 1 tasks | 1 files |
 | Phase 10 P01 | 192 | 2 tasks | 3 files |
 | Phase 10 P02 | 5 | 1 tasks | 1 files |
+| Phase 12 P01 | 63 | 5 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,12 @@ Recent decisions affecting current work:
 - [Phase 10-01]: useColorScheme hook reads from settingsStore.colorScheme, falls back to React Native's useColorScheme for 'system' mode
 - [Phase 10-02]: Lazy useState initializer for hydration gate — prevents one-frame skeleton flash on fast devices where store already hydrated at mount
 - [Phase 10-02]: Shared pulse animation pattern — single Animated.Value drives multiple skeleton cards simultaneously for better performance
+- [Phase 12-01]: Auto-create profile trigger extracts username from email (split_part) — ensures profile exists immediately after signup
+- [Phase 12-01]: Public profile viewing with authenticated user SELECT policy — enables community features while maintaining data isolation
+- [Phase 12-01]: User-isolated storage folders with {userId}/* path pattern for RLS — prevents cross-user access in Supabase Storage
+- [Phase 12-01]: Profile store without persist middleware — fresh fetch on app launch follows authStore pattern for consistency
+- [Phase 12-01]: PostgreSQL helper functions for profile stats (get_follower_count, get_following_count, get_plants_count) — efficient aggregation without complex queries
+- [Phase 12-01]: Dynamic imports in profileStore to avoid circular dependencies with lib/supabase/profiles — maintains clean module structure
 
 ### Pending Todos
 
@@ -117,5 +124,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 10-ui-polish-dark-mode/10-02-PLAN.md — Skeleton loading grid implementation
-Resume file: .planning/phases/10-ui-polish-dark-mode/10-02-SUMMARY.md
+Stopped at: Completed 12-database-schema-user-profiles/12-01-PLAN.md — Database Schema & Supabase Infrastructure
+Resume file: .planning/phases/12-database-schema-user-profiles/12-01-SUMMARY.md
