@@ -197,15 +197,14 @@ Plans:
 **Depends on**: Phase 8
 **Success Criteria** (what must be TRUE):
   1. Calendar displays current month with task indicators
-  2. Each day shows colored dots for watering (blue) and reminders (orange)
+  2. Each day shows colored dots for watering (blue/teal via colors.tint) and reminders (orange)
   3. Tapping a day shows list of tasks for that date
   4. User can complete tasks directly from calendar view
   5. User can navigate to previous/next months
-**Plans**: 2 plans
+**Plans**: 1 plan
 
 Plans:
-- [x] 09-01: Monthly calendar grid with task indicators
-- [x] 09-02: Task completion from calendar view
+- [ ] 09-01-PLAN.md — Replace hardcoded green watering color with colors.tint in calendar.tsx
 
 ### Phase 10: UI Polish & Dark Mode
 **Goal**: Improved visual design with dark mode support
@@ -307,7 +306,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 6. Custom Reminders | v1.2 | 3/3 | Complete | 2026-02-25 |
 | 7. Search & Filter | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 8. Statistics Dashboard | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
-| 9. Care Calendar | v1.3 | 2/2 | Complete | 2026-02-26 |
+| 9. Care Calendar | v1.3 | 0/1 | Planned | - |
 | 10. UI Polish & Dark Mode | v1.3 | 2/2 | Complete | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 6/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | v2.0 | 0/TBD | Not started | - |
