@@ -5,6 +5,7 @@ import { changeLanguage } from '@/i18n';
 
 type Language = 'en' | 'it';
 type NotificationPermissionStatus = 'granted' | 'denied' | 'undetermined';
+type ColorScheme = 'light' | 'dark' | 'system';
 
 interface SettingsState {
   language: Language;
@@ -16,6 +17,8 @@ interface SettingsState {
   setNotificationTime: (time: string) => void;
   notificationPermission: NotificationPermissionStatus;
   setNotificationPermission: (status: NotificationPermissionStatus) => void;
+  colorScheme: ColorScheme;
+  setColorScheme: (scheme: ColorScheme) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -33,6 +36,8 @@ export const useSettingsStore = create<SettingsState>()(
       setNotificationTime: (time) => set({ notificationTime: time }),
       notificationPermission: 'undetermined',
       setNotificationPermission: (status) => set({ notificationPermission: status }),
+      colorScheme: 'system',
+      setColorScheme: (scheme) => set({ colorScheme: scheme }),
     }),
     {
       name: 'plantid-settings-storage',
