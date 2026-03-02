@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 (Database Schema & User Profiles) — In Progress
-Plan: 4 of 5 complete
-Status: Plan 12-04 complete — Profile Tab & Edit UI
-Last activity: 2026-03-02 — Completed Plan 12-04 (Profile Tab & Edit UI)
+Plan: 3 of 5 complete
+Status: Plan 12-03 complete — Profile UI Components
+Last activity: 2026-03-02 — Completed Plan 12-03 (Profile UI Components)
 
-Progress: [█████░░░░░] 80% (Phase 12: 4/5 plans complete)
+Progress: [████░░░░░░] 60% (Phase 12: 3/5 plans complete)
 
 ## Milestone Goals
 
@@ -72,6 +72,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 10 P02 | 5 | 1 tasks | 1 files |
 | Phase 12 P01 | 63 | 5 tasks | 5 files |
 | Phase 12 P02 | 4 | 5 tasks | 7 files |
+| Phase 12 P03 | 2 | 5 tasks | 5 files |
 | Phase 12 P04 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
@@ -116,6 +117,13 @@ Recent decisions affecting current work:
 - [Phase 12-01]: Profile store without persist middleware — fresh fetch on app launch follows authStore pattern for consistency
 - [Phase 12-01]: PostgreSQL helper functions for profile stats (get_follower_count, get_following_count, get_plants_count) — efficient aggregation without complex queries
 - [Phase 12-01]: Dynamic imports in profileStore to avoid circular dependencies with lib/supabase/profiles — maintains clean module structure
+- [Phase 12-03]: Circular avatar with borderRadius: size/2 and overflow: 'hidden' — creates perfect circle for images and placeholders
+- [Phase 12-03]: Avatar placeholder uses person-circle-outline Ionicons with themed text color — consistent placeholder across light/dark modes
+- [Phase 12-03]: ProfileStats 2x2 grid using flexDirection: 'row' with flexWrap: 'wrap' — responsive layout without grid library
+- [Phase 12-03]: Number formatting with K suffix (1.2K, 10.5K) for stats > 1000 — compact display for large numbers
+- [Phase 12-03]: ThemedCard wrapper uses surface background color — visual distinction from background color
+- [Phase 12-03]: ThemedStatCard with TouchableOpacity for interactive stat items — enables future navigation to followers/following lists
+- [Phase 12-03]: Date formatter with locale support (en, it, etc.) using toLocaleString — localized month names for international users
 - [Phase 12-04]: Profile tab positioned as 4th tab (after Home, Camera, Settings) — follows Instagram-style tab layout
 - [Phase 12-04]: Modal-based edit flow instead of inline editing — prevents accidental edits, better UX
 - [Phase 12-04]: Stats refresh on tab focus via useFocusEffect (not real-time subscriptions) — reduces network load while keeping counts fresh
@@ -136,5 +144,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 12-database-schema-user-profiles/12-04-PLAN.md — Profile Tab & Edit UI
-Resume file: .planning/phases/12-database-schema-user-profiles/12-04-SUMMARY.md
+Stopped at: Completed 12-database-schema-user-profiles/12-03-PLAN.md — Profile UI Components
+Resume file: .planning/phases/12-database-schema-user-profiles/12-03-SUMMARY.md

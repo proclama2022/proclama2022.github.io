@@ -256,10 +256,14 @@ Plans:
   3. User can view other users' public profiles
   4. User can edit display name, avatar, and bio
   5. Database schema with RLS policies supports profiles, posts, likes, comments, follows, and reports
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- [ ] 12-01: TBD
+- [x] 12-01: Database Schema & Profile Table Setup
+- [x] 12-02: Avatar Upload & Profile Services
+- [x] 12-03: Profile UI Components
+- [x] 12-04: Profile Tab & Edit UI
+- [ ] 12-05: Public Profile Viewing
 
 #### Phase 13: Community Feed Core & Moderation
 **Goal**: Users can view, create, and engage with community posts in a moderated environment
@@ -308,8 +312,8 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 8. Statistics Dashboard | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 9. Care Calendar | v1.3 | Complete    | 2026-03-02 | - |
 | 10. UI Polish & Dark Mode | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
-| 11. Auth Infrastructure & Supabase Setup | 6/5 | Complete    | 2026-02-27 |
-| 12. Database Schema & User Profiles | 5/5 | Complete   | 2026-03-02 | - |
+| 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
+| 12. Database Schema & User Profiles | 3/5 | In Progress | 2026-03-02 | - |
 | 13. Community Feed Core & Moderation | v2.0 | 0/TBD | Not started | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
