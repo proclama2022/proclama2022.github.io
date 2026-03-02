@@ -22,7 +22,7 @@ import { getMigrationFlag, clearMigrationFlag } from '@/services/migrationServic
 import * as NotificationService from '@/services/notificationService';
 
 export default function SettingsScreen() {
-  const { language, setLanguage, notificationEnabled, setNotificationEnabled, notificationTime, setNotificationTime } = useSettingsStore();
+  const { language, setLanguage, notificationEnabled, setNotificationEnabled, notificationTime, setNotificationTime, colorScheme, setColorScheme } = useSettingsStore();
   const plants = usePlantsStore((state) => state.plants);
   const isPro = useProStore((state) => state.isPro);
   const user = useAuthStore((state) => state.user);
@@ -93,6 +93,11 @@ export default function SettingsScreen() {
     if (notificationEnabled) {
       await NotificationService.scheduleDailyDigest(plants, newTime);
     }
+  };
+
+  const handleColorSchemeToggle = () => {
+    const next = colorScheme === 'dark' ? 'system' : 'dark';
+    setColorScheme(next);
   };
 
   const handleRestorePurchases = async () => {
@@ -293,6 +298,17 @@ export default function SettingsScreen() {
             >
               <Text style={[styles.languageButtonText, { color: language === 'it' ? '#fff' : colors.text }]}>Italiano</Text>
             </TouchableOpacity>
+          </View>
+
+          {/* Dark Mode */}
+          <View style={styles.row}>
+            <Text style={[styles.rowLabel, { color: colors.text }]}>{t('settings.darkMode')}</Text>
+            <Switch
+              value={colorScheme === 'dark'}
+              onValueChange={handleColorSchemeToggle}
+              trackColor={{ false: colors.chipBorder, true: colors.tint }}
+              thumbColor={colorScheme === 'dark' ? colors.success : colors.chipBg}
+            />
           </View>
         </View>
 
