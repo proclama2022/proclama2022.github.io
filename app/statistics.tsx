@@ -104,8 +104,22 @@ function computeStats(plants: ReturnType<typeof usePlantsStore.getState>['plants
   };
 }
 
-function BarChart({ data, dayLabels, colors, t }: { data: number[]; dayLabels: string[]; colors: ReturnType<typeof useThemeColors>; t: ReturnType<typeof useTranslation>['t'] }) {
-  const maxVal = Math.max(...data, 1);
+function BarChart({
+  data,
+  secondaryData,
+  dayLabels,
+  colors,
+  t,
+  showLegend,
+}: {
+  data: number[];
+  secondaryData?: number[];
+  dayLabels: string[];
+  colors: ReturnType<typeof useThemeColors>;
+  t: ReturnType<typeof useTranslation>['t'];
+  showLegend?: boolean;
+}) {
+  const maxVal = Math.max(...data, ...(secondaryData ?? []), 1);
   const dayNames: Record<string, string> = {
     '0': t('stats.sun'),
     '1': t('stats.mon'),
@@ -117,27 +131,56 @@ function BarChart({ data, dayLabels, colors, t }: { data: number[]; dayLabels: s
   };
 
   return (
-    <View style={barStyles.container}>
-      {data.map((val, i) => (
-        <View key={i} style={barStyles.barColumn}>
-          <View style={[barStyles.barTrack, { backgroundColor: colors.chipBg }]}>
-            <View
-              style={[
-                barStyles.barFill,
-                {
-                  backgroundColor: colors.tint,
-                  height: `${Math.round((val / maxVal) * 100)}%`,
-                },
-              ]}
-            />
+    <>
+      {showLegend && (
+        <View style={barStyles.legend}>
+          <View style={barStyles.legendItem}>
+            <View style={[barStyles.legendDot, { backgroundColor: colors.tint }]} />
+            <Text style={[barStyles.legendLabel, { color: colors.textSecondary }]}>
+              {t('stats.legendWatering')}
+            </Text>
           </View>
-          <Text style={[barStyles.barValue, { color: colors.textSecondary }]}>{val}</Text>
-          <Text style={[barStyles.dayLabel, { color: colors.textMuted }]}>
-            {dayNames[dayLabels[i]] || ''}
-          </Text>
+          <View style={barStyles.legendItem}>
+            <View style={[barStyles.legendDot, { backgroundColor: colors.warning }]} />
+            <Text style={[barStyles.legendLabel, { color: colors.textSecondary }]}>
+              {t('stats.legendReminders')}
+            </Text>
+          </View>
         </View>
-      ))}
-    </View>
+      )}
+      <View style={barStyles.container}>
+        {data.map((val, i) => {
+          const secVal = secondaryData?.[i] ?? 0;
+          return (
+            <View key={i} style={barStyles.barColumn}>
+              <View style={barStyles.groupedBars}>
+                {/* Primary bar — watering (tint/blue) */}
+                <View style={[barStyles.barTrack, { backgroundColor: colors.chipBg }]}>
+                  {val > 0 && (
+                    <View style={[barStyles.barFill, {
+                      backgroundColor: colors.tint,
+                      height: `${Math.round((val / maxVal) * 100)}%`,
+                    }]} />
+                  )}
+                </View>
+                {/* Secondary bar — reminders (warning/orange) */}
+                <View style={[barStyles.barTrack, { backgroundColor: colors.chipBg }]}>
+                  {secVal > 0 && (
+                    <View style={[barStyles.barFill, {
+                      backgroundColor: colors.warning,
+                      height: `${Math.round((secVal / maxVal) * 100)}%`,
+                    }]} />
+                  )}
+                </View>
+              </View>
+              <Text style={[barStyles.dayLabel, { color: colors.textMuted }]}>
+                {dayNames[dayLabels[i]] || ''}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+    </>
   );
 }
 
@@ -154,8 +197,13 @@ const barStyles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
   },
+  groupedBars: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'flex-end',
+  },
   barTrack: {
-    width: 28,
+    width: 11,
     height: 100,
     borderRadius: 6,
     justifyContent: 'flex-end',
@@ -166,13 +214,28 @@ const barStyles = StyleSheet.create({
     borderRadius: 6,
     minHeight: 4,
   },
-  barValue: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
   dayLabel: {
     fontSize: 11,
     fontWeight: '500',
+  },
+  legend: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 8,
+    justifyContent: 'flex-end',
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  legendLabel: {
+    fontSize: 11,
   },
 });
 
