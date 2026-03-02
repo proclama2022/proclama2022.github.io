@@ -165,11 +165,20 @@ export default function HomeScreen() {
         {filteredPlants.length === 0 && hasActiveFilters ? (
           <View style={styles.noResultsContainer}>
             <View style={[styles.emptyIconContainer, { backgroundColor: colors.surface, borderColor: colors.border, width: 80, height: 80 }]}>
-              <Ionicons name="search" size={32} color={colors.textMuted} />
+              <Ionicons name="leaf-outline" size={32} color={colors.textMuted} />
             </View>
-            <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>{t('search.noResults')}</Text>
-            <TouchableOpacity onPress={handleClearFilters}>
-              <Text style={{ color: colors.tint, fontWeight: '600', marginTop: 8 }}>{t('search.clearFilters')}</Text>
+            <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>
+              {emptyStateMessage}
+            </Text>
+            <TouchableOpacity
+              style={[styles.clearAllButton, { backgroundColor: colors.tint }]}
+              onPress={handleClearFilters}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel={t('search.clearAll')}
+            >
+              <Ionicons name="close-circle-outline" size={16} color="#fff" />
+              <Text style={styles.clearAllButtonText}>{t('search.clearAll')}</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -287,6 +296,20 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '500',
     textAlign: 'center',
+  },
+  clearAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 20,
+  },
+  clearAllButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '700',
   },
   fab: {
     position: 'absolute',
