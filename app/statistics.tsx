@@ -302,14 +302,21 @@ export default function StatisticsScreen() {
           )}
         </View>
 
-        {/* Weekly watering bar chart */}
+        {/* Weekly activity bar chart */}
         <View style={[styles.wideCard, { backgroundColor: colors.surface }]}>
           <View style={styles.wideCardHeader}>
             <Ionicons name="bar-chart" size={22} color={colors.tint} />
-            <Text style={[styles.wideCardTitle, { color: colors.text }]}>{t('stats.weeklyWatering')}</Text>
+            <Text style={[styles.wideCardTitle, { color: colors.text }]}>{t('stats.weeklyActivity')}</Text>
           </View>
-          {stats.weeklyData.some(v => v > 0) ? (
-            <BarChart data={stats.weeklyData} dayLabels={stats.dayLabels} colors={colors} t={t} />
+          {stats.weeklyData.some(v => v > 0) || stats.weeklyRemindersData.some(v => v > 0) ? (
+            <BarChart
+              data={stats.weeklyData}
+              secondaryData={stats.weeklyRemindersData}
+              dayLabels={stats.dayLabels}
+              colors={colors}
+              t={t}
+              showLegend={true}
+            />
           ) : (
             <Text style={[styles.noDataText, { color: colors.textMuted }]}>{t('stats.noData')}</Text>
           )}
