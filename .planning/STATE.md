@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: unknown
-last_updated: "2026-03-02T19:18:43.544Z"
+last_updated: "2026-03-02T19:22:51.716Z"
 progress:
   total_phases: 12
-  completed_phases: 11
+  completed_phases: 12
   total_plans: 46
-  completed_plans: 46
+  completed_plans: 48
 ---
 
 # Project State
@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-26)
 ## Current Position
 
 Phase: 12 (Database Schema & User Profiles) — In Progress
-Plan: 3 of 5 complete
-Status: Plan 12-03 complete — Profile UI Components
-Last activity: 2026-03-02 — Completed Plan 12-03 (Profile UI Components)
+Plan: 5 of 5 complete
+Status: Plan 12-05 complete — Public Profile Viewing & Follow System
+Last activity: 2026-03-02 — Completed Plan 12-05 (Public Profile Viewing & Follow System)
 
-Progress: [████░░░░░░] 60% (Phase 12: 3/5 plans complete)
+Progress: [██████████] 100% (Phase 12: 5/5 plans complete)
 
 ## Milestone Goals
 
@@ -74,6 +74,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 12 P02 | 4 | 5 tasks | 7 files |
 | Phase 12 P03 | 2 | 5 tasks | 5 files |
 | Phase 12 P04 | 3 | 2 tasks | 5 files |
+| Phase 12 P05 | 1 | 5 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -130,6 +131,14 @@ Recent decisions affecting current work:
 - [Phase 12-04]: Avatar upload uses action sheet pattern (gallery/camera) — iOS ActionSheetIOS, Android Alert with manual handling
 - [Phase 12-04]: Auth-gated screen with sign in prompt — profile features require authentication, show prompt if not signed in
 - [Phase 12-04]: Character count validation shows current/maximum (e.g., 25/50) — provides clear feedback to users
+- [Phase 12-05]: Dynamic route pattern with [userId] parameter for public profile viewing — enables navigation to any user's profile
+- [Phase 12-05]: Self-profile redirect (userId === currentUser.id → /tabs/profile) — prevents duplicate profile views
+- [Phase 12-05]: Follow button uses pill shape (120px width, 40px height, 20px radius) matching app style
+- [Phase 12-05]: Following state shows outlined button with checkmark icon for visual clarity
+- [Phase 12-05]: Self-follow prevented at service layer (followerId !== followingId validation) — prevents invalid relationships
+- [Phase 12-05]: Profile data refreshes on focus via useFocusEffect for up-to-date stats — keeps follower counts current
+- [Phase 12-05]: Optimistic stat refresh after follow/unfollow — immediate UI feedback with background data update
+- [Phase 12-05]: Local state in FollowButton for immediate UI feedback before parent re-render — better perceived performance
 
 ### Pending Todos
 
