@@ -182,6 +182,7 @@ export default function StatisticsScreen() {
   const colors = useThemeColors();
 
   const stats = useMemo(() => computeStats(plants), [plants]);
+  const isMilestone = stats.wateringStreak >= 7;
 
   return (
     <>
@@ -190,12 +191,17 @@ export default function StatisticsScreen() {
         {/* Stat cards row */}
         <View style={styles.cardRow}>
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
-            <View style={[styles.iconBg, { backgroundColor: '#e8f5e9' }]}>
-              <Ionicons name="water" size={24} color="#2e7d32" />
+            <View style={[styles.iconBg, { backgroundColor: isMilestone ? '#fff3e0' : '#e8f5e9' }]}>
+              <Ionicons name={isMilestone ? 'flame' : 'water'} size={24} color={isMilestone ? colors.warning : '#2e7d32'} />
             </View>
             <Text style={[styles.statValue, { color: colors.text }]}>{stats.wateringStreak}</Text>
             <Text style={[styles.statLabel, { color: colors.textMuted }]}>{t('stats.wateringStreak')}</Text>
             <Text style={[styles.statUnit, { color: colors.textMuted }]}>{t('stats.days')}</Text>
+            {stats.wateringStreak === 0 && (
+              <Text style={[styles.statLabel, { color: colors.textMuted, marginTop: 6, fontSize: 11 }]}>
+                {t('stats.streakZeroMsg')}
+              </Text>
+            )}
           </View>
 
           <View style={[styles.statCard, { backgroundColor: colors.surface }]}>
@@ -221,7 +227,10 @@ export default function StatisticsScreen() {
               <Text style={[styles.percentText, { color: colors.tint }]}>{stats.reminderCompletionRate}%</Text>
             </View>
           ) : (
-            <Text style={[styles.noDataText, { color: colors.textMuted }]}>{t('stats.noData')}</Text>
+            <>
+              <Text style={[styles.percentText, { color: colors.textMuted }]}>—%</Text>
+              <Text style={[styles.noDataText, { color: colors.textMuted }]}>{t('stats.noRemindersSet')}</Text>
+            </>
           )}
           {stats.totalReminders > 0 && (
             <Text style={[styles.completionDetail, { color: colors.textSecondary }]}>
