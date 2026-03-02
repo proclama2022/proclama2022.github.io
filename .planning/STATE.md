@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: unknown
-last_updated: "2026-03-02T19:11:37.831Z"
+last_updated: "2026-03-02T19:14:14.305Z"
 progress:
   total_phases: 12
   completed_phases: 11
   total_plans: 46
-  completed_plans: 44
+  completed_plans: 45
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** Phase 10 - UI Polish & Dark Mode (Complete)
+**Current focus:** Phase 12 - Database Schema & User Profiles
 
 ## Current Position
 
-Phase: 10 (UI Polish & Dark Mode) — Complete
-Plan: 2 of 2 complete
-Status: Phase 10 complete — Dark mode with skeleton loading
-Last activity: 2026-03-02 — Completed Plan 10-02 (Skeleton loading grid)
+Phase: 12 (Database Schema & User Profiles) — In Progress
+Plan: 2 of 5 complete
+Status: Plan 12-02 complete — Avatar upload & profile services
+Last activity: 2026-03-02 — Completed Plan 12-02 (Avatar Upload & Profile Services)
 
-Progress: [██████████] 100% (Phase 10 complete)
+Progress: [████░░░░░░] 40% (Phase 12: 2/5 plans complete)
 
 ## Milestone Goals
 
@@ -71,6 +71,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 10 P01 | 192 | 2 tasks | 3 files |
 | Phase 10 P02 | 5 | 1 tasks | 1 files |
 | Phase 12 P01 | 63 | 5 tasks | 5 files |
+| Phase 12 P02 | 4 | 5 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,10 @@ Recent decisions affecting current work:
 - [Phase 10-02]: Shared pulse animation pattern — single Animated.Value drives multiple skeleton cards simultaneously for better performance
 - [Phase 12-01]: Auto-create profile trigger extracts username from email (split_part) — ensures profile exists immediately after signup
 - [Phase 12-01]: Public profile viewing with authenticated user SELECT policy — enables community features while maintaining data isolation
+- [Phase 12-02]: Avatar compression with expo-image-manipulator (max 1200px, quality 0.7) — matches migrationService pattern for consistency
+- [Phase 12-02]: Square crop (1:1) with allowsEditing for consistent avatar dimensions across all devices
+- [Phase 12-02]: Non-blocking profile initialization on app mount — silent fetch, doesn't block app launch if profile fails
+- [Phase 12-02]: Service layer pattern with structured { success, data?, error? } responses — consistent error handling across profile operations
 - [Phase 12-01]: User-isolated storage folders with {userId}/* path pattern for RLS — prevents cross-user access in Supabase Storage
 - [Phase 12-01]: Profile store without persist middleware — fresh fetch on app launch follows authStore pattern for consistency
 - [Phase 12-01]: PostgreSQL helper functions for profile stats (get_follower_count, get_following_count, get_plants_count) — efficient aggregation without complex queries
@@ -124,5 +129,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 12-database-schema-user-profiles/12-01-PLAN.md — Database Schema & Supabase Infrastructure
-Resume file: .planning/phases/12-database-schema-user-profiles/12-01-SUMMARY.md
+Stopped at: Completed 12-database-schema-user-profiles/12-02-PLAN.md — Avatar Upload & Profile Services
+Resume file: .planning/phases/12-database-schema-user-profiles/12-02-SUMMARY.md
