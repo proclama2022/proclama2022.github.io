@@ -55,7 +55,13 @@
     "easy": "Easy",
     "medium": "Medium",
     "hard": "Hard",
-    "all": "All"
+    "all": "All",
+    "resultsCount": "{{count}} of {{total}} plants",
+    "noResultsQuery": "No plants match '{{query}}'",
+    "noResultsNeedsWater": "No plants need watering",
+    "noResultsWaterOk": "All plants are watered",
+    "noResultsDifficulty": "No {{level}} plants in your collection",
+    "clearAll": "Clear all filters"
   },
   "stats": {
     "title": "Statistics",

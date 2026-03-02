@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, SafeAreaView, Animated } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, SafeAreaView, Animated, Platform } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,7 @@ import SearchFilterBar, { WateringFilter, DifficultyFilter } from '@/components/
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
 import { usePlantsStore } from '@/stores/plantsStore';
 import { useOnboardingStore } from '@/stores/onboardingStore';
+import { useSearchStore } from '@/stores/searchStore';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { getCareInfo } from '@/services/careDB';
 import { SavedPlant } from '@/types';
@@ -39,7 +40,7 @@ function plantMatchesSearch(plant: SavedPlant, query: string): boolean {
 function plantMatchesWateringFilter(plant: SavedPlant, filter: WateringFilter): boolean {
   if (filter === 'all') return true;
   const care = plant.scientificName ? getCareInfo(plant.scientificName) : null;
-  if (!care) return filter === 'all';
+  if (!care) return false;
   const now = new Date();
   const lastWatered = plant.lastWatered ? new Date(plant.lastWatered) : null;
   if (!lastWatered) return filter === 'needsWater';
@@ -62,8 +63,7 @@ export default function HomeScreen() {
   const colors = useThemeColors();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [wateringFilter, setWateringFilter] = useState<WateringFilter>('all');
-  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
+  const { wateringFilter, difficultyFilter, setWateringFilter, setDifficultyFilter, clearFilters } = useSearchStore();
 
   // FAB entrance animation
   const fabScale = useRef(new Animated.Value(0)).current;
@@ -79,6 +79,10 @@ export default function HomeScreen() {
   const handleSearchChange = useCallback((q: string) => setSearchQuery(q), []);
   const handleWateringChange = useCallback((f: WateringFilter) => setWateringFilter(f), []);
   const handleDifficultyChange = useCallback((f: DifficultyFilter) => setDifficultyFilter(f), []);
+  const handleClearFilters = useCallback(() => {
+    setSearchQuery('');
+    clearFilters();
+  }, [clearFilters]);
 
   const filteredPlants = useMemo(() => {
     return plants.filter(plant =>
@@ -98,10 +102,16 @@ export default function HomeScreen() {
     return (
       <>
         <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+          <View style={styles.header}>
+            <Text style={[styles.greeting, { color: colors.textSecondary }]}>{t('common.welcome', { defaultValue: 'Welcome to' })}</Text>
+            <Text style={[styles.screenTitle, { color: colors.text }]}>Plantid</Text>
+          </View>
           <View style={styles.emptyContainer}>
-            <Ionicons name="leaf-outline" size={72} color={colors.tint} />
-            <Text style={[styles.emptyTitle, { color: colors.textSecondary }]}>{t('collection.empty')}</Text>
-            <Text style={[styles.emptyCTA, { color: colors.textMuted }]}>{t('collection.emptyCTA')}</Text>
+            <View style={[styles.emptyIconContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+              <Ionicons name="leaf" size={60} color={colors.tint} />
+            </View>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('collection.empty')}</Text>
+            <Text style={[styles.emptyCTA, { color: colors.textSecondary }]}>{t('collection.emptyCTA')}</Text>
             <TouchableOpacity
               style={[styles.cameraButton, { backgroundColor: colors.fab }]}
               onPress={() => router.push('/camera' as const)}
@@ -122,7 +132,8 @@ export default function HomeScreen() {
   return (
     <>
       <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
-        <View style={[styles.titleBar, { backgroundColor: colors.surface }]}>
+        <View style={styles.header}>
+          <Text style={[styles.greeting, { color: colors.textSecondary }]}>{t('collection.my', { defaultValue: 'My' })}</Text>
           <Text style={[styles.screenTitle, { color: colors.text }]}>{t('collection.title')}</Text>
         </View>
 
@@ -137,8 +148,13 @@ export default function HomeScreen() {
 
         {filteredPlants.length === 0 && hasActiveFilters ? (
           <View style={styles.noResultsContainer}>
-            <Ionicons name="search-outline" size={48} color={colors.textMuted} />
-            <Text style={[styles.noResultsText, { color: colors.textMuted }]}>{t('search.noResults')}</Text>
+            <View style={[styles.emptyIconContainer, { backgroundColor: colors.surface, borderColor: colors.border, width: 80, height: 80 }]}>
+              <Ionicons name="search" size={32} color={colors.textMuted} />
+            </View>
+            <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>{t('search.noResults')}</Text>
+            <TouchableOpacity onPress={handleClearFilters}>
+              <Text style={{ color: colors.tint, fontWeight: '600', marginTop: 8 }}>{t('search.clearFilters')}</Text>
+            </TouchableOpacity>
           </View>
         ) : (
           <PlantGrid plants={filteredPlants} />
@@ -152,7 +168,7 @@ export default function HomeScreen() {
             accessibilityRole="button"
             accessibilityLabel={t('camera.title')}
           >
-            <Ionicons name="camera" size={26} color="#fff" />
+            <Ionicons name="add" size={32} color="#fff" />
           </TouchableOpacity>
         </Animated.View>
       </SafeAreaView>
@@ -163,52 +179,78 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1 },
-  titleBar: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 0,
-    borderBottomWidth: 0,
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 8,
+  },
+  greeting: {
+    fontSize: 14,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 4,
   },
   screenTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    paddingBottom: 10,
+    fontSize: 32,
+    fontWeight: '800',
+    letterSpacing: -0.5,
   },
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 40,
-    gap: 12,
+    gap: 16,
+    marginTop: -40,
+  },
+  emptyIconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    marginBottom: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   emptyTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontSize: 22,
+    fontWeight: '700',
     textAlign: 'center',
-    marginTop: 8,
   },
   emptyCTA: {
-    fontSize: 15,
+    fontSize: 16,
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 24,
   },
   cameraButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 14,
-    shadowColor: '#2e7d32',
-    shadowOffset: { width: 0, height: 4 },
+    gap: 10,
+    marginTop: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 20,
+    shadowColor: '#2d5a27',
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowRadius: 10,
+    elevation: 6,
   },
   cameraButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
   },
   noResultsContainer: {
@@ -216,28 +258,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
+    marginTop: -20,
   },
   noResultsText: {
-    fontSize: 16,
+    fontSize: 17,
+    fontWeight: '500',
     textAlign: 'center',
   },
   fab: {
     position: 'absolute',
     bottom: 24,
     right: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    shadowColor: '#2e7d32',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 6,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 8,
   },
   fabTouch: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     alignItems: 'center',
     justifyContent: 'center',
   },

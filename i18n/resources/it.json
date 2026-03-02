@@ -55,7 +55,13 @@
     "easy": "Facile",
     "medium": "Media",
     "hard": "Difficile",
-    "all": "Tutti"
+    "all": "Tutti",
+    "resultsCount": "{{count}} di {{total}} piante",
+    "noResultsQuery": "Nessuna pianta corrisponde a '{{query}}'",
+    "noResultsNeedsWater": "Nessuna pianta ha bisogno d'acqua",
+    "noResultsWaterOk": "Tutte le piante sono innaffiate",
+    "noResultsDifficulty": "Nessuna pianta {{level}} nella tua collezione",
+    "clearAll": "Rimuovi tutti i filtri"
   },
   "stats": {
     "title": "Statistiche",
