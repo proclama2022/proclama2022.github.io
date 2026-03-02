@@ -77,7 +77,12 @@
     "thu": "Thu",
     "fri": "Fri",
     "sat": "Sat",
-    "sun": "Sun"
+    "sun": "Sun",
+    "streakZeroMsg": "Start watering to build your streak!",
+    "noRemindersSet": "No reminders set",
+    "legendWatering": "Watering",
+    "legendReminders": "Reminders",
+    "weeklyActivity": "Weekly Activity"
   },
   "calendar": {
     "title": "Care Calendar",
