@@ -3,7 +3,7 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text as DefaultText, View as DefaultView } from 'react-native';
+import { Text as DefaultText, View as DefaultView, TouchableOpacity as DefaultTouchableOpacity, StyleSheet } from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from './useColorScheme';
@@ -15,6 +15,7 @@ type ThemeProps = {
 
 export type TextProps = ThemeProps & DefaultText['props'];
 export type ViewProps = ThemeProps & DefaultView['props'];
+export type TouchableOpacityProps = ThemeProps & React.ComponentProps<typeof DefaultTouchableOpacity>;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -42,4 +43,67 @@ export function View(props: ViewProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+// Re-export with custom names for convenience
+export const ThemedText = Text;
+export const ThemedView = View;
+
+// ThemedCard component for profile cards
+export interface ThemedCardProps extends ViewProps {
+  children: React.ReactNode;
+}
+
+export function ThemedCard(props: ThemedCardProps) {
+  const { style, lightColor, darkColor, children, ...otherProps } = props;
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
+
+  return (
+    <DefaultView
+      style={[
+        {
+          backgroundColor: colors.surface,
+          borderColor: colors.border,
+          borderWidth: 1,
+          borderRadius: 12,
+          padding: 16,
+        },
+        style,
+      ]}
+      {...otherProps}
+    >
+      {children}
+    </DefaultView>
+  );
+}
+
+// ThemedStatCard component for individual stat cards
+export interface ThemedStatCardProps extends TouchableOpacityProps {
+  children: React.ReactNode;
+}
+
+export function ThemedStatCard(props: ThemedStatCardProps) {
+  const { style, lightColor, darkColor, children, ...otherProps } = props;
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
+
+  return (
+    <DefaultTouchableOpacity
+      style={[
+        {
+          backgroundColor: colors.background,
+          borderColor: colors.border,
+          borderWidth: 1,
+          borderRadius: 8,
+          padding: 12,
+          alignItems: 'center',
+        },
+        style,
+      ]}
+      {...otherProps}
+    >
+      {children}
+    </DefaultTouchableOpacity>
+  );
 }
