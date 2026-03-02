@@ -252,12 +252,17 @@
     "following": "Following",
     "joined": "Joined {{date}}",
     "signInToView": "Sign in to view profile",
+    "follow": "Follow",
+    "following_button": "Following",
+    "unfollow": "Unfollow",
     "errors": {
       "displayNameRequired": "Display name is required",
       "displayNameTooLong": "Display name must be 50 characters or less",
       "bioTooLong": "Bio must be 500 characters or less",
       "uploadFailed": "Failed to upload avatar",
-      "saveFailed": "Failed to save profile"
+      "saveFailed": "Failed to save profile",
+      "followFailed": "Failed to follow user",
+      "unfollowFailed": "Failed to unfollow user"
     }
   }
 }

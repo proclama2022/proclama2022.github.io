@@ -252,12 +252,17 @@
     "following": "Seguiti",
     "joined": "Iscritto {{date}}",
     "signInToView": "Accedi per vedere il profilo",
+    "follow": "Segui",
+    "following_button": "Seguito",
+    "unfollow": "Smetti di seguire",
     "errors": {
       "displayNameRequired": "Il nome visualizzato è obbligatorio",
       "displayNameTooLong": "Il nome deve essere di 50 caratteri o meno",
       "bioTooLong": "La bio deve essere di 500 caratteri o meno",
       "uploadFailed": "Impossibile caricare l'avatar",
-      "saveFailed": "Impossibile salvare il profilo"
+      "saveFailed": "Impossibile salvare il profilo",
+      "followFailed": "Impossibile seguire l'utente",
+      "unfollowFailed": "Impossibile smettere di seguire l'utente"
     }
   }
 }
