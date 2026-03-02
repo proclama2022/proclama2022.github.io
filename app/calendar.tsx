@@ -225,7 +225,7 @@ export default function CalendarScreen() {
                 </Text>
                 {hasTasks && (
                   <View style={styles.dotsRow}>
-                    {hasWatering && <View style={[styles.dot, { backgroundColor: '#2e7d32' }]} />}
+                    {hasWatering && <View style={[styles.dot, { backgroundColor: colors.tint }]} />}
                     {hasReminder && <View style={[styles.dot, { backgroundColor: '#f57c00' }]} />}
                   </View>
                 )}
@@ -237,7 +237,7 @@ export default function CalendarScreen() {
         {/* Legend */}
         <View style={styles.legend}>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#2e7d32' }]} />
+            <View style={[styles.legendDot, { backgroundColor: colors.tint }]} />
             <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('calendar.watering')}</Text>
           </View>
           <View style={styles.legendItem}>
@@ -257,11 +257,11 @@ export default function CalendarScreen() {
             ) : (
               selectedTasks.map(task => (
                 <View key={task.id} style={[styles.taskRow, { borderBottomColor: colors.borderLight }]}>
-                  <View style={[styles.taskIcon, { backgroundColor: task.type === 'watering' ? '#e8f5e9' : '#fff3e0' }]}>
+                  <View style={[styles.taskIcon, { backgroundColor: task.type === 'watering' ? colors.tint + '20' : '#fff3e0' }]}>
                     <Ionicons
                       name={task.type === 'watering' ? 'water' : 'alarm'}
                       size={18}
-                      color={task.type === 'watering' ? '#2e7d32' : '#f57c00'}
+                      color={task.type === 'watering' ? colors.tint : '#f57c00'}
                     />
                   </View>
                   <View style={styles.taskInfo}>
