@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
-status: unknown
-last_updated: "2026-03-02T17:37:11.895Z"
+status: in-progress
+last_updated: "2026-03-02T18:00:12Z"
 progress:
-  total_phases: 10
+  total_phases: 11
   completed_phases: 10
-  total_plans: 39
-  completed_plans: 40
+  total_plans: 41
+  completed_plans: 41
 ---
 
 # Project State
@@ -18,16 +18,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-26)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** Phase 09 - Care Calendar (Complete)
+**Current focus:** Phase 10 - UI Polish & Dark Mode (In Progress)
 
 ## Current Position
 
-Phase: 09 (Care Calendar) — Complete
-Plan: 1 of 1 complete
-Status: Plan 09-01 complete — colors.tint substitution for watering indicators in calendar.tsx
-Last activity: 2026-03-02 — Completed Plan 09-01
+Phase: 10 (UI Polish & Dark Mode) — In Progress
+Plan: 1 of 2 complete
+Status: Plan 10-01 complete — User-controlled dark mode with store persistence
+Last activity: 2026-03-02 — Completed Plan 10-01
 
-Progress: [██████████] 100% (Phase 09 - Plan 1 of 1 done)
+Progress: [████░░░░░░] 50% (Phase 10 - Plan 1 of 2 done)
 
 ## Milestone Goals
 
@@ -68,6 +68,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 08 P01 | 12 | 3 tasks | 3 files |
 | Phase 08-statistics-dashboard P02 | 1 | 2 tasks | 1 files |
 | Phase 09-care-calendar P01 | 5 | 1 tasks | 1 files |
+| Phase 10 P01 | 192 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -97,6 +98,8 @@ Recent decisions affecting current work:
 - [Phase 08-statistics-dashboard]: barValue count label omitted in grouped bar mode — avoids clutter when two bars render per column
 - [Phase 08-statistics-dashboard]: barTrack width reduced from 28px to 11px for grouped bars — two bars + 3px gap fit within column without overflow
 - [Phase 09-care-calendar]: colors.tint + '20' hex alpha pattern for soft tinted React Native backgrounds in calendar watering indicators
+- [Phase 10-01]: Store-based dark mode toggle with binary 'dark'/'system' preference — avoids three-state Switch UX, defaults to system preference on first launch
+- [Phase 10-01]: useColorScheme hook reads from settingsStore.colorScheme, falls back to React Native's useColorScheme for 'system' mode
 
 ### Pending Todos
 
@@ -111,5 +114,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-02
-Stopped at: Completed 09-care-calendar/09-01-PLAN.md — colors.tint substitution for watering indicators
-Resume file: .planning/phases/09-care-calendar/09-01-SUMMARY.md
+Stopped at: Completed 10-ui-polish-dark-mode/10-01-PLAN.md — User-controlled dark mode implementation
+Resume file: .planning/phases/10-ui-polish-dark-mode/10-01-SUMMARY.md
