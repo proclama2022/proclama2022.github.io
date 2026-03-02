@@ -258,3 +258,18 @@ export interface MigrationFlag {
   /** Number of plants that were migrated */
   plantCount: number;
 }
+
+// Profile Types
+export type {
+  Profile,
+  ProfileStats,
+  ProfileWithStats,
+  Follow,
+  ServiceResult,
+  ProfileUpdateData,
+  ValidationResult,
+  ProfileState,
+  AvatarUploadResult,
+  AvatarSource,
+  AvatarUploadOptions,
+} from './profile';
