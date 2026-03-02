@@ -306,7 +306,7 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 6. Custom Reminders | v1.2 | 3/3 | Complete | 2026-02-25 |
 | 7. Search & Filter | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 8. Statistics Dashboard | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
-| 9. Care Calendar | v1.3 | 0/1 | Planned | - |
+| 9. Care Calendar | v1.3 | Complete    | 2026-03-02 | - |
 | 10. UI Polish & Dark Mode | v1.3 | 2/2 | Complete | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 6/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | v2.0 | 0/TBD | Not started | - |
