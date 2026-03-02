@@ -65,6 +65,32 @@ export default function HomeScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const { wateringFilter, difficultyFilter, setWateringFilter, setDifficultyFilter, clearFilters } = useSearchStore();
 
+  // Hydration gate — avoids empty flash while AsyncStorage loads
+  const [storeHydrated, setStoreHydrated] = useState(
+    () => usePlantsStore.persist.hasHydrated()  // lazy init: true on fast devices
+  );
+
+  useEffect(() => {
+    if (!storeHydrated) {
+      // Returns unsubscribe — must return from useEffect for cleanup
+      return usePlantsStore.persist.onFinishHydration(() => setStoreHydrated(true));
+    }
+  }, []);  // runs once on mount
+
+  // Skeleton animation for loading state
+  const pulseAnim = useRef(new Animated.Value(0.4)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.0, duration: 500, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 0.4, duration: 500, useNativeDriver: true }),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, []);
+
   // FAB entrance animation
   const fabScale = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -162,27 +188,45 @@ export default function HomeScreen() {
           </Text>
         )}
 
-        {filteredPlants.length === 0 && hasActiveFilters ? (
-          <View style={styles.noResultsContainer}>
-            <View style={[styles.emptyIconContainer, { backgroundColor: colors.surface, borderColor: colors.border, width: 80, height: 80 }]}>
-              <Ionicons name="leaf-outline" size={32} color={colors.textMuted} />
-            </View>
-            <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>
-              {emptyStateMessage}
-            </Text>
-            <TouchableOpacity
-              style={[styles.clearAllButton, { backgroundColor: colors.tint }]}
-              onPress={handleClearFilters}
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityLabel={t('search.clearAll')}
-            >
-              <Ionicons name="close-circle-outline" size={16} color="#fff" />
-              <Text style={styles.clearAllButtonText}>{t('search.clearAll')}</Text>
-            </TouchableOpacity>
+        {!storeHydrated ? (
+          <View style={styles.skeletonGrid}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Animated.View
+                key={i}
+                style={[styles.skeletonCard, { backgroundColor: colors.border, opacity: pulseAnim }]}
+              >
+                {/* Square photo area */}
+                <View style={styles.skeletonPhoto} />
+                {/* Info strip */}
+                <View style={styles.skeletonInfo} />
+              </Animated.View>
+            ))}
           </View>
         ) : (
-          <PlantGrid plants={filteredPlants} />
+          <>
+            {filteredPlants.length === 0 && hasActiveFilters ? (
+              <View style={styles.noResultsContainer}>
+                <View style={[styles.emptyIconContainer, { backgroundColor: colors.surface, borderColor: colors.border, width: 80, height: 80 }]}>
+                  <Ionicons name="leaf-outline" size={32} color={colors.textMuted} />
+                </View>
+                <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>
+                  {emptyStateMessage}
+                </Text>
+                <TouchableOpacity
+                  style={[styles.clearAllButton, { backgroundColor: colors.tint }]}
+                  onPress={handleClearFilters}
+                  activeOpacity={0.8}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('search.clearAll')}
+                >
+                  <Ionicons name="close-circle-outline" size={16} color="#fff" />
+                  <Text style={styles.clearAllButtonText}>{t('search.clearAll')}</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <PlantGrid plants={filteredPlants} />
+            )}
+          </>
         )}
 
         <Animated.View style={[styles.fab, { backgroundColor: colors.fab, transform: [{ scale: fabScale }] }]}>
@@ -330,5 +374,25 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  skeletonGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  skeletonCard: {
+    flex: 1,
+    margin: 8,
+    borderRadius: 20,
+    overflow: 'hidden',
+    minWidth: '40%',   // ensures 2-column layout with flexWrap
+  },
+  skeletonPhoto: {
+    width: '100%',
+    aspectRatio: 1,    // matches gridPhotoContainer
+  },
+  skeletonInfo: {
+    height: 48,        // approximate height of name + meta lines in gridInfo
   },
 });
