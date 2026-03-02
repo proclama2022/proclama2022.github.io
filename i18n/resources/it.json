@@ -236,5 +236,28 @@
     "notificationTime": "Orario Notifiche",
     "plantsNeedWater": "{{plants}} hanno bisogno di acqua oggi",
     "notesFor": "Note per {{date}}"
+  },
+  "profile": {
+    "title": "Profilo",
+    "editProfile": "Modifica Profilo",
+    "displayName": "Nome Visualizzato",
+    "bio": "Bio",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "changeAvatar": "Cambia Avatar",
+    "chooseFromLibrary": "Scegli dalla Galleria",
+    "takePhoto": "Scatta Foto",
+    "plants_identified": "Piante Identificate",
+    "followers": "Follower",
+    "following": "Seguiti",
+    "joined": "Iscritto {{date}}",
+    "signInToView": "Accedi per vedere il profilo",
+    "errors": {
+      "displayNameRequired": "Il nome visualizzato è obbligatorio",
+      "displayNameTooLong": "Il nome deve essere di 50 caratteri o meno",
+      "bioTooLong": "La bio deve essere di 500 caratteri o meno",
+      "uploadFailed": "Impossibile caricare l'avatar",
+      "saveFailed": "Impossibile salvare il profilo"
+    }
   }
 }
