@@ -304,19 +304,21 @@ Plans:
 - [ ] 13-01: TBD
 
 #### Phase 14: Follow System & Engagement Polish
-**Goal**: Users can follow plant enthusiasts and filter feed by followed users
+**Goal**: Complete engagement features with Following feed filter, likes list, and liked posts profile section
 **Depends on**: Phase 13
-**Requirements**: LIKE-04, LIKE-05, FOLL-01, FOLL-02, FOLL-03, FOLL-04, FOLL-05
+**Requirements**: LIKE-04, LIKE-05, FOLL-04
 **Success Criteria** (what must be TRUE):
-  1. User can follow/unfollow other users via profile buttons
-  2. Follower and following counts displayed on profiles
-  3. "Following" feed filter shows posts only from followed users
-  4. Liked posts appear in user's profile ("Liked Plants" section)
-  5. User can view list of users who liked a post
-**Plans**: TBD
+  1. "Following" feed filter shows posts only from followed users
+  2. Liked posts appear in user's profile ("Liked Plants" tab)
+  3. User can view list of users who liked a post
+**Plans**: 5 plans
 
 Plans:
-- [ ] 14-01: TBD
+- [ ] 14-01-PLAN.md — Backend Infrastructure: Supabase posts/likes queries, likeService, feedStore
+- [ ] 14-02-PLAN.md — Likes List UI: LikesList component, LikesListModal, translations
+- [ ] 14-03-PLAN.md — Liked Posts Profile Tab: LikedPostsTab component, profile tab navigation
+- [ ] 14-04-PLAN.md — Feed Filter UI: FeedFilterTabs, EmptyFeedState components
+- [ ] 14-05-PLAN.md — Community Feed Integration: community.tsx screen, PostCard, tab navigation
 
 ## Progress
 
@@ -339,7 +341,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
 | 13-light-meter. Light Meter | v2.1 | 3/5 | Gap Closure | - |
 | 13. Community Feed Core & Moderation | 5/5 | Complete   | 2026-03-04 | - |
-| 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
+| 14. Follow System & Engagement Polish | v2.0 | 0/5 | Ready | - |
 
 ---
 
