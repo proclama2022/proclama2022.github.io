@@ -105,6 +105,14 @@ Deferred to future release. Tracked but not in current roadmap.
 - **NOTF-03**: User receives push notification for comments on own posts
 - **NOTF-04**: User can configure notification preferences
 
+## v2.1 Smart Features
+
+Requirements for the Smart Features milestone. Inserted between Phase 12 and Phase 13.
+
+### Light Meter
+
+- [x] **v2.1-light-meter**: Users can measure ambient light levels (lux) to determine optimal plant placement — Android uses native expo-sensors LightSensor (±15% accuracy), iOS uses camera-based brightness estimation (±30% estimate); color-coded category gauge (Low/Medium/Bright Indirect/Direct Sun); plant recommendations per category; save measurement to plant location field; bilingual EN/IT support
+
 ## Out of Scope
 
 Explicitly excluded. Documented to prevent scope creep.
@@ -142,6 +150,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PROF-06 | Phase 12 | Complete |
 | PROF-07 | Phase 12 | Complete |
 | PROF-08 | Phase 12 | Pending |
+| v2.1-light-meter | Phase 13-light-meter | Complete |
 | FEED-01 | Phase 13 | Pending |
 | FEED-02 | Phase 13 | Pending |
 | FEED-03 | Phase 13 | Pending |
@@ -182,9 +191,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 **Coverage:**
 - v2.0 requirements: 50 total
-- Mapped to phases: 50
+- v2.1 requirements: 1 total
+- Mapped to phases: 51
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-27*
-*Last updated: 2026-02-27 after milestone scoping*
+*Last updated: 2026-03-04 after light meter gap closure*
