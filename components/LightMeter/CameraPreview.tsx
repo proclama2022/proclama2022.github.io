@@ -207,7 +207,7 @@ export function CameraPreview({
   if (!permission.granted) {
     return (
       <View style={[styles.container, styles.permissionDenied, style]}>
-        <Ionicons name="camera-off-outline" size={48} color="#9aa09a" />
+        <Ionicons name="camera-outline" size={48} color="#9aa09a" />
         <Text style={styles.permissionTitle}>Camera Access Required</Text>
         <Text style={styles.permissionText}>
           Camera access is needed to estimate light levels on iOS.
