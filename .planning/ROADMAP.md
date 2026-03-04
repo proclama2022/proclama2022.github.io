@@ -49,12 +49,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Color-coded gauge shows light category (Low/Medium/Bright/Direct)
   4. Plant recommendations appear based on current light category
   5. Users can save measurements linked to specific plants
-**Plans**: 3 plans
+**Plans**: 5 plans
 
 Plans:
 - [ ] 13-01: Android Light Sensor Implementation — expo-sensors LightSensor with smoothing
 - [ ] 13-02: iOS Camera-based Light Estimation — Camera brightness analysis with calibration
 - [ ] 13-03: Light Meter UI/UX & Integration — Gauge component, recommendations, bilingual support
+- [ ] 13-04-PLAN.md — REQUIREMENTS.md documentation fix (v2.1-light-meter traceability)
+- [ ] 13-05-PLAN.md — Navigation entry point (CareTab button) + iOS camera smoothing
 
 ## Phase Details
 
@@ -335,7 +337,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 10. UI Polish & Dark Mode | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
-| 13-light-meter. Light Meter | v2.1 | 0/3 | Planned | - |
+| 13-light-meter. Light Meter | v2.1 | 3/5 | Gap Closure | - |
 | 13. Community Feed Core & Moderation | 3/3 | Complete   | 2026-03-04 | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
