@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 10: UI Polish & Dark Mode** - Dark mode support and enhanced onboarding (shipped 2026-03-02)
 - [x] **Phase 11: Auth Infrastructure & Supabase Setup** - User authentication with optional access (completed 2026-02-27)
 - [x] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats (completed 2026-03-02)
-- [ ] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation
+- [x] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation (completed 2026-03-04)
 - [ ] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed
 
 ### 📋 v2.1 Smart Features (INSERTED)
@@ -336,7 +336,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
 | 13-light-meter. Light Meter | v2.1 | 0/3 | Planned | - |
-| 13. Community Feed Core & Moderation | 2/3 | In Progress|  | - |
+| 13. Community Feed Core & Moderation | 3/3 | Complete   | 2026-03-04 | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
 ---
