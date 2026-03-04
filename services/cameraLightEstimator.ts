@@ -24,6 +24,18 @@ const DEFAULT_UPDATE_INTERVAL = 500; // ms
 // Maximum active time before auto-stop (30 seconds)
 const MAX_ACTIVE_TIME = 30000; // ms
 
+// ============================================================================
+// iOS Smoothing Buffer
+// ============================================================================
+
+/**
+ * Rolling buffer for iOS camera lux estimates.
+ * Applies a 4-sample simple moving average to reduce frame-to-frame jitter.
+ * Reset when estimateLuxFromFrame is called after a gap (handled by auto-stop in CameraPreview).
+ */
+const IOS_SMOOTHING_SAMPLES = 4;
+const iosReadingsBuffer: number[] = [];
+
 /**
  * Calibration data structure
  */
@@ -193,7 +205,14 @@ export function estimateLuxFromFrame(
   const baseLux = luminanceToLux(averageLuminance);
 
   // Apply calibration offset if available
-  const finalLux = calibration ? baseLux * calibration.offset : baseLux;
+  const calibratedLux = calibration ? baseLux * calibration.offset : baseLux;
+
+  // Apply 4-sample simple moving average to reduce iOS frame-to-frame jitter
+  iosReadingsBuffer.push(calibratedLux);
+  if (iosReadingsBuffer.length > IOS_SMOOTHING_SAMPLES) {
+    iosReadingsBuffer.shift();
+  }
+  const finalLux = iosReadingsBuffer.reduce((sum, v) => sum + v, 0) / iosReadingsBuffer.length;
 
   return {
     value: Math.round(finalLux),
@@ -201,6 +220,15 @@ export function estimateLuxFromFrame(
     source: 'camera',
     confidence: 0.7, // Camera estimates have ±30% accuracy
   };
+}
+
+/**
+ * Reset the iOS smoothing buffer.
+ * Call this when camera measurement stops so the buffer does not carry
+ * stale values into the next measurement session.
+ */
+export function resetIosSmoothing(): void {
+  iosReadingsBuffer.length = 0;
 }
 
 /**
