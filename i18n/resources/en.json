@@ -496,6 +496,7 @@
       "instruction": "Place a white paper in view and select a known light level",
       "reference": "Reference brightness",
       "save": "Save Calibration"
-    }
+    },
+    "measureLight": "Measure Light"
   }
 }

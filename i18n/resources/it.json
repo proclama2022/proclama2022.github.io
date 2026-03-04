@@ -496,6 +496,7 @@
       "instruction": "Posiziona un foglio bianco nell'inquadratura e seleziona un livello di luce noto",
       "reference": "Luminosità di riferimento",
       "save": "Salva Calibrazione"
-    }
+    },
+    "measureLight": "Misura la Luce"
   }
 }
