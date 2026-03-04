@@ -11,6 +11,7 @@ Plantid transforms from personal plant tracker to community platform through 5 m
 - ✅ **v1.2 Multi-Photo Gallery + Custom Reminders** - Phases 5-6 (shipped 2026-02-25)
 - ✅ **v1.3 Enhanced UX** - Phases 7-10 (shipped 2026-02-26)
 - 📋 **v2.0 Community** - Phases 11-14 (planned)
+- 📋 **v2.1 Smart Features** - Decimal phases 13-light-meter (planned)
 
 ## Phases
 
@@ -34,6 +35,26 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats (completed 2026-03-02)
 - [ ] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation
 - [ ] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed
+
+### 📋 v2.1 Smart Features (INSERTED)
+
+**Phase 13-light-meter: Light Meter** — *Inserted between Phase 12 and Phase 13*
+
+**Goal**: Users can measure ambient light levels to determine optimal plant placement
+**Depends on**: Phase 12
+**Requirements**: v2.1-light-meter
+**Success Criteria** (what must be TRUE):
+  1. Android shows accurate lux readings on devices with light sensors (±15% accuracy)
+  2. iOS provides reasonable light estimates using camera analysis (±30% estimate)
+  3. Color-coded gauge shows light category (Low/Medium/Bright/Direct)
+  4. Plant recommendations appear based on current light category
+  5. Users can save measurements linked to specific plants
+**Plans**: 3 plans
+
+Plans:
+- [ ] 13-01: Android Light Sensor Implementation — expo-sensors LightSensor with smoothing
+- [ ] 13-02: iOS Camera-based Light Estimation — Camera brightness analysis with calibration
+- [ ] 13-03: Light Meter UI/UX & Integration — Gauge component, recommendations, bilingual support
 
 ## Phase Details
 
@@ -298,7 +319,7 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 11 → 12 → 13 → 14
+Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
@@ -314,7 +335,8 @@ Phases execute in numeric order: 11 → 12 → 13 → 14
 | 10. UI Polish & Dark Mode | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
-| 13. Community Feed Core & Moderation | v2.0 | 0/TBD | Not started | - |
+| 13-light-meter. Light Meter | v2.1 | 0/3 | Planned | - |
+| 13. Community Feed Core & Moderation | 1/3 | In Progress|  | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
 ---

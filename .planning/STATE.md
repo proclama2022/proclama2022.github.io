@@ -1,14 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Community
-status: unknown
-last_updated: "2026-03-02T19:25:58.170Z"
+milestone: v2.1
+milestone_name: Smart Features
+status: completed
+stopped_at: Completed 13-light-meter/13-01-PLAN.md — Light Sensor Infrastructure
+last_updated: "2026-03-04T15:06:35.816Z"
+last_activity: 2026-03-02 — Completed Plan 12-05 (Public Profile Viewing & Follow System)
 progress:
-  total_phases: 12
+  total_phases: 14
   completed_phases: 12
-  total_plans: 46
-  completed_plans: 48
+  total_plans: 49
+  completed_plans: 49
+  percent: 100
 ---
 
 # Project State
@@ -75,6 +78,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 12 P03 | 2 | 5 tasks | 5 files |
 | Phase 12 P04 | 3 | 2 tasks | 5 files |
 | Phase 12 P05 | 1 | 5 tasks | 5 files |
+| Phase 13-light-meter P01 | 164 | 3 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -139,6 +143,9 @@ Recent decisions affecting current work:
 - [Phase 12-05]: Profile data refreshes on focus via useFocusEffect for up-to-date stats — keeps follower counts current
 - [Phase 12-05]: Optimistic stat refresh after follow/unfollow — immediate UI feedback with background data update
 - [Phase 12-05]: Local state in FollowButton for immediate UI feedback before parent re-render — better perceived performance
+- [Phase 13-01]: expo-sensors LightSensor API for Android native sensor — accurate ±15% lux at 100ms intervals
+- [Phase 13-01]: Weighted moving average (N=5, recent samples weighted higher) smooths jitter while remaining responsive
+- [Phase 13-01]: Platform check at both service layer (throws) and hook layer (sets unavailable) — defense in depth for iOS
 
 ### Pending Todos
 
@@ -152,6 +159,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-02
-Stopped at: Completed 12-database-schema-user-profiles/12-03-PLAN.md — Profile UI Components
-Resume file: .planning/phases/12-database-schema-user-profiles/12-03-SUMMARY.md
+Last session: 2026-03-04T15:06:35.793Z
+Stopped at: Completed 13-light-meter/13-01-PLAN.md — Light Sensor Infrastructure
+Resume file: None
