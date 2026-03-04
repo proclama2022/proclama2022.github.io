@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Smart Features
 status: completed
-stopped_at: "Checkpoint: 13-03 Tasks 1-4 complete — awaiting human-verify for Light Meter UI"
-last_updated: "2026-03-04T15:24:51.245Z"
+stopped_at: Completed 13-03-PLAN.md (Light Meter UI) — plan 13-03 fully verified and complete
+last_updated: "2026-03-04T15:33:48.311Z"
 last_activity: 2026-03-02 — Completed Plan 12-05 (Public Profile Viewing & Follow System)
 progress:
   total_phases: 14
@@ -81,6 +81,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 13-light-meter P01 | 164 | 3 tasks | 3 files |
 | Phase 13-light-meter P02 | 7 | 4 tasks | 3 files |
 | Phase 13-light-meter P03 | 4 | 4 tasks | 5 files |
+| Phase 13-light-meter P03 | 4 | 5 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -154,6 +155,9 @@ Recent decisions affecting current work:
 - [Phase 13-light-meter]: [Phase 13-03]: iOS camera local state pattern — useCameraLightEstimator does not expose handleFrame externally, so screen manages iosLux/iosCategory via CameraPreview.onFrameProcessed callback
 - [Phase 13-light-meter]: [Phase 13-03]: LightCategory color mapping locked — low=#607D8B, medium=#8BC34A, bright_indirect=#FF9800, direct_sun=#F44336
 - [Phase 13-light-meter]: [Phase 13-03]: Save measurement to plant.location as formatted string — avoids architectural change to SavedPlant type
+- [Phase 13-light-meter]: iOS camera local state pattern — useCameraLightEstimator does not expose handleFrame externally, so screen manages iosLux/iosCategory via CameraPreview.onFrameProcessed callback
+- [Phase 13-light-meter]: Plant names not translated (proper nouns/Latin names) — kept in English-style in both EN/IT translations per botanical convention
+- [Phase 13-light-meter]: Save measurement to plant location field as formatted string — avoids architectural change to SavedPlant type
 
 ### Pending Todos
 
@@ -167,6 +171,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T15:24:51.238Z
-Stopped at: Checkpoint: 13-03 Tasks 1-4 complete — awaiting human-verify for Light Meter UI
+Last session: 2026-03-04T15:33:48.304Z
+Stopped at: Completed 13-03-PLAN.md (Light Meter UI) — plan 13-03 fully verified and complete
 Resume file: None
