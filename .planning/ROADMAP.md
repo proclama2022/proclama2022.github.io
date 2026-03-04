@@ -338,7 +338,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
 | 13-light-meter. Light Meter | v2.1 | 3/5 | Gap Closure | - |
-| 13. Community Feed Core & Moderation | 3/3 | Complete   | 2026-03-04 | - |
+| 13. Community Feed Core & Moderation | 4/5 | In Progress|  | - |
 | 14. Follow System & Engagement Polish | v2.0 | 0/TBD | Not started | - |
 
 ---
