@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v2.1
 milestone_name: Smart Features
 status: completed
-stopped_at: Completed 13-04-PLAN.md (Light Meter Requirements Gap Closure) — phase 13-light-meter fully complete
-last_updated: "2026-03-04T16:04:07.972Z"
+stopped_at: Completed 13-05-PLAN.md (Light Meter Gap Closure — Navigation + iOS Smoothing)
+last_updated: "2026-03-04T16:08:19.932Z"
 last_activity: 2026-03-02 — Completed Plan 12-05 (Public Profile Viewing & Follow System)
 progress:
   total_phases: 14
-  completed_phases: 12
+  completed_phases: 13
   total_plans: 51
-  completed_plans: 52
+  completed_plans: 53
   percent: 100
 ---
 
@@ -83,6 +83,7 @@ Transform Plantid from personal plant tracker to community platform:
 | Phase 13-light-meter P03 | 4 | 4 tasks | 5 files |
 | Phase 13-light-meter P03 | 4 | 5 tasks | 5 files |
 | Phase 13-light-meter P04 | 1 | 1 tasks | 1 files |
+| Phase 13-light-meter P05 | 140 | 3 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -160,6 +161,8 @@ Recent decisions affecting current work:
 - [Phase 13-light-meter]: Plant names not translated (proper nouns/Latin names) — kept in English-style in both EN/IT translations per botanical convention
 - [Phase 13-light-meter]: Save measurement to plant location field as formatted string — avoids architectural change to SavedPlant type
 - [Phase 13-light-meter]: v2.1-light-meter placed in ## v2.1 Smart Features section (not v2.1+ deferred list) — feature is complete, deferred list covers speculative future items
+- [Phase 13-light-meter]: measureLightButton styled as pill with colors.tint alpha background — matches existing inlineChip pattern in CareTab
+- [Phase 13-light-meter]: resetIosSmoothing exported for caller to clear stale buffer between measurement sessions
 
 ### Pending Todos
 
@@ -173,6 +176,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-04T16:04:07.966Z
-Stopped at: Completed 13-04-PLAN.md (Light Meter Requirements Gap Closure) — phase 13-light-meter fully complete
+Last session: 2026-03-04T16:08:19.906Z
+Stopped at: Completed 13-05-PLAN.md (Light Meter Gap Closure — Navigation + iOS Smoothing)
 Resume file: None
