@@ -38,15 +38,29 @@
   },
   "results": {
     "title": "Identification Results",
+    "identification": "Identification",
     "confidence": "Confidence",
+    "confidenceStrong": "Strong match",
+    "confidenceMedium": "Worth checking",
+    "confidenceLow": "Low confidence",
     "scientificName": "Scientific Name",
     "family": "Family",
     "commonNames": "Common Names",
+    "bestMatch": "Best match",
+    "possibleMatch": "Possible match",
+    "nextStep": "Next step",
     "viewCare": "View Care Info",
     "addToCollection": "Add to Collection",
+    "addManagedAction": "Add to collection",
     "saveAsTitle": "Save this result as",
+    "saveFlowBody": "Decide whether this belongs to your care routine or to your field journal, then place it in the right space.",
     "saveManagedHint": "Choose this for plants you care for at home, in the garden or on the balcony.",
     "saveSightingHint": "Choose this for flowers, trees and plants you discover outside and want to remember.",
+    "chooseSpace": "Choose a space",
+    "spaceHintManaged": "This helps organize reminders, collection views and routines later.",
+    "spaceHintSighting": "Use the place that best matches where you found or keep track of it.",
+    "saveManagedSummary": "This will be saved as a managed plant in {{space}}.",
+    "saveSightingSummary": "This will be saved as a sighting in {{space}}.",
     "saveSighting": "Save as Sighting",
     "sightingSaved": "Sighting saved",
     "lowConfidenceWarning": "Low confidence result. Try a clearer photo for better accuracy.",
@@ -114,7 +128,12 @@
     "nextReminderBody": "{{task}} for {{plant}} is scheduled {{date}}.",
     "nextReminderEmpty": "No pending reminders. Add one from a plant detail page.",
     "collectionPulse": "Collection Pulse",
-    "collectionPulseBody": "You currently manage {{collection}} plants and {{reminders}} active reminders across your routine."
+    "collectionPulseBody": "You currently manage {{collection}} plants and {{reminders}} active reminders across your routine.",
+    "smartCollections": "Smart collections",
+    "smartAll": "Everything",
+    "smartNeedsCare": "Needs care",
+    "smartRecent": "Recent",
+    "smartWithReminders": "With reminders"
   },
   "entry": {
     "kind": {
@@ -303,8 +322,9 @@
     "deleteBody": "This will permanently remove the plant from your collection.",
     "convertTitle": "Add this sighting to your care routine?",
     "convertBody": "This will turn the sighting into a managed plant and place it in {{space}}.",
+    "convertBodyChoice": "Choose where this should live once it becomes part of your care routine.",
     "convertAction": "Add to care routine",
-    "convertInlineBody": "Turn this sighting into a managed plant and start organizing it under {{space}}.",
+    "convertInlineBody": "Turn this sighting into a managed plant and choose where it belongs in your routine.",
     "convertLimitTitle": "Collection limit reached",
     "thumbnailA11y": "Thumbnail of {{name}}",
     "gallery": {
@@ -425,6 +445,18 @@
     "notificationTime": "Notification Time",
     "plantsNeedWater": "{{plants}} need water today",
     "notesFor": "Notes for {{date}}"
+  },
+  "community": {
+    "likes": "Likes",
+    "noLikes": "No likes yet",
+    "beFirst": "Be the first to like this",
+    "followingFilter": "Following",
+    "recentFilter": "Recent",
+    "popularFilter": "Popular",
+    "emptyFollowing": "You're not following anyone yet",
+    "emptyFollowingCTA": "Discover plant lovers",
+    "emptyFeed": "No posts yet",
+    "emptyFeedCTA": "Be the first to share a plant!"
   },
   "profile": {
     "title": "Profile",

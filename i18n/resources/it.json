@@ -38,15 +38,29 @@
   },
   "results": {
     "title": "Risultati Identificazione",
+    "identification": "Identificazione",
     "confidence": "Confidenza",
+    "confidenceStrong": "Match forte",
+    "confidenceMedium": "Da verificare",
+    "confidenceLow": "Confidenza bassa",
     "scientificName": "Nome Scientifico",
     "family": "Famiglia",
     "commonNames": "Nomi Comuni",
+    "bestMatch": "Miglior match",
+    "possibleMatch": "Possibile match",
+    "nextStep": "Prossimo passo",
     "viewCare": "Vedi Info Cura",
     "addToCollection": "Aggiungi alla Collezione",
+    "addManagedAction": "Aggiungi alla collezione",
     "saveAsTitle": "Salva questo risultato come",
+    "saveFlowBody": "Decidi se appartiene alla tua routine di cura o al tuo diario sul campo, poi mettilo nello spazio giusto.",
     "saveManagedHint": "Scegli questa opzione per le piante che curi in casa, in giardino o sul balcone.",
     "saveSightingHint": "Scegli questa opzione per fiori, alberi e piante che incontri fuori e vuoi ricordare.",
+    "chooseSpace": "Scegli uno spazio",
+    "spaceHintManaged": "Ti aiutera a organizzare promemoria, viste collezione e routine in seguito.",
+    "spaceHintSighting": "Usa il luogo che descrive meglio dove l'hai trovata o vuoi tracciarla.",
+    "saveManagedSummary": "Questa verra salvata come pianta gestita in {{space}}.",
+    "saveSightingSummary": "Questo verra salvato come avvistamento in {{space}}.",
     "saveSighting": "Salva come avvistamento",
     "sightingSaved": "Avvistamento salvato",
     "lowConfidenceWarning": "Risultato a bassa confidenza. Prova una foto più chiara per maggiore precisione.",
@@ -114,7 +128,12 @@
     "nextReminderBody": "{{task}} per {{plant}} è previsto {{date}}.",
     "nextReminderEmpty": "Nessun promemoria in sospeso. Aggiungine uno dalla scheda di una pianta.",
     "collectionPulse": "Polso collezione",
-    "collectionPulseBody": "In questo momento gestisci {{collection}} piante e {{reminders}} promemoria attivi nella tua routine."
+    "collectionPulseBody": "In questo momento gestisci {{collection}} piante e {{reminders}} promemoria attivi nella tua routine.",
+    "smartCollections": "Collezioni intelligenti",
+    "smartAll": "Tutto",
+    "smartNeedsCare": "Da curare",
+    "smartRecent": "Recenti",
+    "smartWithReminders": "Con promemoria"
   },
   "entry": {
     "kind": {
@@ -303,8 +322,9 @@
     "deleteBody": "La pianta verrà rimossa definitivamente dalla tua collezione.",
     "convertTitle": "Aggiungere questo avvistamento alla routine di cura?",
     "convertBody": "L'avvistamento diventera una pianta gestita e verra inserito in {{space}}.",
+    "convertBodyChoice": "Scegli dove deve stare quando entra nella tua routine di cura.",
     "convertAction": "Aggiungi alla routine",
-    "convertInlineBody": "Trasforma questo avvistamento in una pianta gestita e inizia a organizzarla in {{space}}.",
+    "convertInlineBody": "Trasforma questo avvistamento in una pianta gestita e scegli dove inserirlo nella tua routine.",
     "convertLimitTitle": "Limite collezione raggiunto",
     "thumbnailA11y": "Miniatura di {{name}}",
     "gallery": {
@@ -425,6 +445,18 @@
     "notificationTime": "Orario Notifiche",
     "plantsNeedWater": "{{plants}} hanno bisogno di acqua oggi",
     "notesFor": "Note per {{date}}"
+  },
+  "community": {
+    "likes": "Mi piace",
+    "noLikes": "Nessun mi piace ancora",
+    "beFirst": "Sii il primo a mettere mi piace",
+    "followingFilter": "Seguiti",
+    "recentFilter": "Recenti",
+    "popularFilter": "Popolari",
+    "emptyFollowing": "Non segui ancora nessuno",
+    "emptyFollowingCTA": "Scopri altri amanti delle piante",
+    "emptyFeed": "Nessun post ancora",
+    "emptyFeedCTA": "Sii il primo a condividere una pianta!"
   },
   "profile": {
     "title": "Profilo",
