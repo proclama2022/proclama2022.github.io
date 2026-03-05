@@ -315,7 +315,7 @@ Plans:
 
 Plans:
 - [ ] 14-01-PLAN.md — Backend Infrastructure: Supabase posts/likes queries, likeService, feedStore
-- [ ] 14-02-PLAN.md — Likes List UI: LikesList component, LikesListModal, translations
+- [x] 14-02-PLAN.md — Likes List UI: LikesList component, LikesListModal, translations (2026-03-05)
 - [ ] 14-03-PLAN.md — Liked Posts Profile Tab: LikedPostsTab component, profile tab navigation
 - [ ] 14-04-PLAN.md — Feed Filter UI: FeedFilterTabs, EmptyFeedState components
 - [ ] 14-05-PLAN.md — Community Feed Integration: community.tsx screen, PostCard, tab navigation
@@ -341,7 +341,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
 | 13-light-meter. Light Meter | v2.1 | 3/5 | Gap Closure | - |
 | 13. Community Feed Core & Moderation | 5/5 | Complete   | 2026-03-04 | - |
-| 14. Follow System & Engagement Polish | v2.0 | 0/5 | Ready | - |
+| 14. Follow System & Engagement Polish | v2.0 | 2/5 | In Progress | - |
 
 ---
 

@@ -55,7 +55,7 @@ Requirements for Community milestone. Each maps to roadmap phases.
 - [ ] **LIKE-01**: User can like any post (auth required)
 - [ ] **LIKE-02**: User can unlike a post (toggle behavior)
 - [ ] **LIKE-03**: Like count displayed on post card
-- [ ] **LIKE-04**: User can view list of users who liked a post (optional for MVP)
+- [x] **LIKE-04**: User can view list of users who liked a post (optional for MVP)
 - [ ] **LIKE-05**: Liked posts appear in user's profile ("Liked Plants" section)
 
 ### Follow System
@@ -170,7 +170,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LIKE-01 | Phase 13 | Pending |
 | LIKE-02 | Phase 13 | Pending |
 | LIKE-03 | Phase 13 | Pending |
-| LIKE-04 | Phase 14 | Pending |
+| LIKE-04 | Phase 14 | Complete (2026-03-05) |
 | LIKE-05 | Phase 14 | Pending |
 | FOLL-01 | Phase 14 | Pending |
 | FOLL-02 | Phase 14 | Pending |
