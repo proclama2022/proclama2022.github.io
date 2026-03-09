@@ -308,11 +308,20 @@ export async function getUserGamificationSummary(): Promise<GamificationSummary 
 
 export async function awardWateringEvent(
   plantId: string,
-  eventDateIso: string
+  eventDateIso: string,
+  wateringTime?: Date
 ): Promise<GamificationAwardResult | null> {
+  // Check for early bird badge (watering before 7am)
+  let earlyWatering = false;
+  if (wateringTime) {
+    const hour = wateringTime.getHours();
+    earlyWatering = hour < 7;
+  }
+
   return awardGamificationEvent('watering_completed', `watering:${plantId}:${eventDateIso}`, {
     plant_id: plantId,
     event_date: eventDateIso,
+    early_watering: earlyWatering,
   });
 }
 
@@ -347,4 +356,40 @@ export async function awardDailyCheckinEvent(date: Date = new Date()): Promise<G
   return awardGamificationEvent('daily_checkin', `daily-checkin:${utcDateKey}`, {
     checkin_date: utcDateKey,
   });
+}
+
+/**
+ * Awards a plant identification event.
+ * Used after a successful PlantNet identification.
+ * @param plantId - ID of the identified plant
+ * @param hasDisease - Whether the plant appears diseased (for Plant Doctor badge)
+ */
+export async function awardPlantIdentifiedEvent(
+  plantId: string,
+  hasDisease: boolean = false
+): Promise<GamificationAwardResult | null> {
+  return awardGamificationEvent('plant_identified', `plant-identified:${plantId}`, {
+    plant_id: plantId,
+    has_disease: hasDisease,
+  });
+}
+
+/**
+ * Awards a followers gained event.
+ * Used after a user gains a new follower.
+ * @param followedUserId - ID of the user who was followed
+ * @param totalFollowers - Total follower count after the new follow
+ */
+export async function awardFollowersGainedEvent(
+  followedUserId: string,
+  totalFollowers: number
+): Promise<GamificationAwardResult | null> {
+  return awardGamificationEvent(
+    'followers_gained',
+    `followers-gained:${followedUserId}:${Date.now()}`,
+    {
+      followed_user_id: followedUserId,
+      total_followers: totalFollowers,
+    }
+  );
 }
