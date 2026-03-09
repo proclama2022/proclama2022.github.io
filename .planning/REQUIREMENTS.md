@@ -11,11 +11,11 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 
 - [x] **LEAG-01**: User is assigned to a league based on XP (Bronze → Silver → Gold → Platinum → Diamond)
 - [x] **LEAG-02**: User can view weekly leaderboard showing top 30 users in their league
-- [ ] **LEAG-03**: Top 10 users promote to higher league at week end (Sunday midnight local time)
-- [ ] **LEAG-04**: Bottom 5 users relegate to lower league at week end
+- [x] **LEAG-03**: Top 10 users promote to higher league at week end (Sunday midnight local time)
+- [x] **LEAG-04**: Bottom 5 users relegate to lower league at week end
 - [x] **LEAG-05**: League tab shows current rank, XP progress, and promotion/relegation zone
 - [x] **LEAG-06**: New users start in Bronze league
-- [ ] **LEAG-07**: League badges are awarded on promotion (Bronze Member, Silver Member, etc.)
+- [x] **LEAG-07**: League badges are awarded on promotion (Bronze Member, Silver Member, etc.)
 
 ### Extended Badges
 
