@@ -13,7 +13,9 @@
     "enabled": "Attive",
     "disabled": "Disattivate",
     "undetermined": "Non determinate",
-    "goBack": "Torna indietro"
+    "goBack": "Torna indietro",
+    "water": "Annaffia",
+    "update": "Aggiorna"
   },
   "camera": {
     "title": "Identifica Pianta",
@@ -64,7 +66,13 @@
     "saveSighting": "Salva come avvistamento",
     "sightingSaved": "Avvistamento salvato",
     "lowConfidenceWarning": "Risultato a bassa confidenza. Prova una foto più chiara per maggiore precisione.",
-    "careComingSoon": "Info sulla cura disponibili presto per questa specie."
+    "careComingSoon": "Info sulla cura disponibili presto per questa specie.",
+    "dataSource": "Fonte dati",
+    "sourceLocal": "Locale",
+    "sourcePerenual": "Perenual",
+    "sourceGbif": "GBIF",
+    "distribution": "Distribuzione",
+    "toxicHumans": "Potenzialmente tossica per gli esseri umani"
   },
   "collection": {
     "title": "Le Mie Piante",
@@ -75,6 +83,55 @@
     "listView": "Vista Elenco",
     "plantAdded": "Pianta aggiunta alla collezione",
     "plantDeleted": "Pianta rimossa dalla collezione"
+  },
+  "weather": {
+    "title": "Meteo Intelligente",
+    "enable": "Attiva Meteo Intelligente",
+    "description": "Adatta i programmi di annaffiatura in base alle condizioni locali (pioggia, caldo).",
+    "locationAccess": "Accesso Posizione",
+    "grantPermission": "Consenti Accesso Posizione",
+    "permissionDenied": "Permesso posizione negato. Abilitalo nelle impostazioni per usare le funzioni meteo.",
+    "coldWarningTitle": "Allerta Gelo",
+    "coldWarningMessage": "Temperature sotto i 5°C. Proteggi le piante sensibili all'aperto.",
+    "rainDelayTitle": "Ritardo Pioggia",
+    "rainDelayMessage": "Rilevata pioggia recente. Le piante all'esterno potrebbero non necessitare di acqua.",
+    "heatWarningTitle": "Ondata di Calore",
+    "heatWarningMessage": "Temperature elevate previste. Controlla le piante assetate ogni giorno.",
+    "neutralTitle": "Meteo Stabile",
+    "neutralMessage": "Condizioni normali. Segui il programma regolare."
+  },
+  "lightMeter": {
+    "title": "Misuratore Luce",
+    "measure": "Misura",
+    "calibrate": "Calibra",
+    "lux": "Lux",
+    "sensorUnavailable": "Sensore di luce non disponibile. Uso la stima della fotocamera.",
+    "cameraInstruction": "Punta la fotocamera verso la fonte di luce o la superficie della foglia.",
+    "start": "Avvia Misurazione",
+    "stop": "Stop",
+    "measuring": "Misurazione...",
+    "save": "Salva Misurazione",
+    "accuracy": {
+      "high": "Alta Precisione",
+      "estimate": "Stimata (Fotocamera)"
+    },
+    "recommendations": {
+      "title": "Adatto per piante come:"
+    },
+    "instructions": {
+      "title": "Come misurare",
+      "point": "Punta il sensore (o la fotocamera) verso la fonte di luce.",
+      "steady": "Tieni fermo per alcuni secondi per una lettura stabile.",
+      "multiple": "Effettua misurazioni in diversi momenti della giornata."
+    },
+    "disclaimer": "Le misurazioni sono approssimative. Le letture basate su fotocamera dipendono dalla calibrazione del dispositivo.",
+    "categories": {
+      "low": "Luce Bassa",
+      "medium": "Luce Media",
+      "brightIndirect": "Luce Indiretta Luminosa",
+      "directSun": "Sole Diretto"
+    },
+    "recommendation": "Adatto per: {{plants}}"
   },
   "home": {
     "todayLabel": "Oggi",
@@ -134,6 +191,22 @@
     "smartNeedsCare": "Da curare",
     "smartRecent": "Recenti",
     "smartWithReminders": "Con promemoria"
+  },
+  "learningPopup": {
+    "title": "Coach piante del giorno",
+    "subtitle": "Microlearning per {{name}}",
+    "funFactTitle": "Curiosità",
+    "tipTitle": "Micro consiglio",
+    "pairsWellTitle": "Sta bene con",
+    "avoidTitle": "Meglio separare da",
+    "noFunFact": "Nessuna curiosità specifica disponibile per questa pianta.",
+    "noGoodPairs": "Nessun abbinamento chiaro nella tua collezione per ora.",
+    "noBadPairs": "Nessun conflitto di abbinamento rilevato nella tua collezione.",
+    "close": "Chiudi",
+    "openPlant": "Apri pianta",
+    "waterTip": "Ritmo acqua: circa ogni {{days}} giorni.",
+    "sunlightTip": "Luce preferita: {{sunlight}}.",
+    "humidityTip": "Umidità ideale: {{humidity}}."
   },
   "entry": {
     "kind": {
@@ -246,28 +319,38 @@
       "observedWithPlaceholder": "Da sola, con Anna, durante una passeggiata..."
     },
     "care": {
+      "summaryTitle": "Programma di Cura",
+      "summaryBody": "Segui queste linee guida per mantenere la tua pianta sana e rigogliosa.",
       "watering": "Annaffiatura",
       "light": "Luce",
       "temperature": "Temperatura",
       "humidity": "Umidità",
-      "seasonalTemps": "Temperature Stagionali",
       "fertilization": "Fertilizzazione",
+      "repotting": "Rinvaso",
       "pruning": "Potatura",
-      "pests": "Parassiti e Rimedi",
-      "summaryTitle": "Quadro Cura",
-      "summaryBody": "Una lettura rapida del ritmo di cura di questa pianta, dell'ambiente in cui vive e delle cose principali da tenere d'occhio nel tempo.",
-      "emptyTitle": "Profilo di cura non pronto",
+      "pests": "Parassiti e Malattie",
+      "notAvailable": "Non disponibile",
+      "emptyTitle": "Nessuna Info Cura",
       "toxicWarning": "Attenzione: tossica per animali domestici.",
+      "toxicityWarning": "Attenzione: Tossicità",
       "safePets": "Segnata come più sicura in presenza di animali.",
-      "tipTitle": "Consiglio di Cura",
-      "remedyLabel": "Rimedio",
-      "notAvailable": "Non disponibile per questa specie",
-      "tapToExpand": "Tocca per il rimedio",
+      "safePlant": "Sicura per tutti.",
       "spring": "Primavera",
       "summer": "Estate",
       "autumn": "Autunno",
       "winter": "Inverno",
-      "tempRange": "{{min}}–{{max}}°C"
+      "tempRange": "{{min}} - {{max}} °C",
+      "remedyLabel": "Rimedio Biologico",
+      "tapToExpand": "Tocca per vedere il rimedio",
+      "tipTitle": "Consiglio Pro",
+      "addToCalendar": "Aggiungi al Calendario",
+      "calendarAdded": "Promemoria aggiunto al calendario.",
+      "calendarEventExists": "Evento Calendario Esistente",
+      "calendarEventExistsBody": "Vuoi aggiornare o eliminare l'evento esistente?",
+      "calendarEventDeleted": "Evento calendario eliminato.",
+      "calendarEventDeleteError": "Impossibile eliminare l'evento.",
+      "calendarEventUpdated": "Evento calendario aggiornato.",
+      "calendarEventUpdateError": "Impossibile aggiornare l'evento."
     },
     "notes": {
       "placeholder": "Aggiungi note su questa pianta...",
@@ -377,7 +460,13 @@
     "notifications": "Notifiche",
     "statistics": "Statistiche",
     "viewStats": "Vedi Statistiche",
-    "legalInfo": "Legale & Info"
+    "legalInfo": "Legale & Info",
+    "calendarIntegration": "Integrazione Calendario",
+    "calendarDescription": "Sincronizza i promemoria di cura con il calendario del dispositivo.",
+    "syncCalendar": "Collega Calendario",
+    "calendarPermissionDenied": "Permesso calendario necessario per sincronizzare i promemoria.",
+    "calendarConnected": "Calendario collegato con successo!",
+    "calendarError": "Impossibile collegare il calendario."
   },
   "rateLimit": {
     "title": "Limite Giornaliero Raggiunto",
@@ -456,19 +545,25 @@
     "emptyFollowing": "Non segui ancora nessuno",
     "emptyFollowingCTA": "Scopri altri amanti delle piante",
     "emptyFeed": "Nessun post ancora",
-    "emptyFeedCTA": "Sii il primo a condividere una pianta!"
+    "emptyFeedCTA": "Sii il primo a condividere una pianta!",
+    "noLikedPosts": "I post che ti piacciono appariranno qui"
   },
   "profile": {
     "title": "Profilo",
     "editProfile": "Modifica Profilo",
+    "edit": "Modifica Profilo",
     "displayName": "Nome Visualizzato",
     "bio": "Bio",
+    "bioPlaceholder": "Racconta qualcosa di te e delle tue piante...",
     "save": "Salva",
+    "saveProfile": "Salva Profilo",
     "cancel": "Annulla",
     "changeAvatar": "Cambia Avatar",
     "chooseFromLibrary": "Scegli dalla Galleria",
     "takePhoto": "Scatta Foto",
     "plants_identified": "Piante Identificate",
+    "plants": "Piante",
+    "posts": "Post",
     "followers": "Follower",
     "following": "Seguiti",
     "joined": "Iscritto {{date}}",
@@ -476,7 +571,22 @@
     "follow": "Segui",
     "following_button": "Seguito",
     "unfollow": "Smetti di seguire",
+    "plantsTab": "Piante",
+    "likedTab": "Mi piace",
+    "noPlantsHint": "Le tue piante identificate appariranno qui",
+    "gamificationTitle": "Percorso di Crescita",
+    "level": "Livello",
+    "totalXp": "XP Totali",
+    "wateringStreak": "Streak Annaffiatura",
+    "badges": "Badge",
+    "dailyChallenges": "Sfide di Oggi",
+    "recentActivity": "Attività Recente",
+    "challengeProgress": "{{current}} / {{target}}",
+    "noBadgesYet": "Continua a prenderti cura delle tue piante per sbloccare il primo badge.",
+    "noChallengesToday": "Nessuna sfida attiva per oggi.",
+    "noRecentActivity": "Le tue ultime azioni con XP appariranno qui.",
     "errors": {
+      "nameRequired": "Il nome visualizzato è obbligatorio",
       "displayNameRequired": "Il nome visualizzato è obbligatorio",
       "displayNameTooLong": "Il nome deve essere di 50 caratteri o meno",
       "bioTooLong": "La bio deve essere di 500 caratteri o meno",
@@ -488,6 +598,7 @@
   },
   "tabs": {
     "home": "Home",
+    "community": "Community",
     "camera": "Fotocamera",
     "settings": "Impostazioni",
     "profile": "Profilo"
@@ -530,5 +641,66 @@
       "save": "Salva Calibrazione"
     },
     "measureLight": "Misura la Luce"
+  },
+  "gamification": {
+    "toast": {
+      "xpGained": "XP ottenuti",
+      "levelUp": "Livello aumentato",
+      "badgeUnlocked": "Badge sbloccato",
+      "levelLabel": "Livello {{level}}"
+    },
+    "events": {
+      "watering_completed": "Hai annaffiato una pianta",
+      "reminder_completed": "Hai completato un promemoria",
+      "plant_added": "Hai aggiunto una pianta",
+      "post_published": "Hai pubblicato un post",
+      "like_received": "Hai ricevuto un like",
+      "daily_checkin": "Check-in giornaliero"
+    },
+    "badges": {
+      "watering_streak_7": {
+        "title": "Streak di 7 giorni",
+        "description": "Mantieni la routine di annaffiatura per sette giorni consecutivi."
+      },
+      "watering_streak_30": {
+        "title": "Streak di 30 giorni",
+        "description": "Tieni viva la streak di annaffiatura per trenta giorni."
+      },
+      "level_5": {
+        "title": "Giardiniere Livello 5",
+        "description": "Raggiungi il livello 5 nel tuo percorso di crescita."
+      },
+      "level_10": {
+        "title": "Botanico Livello 10",
+        "description": "Raggiungi il livello 10 e diventa un vero plant nerd."
+      }
+    },
+    "challenges": {
+      "daily_watering_3": {
+        "title": "Sprint Annaffiatura",
+        "description": "Completa tre annaffiature oggi."
+      },
+      "daily_reminder_2": {
+        "title": "Maestro dei Promemoria",
+        "description": "Completa due promemoria oggi."
+      }
+    }
+  },
+  "league": {
+    "title": "Lega",
+    "bronze": "Bronzo",
+    "silver": "Argento",
+    "gold": "Oro",
+    "platinum": "Platino",
+    "diamond": "Diamante",
+    "promoted": "Promosso a {{tier}}!",
+    "relegated": "Spostato a {{tier}}",
+    "promotionZone": "Zona Promozione",
+    "relegationZone": "Zona Retrocessione",
+    "yourRank": "Tua Posizione: {{rank}}",
+    "xpThisWeek": "{{xp}} XP questa settimana",
+    "weekEndsIn": "Fine settimana tra {{days}} giorni",
+    "leaderboard": "Classifica",
+    "notAssigned": "Completa attività per entrare in una lega!"
   }
 }

@@ -13,7 +13,9 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "undetermined": "Undetermined",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "water": "Water",
+    "update": "Update"
   },
   "camera": {
     "title": "Identify Plant",
@@ -64,7 +66,13 @@
     "saveSighting": "Save as Sighting",
     "sightingSaved": "Sighting saved",
     "lowConfidenceWarning": "Low confidence result. Try a clearer photo for better accuracy.",
-    "careComingSoon": "Care info coming soon for this species."
+    "careComingSoon": "Care info coming soon for this species.",
+    "dataSource": "Data source",
+    "sourceLocal": "Local",
+    "sourcePerenual": "Perenual",
+    "sourceGbif": "GBIF",
+    "distribution": "Distribution",
+    "toxicHumans": "Potentially toxic to humans"
   },
   "collection": {
     "title": "My Plants",
@@ -75,6 +83,55 @@
     "listView": "List View",
     "plantAdded": "Plant added to collection",
     "plantDeleted": "Plant removed from collection"
+  },
+  "weather": {
+    "title": "Weather Awareness",
+    "enable": "Enable Weather Awareness",
+    "description": "Adjusts watering schedules based on local weather conditions (rain, heat).",
+    "locationAccess": "Location Access",
+    "grantPermission": "Grant Location Permission",
+    "permissionDenied": "Location permission denied. Enable it in settings to use weather features.",
+    "coldWarningTitle": "Freezing Alert",
+    "coldWarningMessage": "Temperatures below 5°C. Protect sensitive outdoor plants.",
+    "rainDelayTitle": "Rain Delay",
+    "rainDelayMessage": "Recent rain detected. Outdoor plants may not need water today.",
+    "heatWarningTitle": "Heat Wave",
+    "heatWarningMessage": "High temperatures expected. Check thirsty plants daily.",
+    "neutralTitle": "Stable Weather",
+    "neutralMessage": "Conditions are normal. Follow your regular schedule."
+  },
+  "lightMeter": {
+    "title": "Light Meter",
+    "measure": "Measure",
+    "calibrate": "Calibrate",
+    "lux": "Lux",
+    "sensorUnavailable": "Light sensor unavailable. Using camera estimation.",
+    "cameraInstruction": "Point the camera at the light source or the leaf surface.",
+    "start": "Start Measuring",
+    "stop": "Stop",
+    "measuring": "Measuring...",
+    "save": "Save Measurement",
+    "accuracy": {
+      "high": "High Accuracy",
+      "estimate": "Estimated (Camera)"
+    },
+    "recommendations": {
+      "title": "Good for plants like:"
+    },
+    "instructions": {
+      "title": "How to measure",
+      "point": "Point the sensor (or camera) towards the light source.",
+      "steady": "Hold steady for a few seconds to get a stable reading.",
+      "multiple": "Take measurements at different times of the day."
+    },
+    "disclaimer": "Measurements are approximate. Camera-based readings depend on device calibration.",
+    "categories": {
+      "low": "Low Light",
+      "medium": "Medium Light",
+      "brightIndirect": "Bright Indirect",
+      "directSun": "Direct Sun"
+    },
+    "recommendation": "Good for: {{plants}}"
   },
   "home": {
     "todayLabel": "Today",
@@ -134,6 +191,22 @@
     "smartNeedsCare": "Needs care",
     "smartRecent": "Recent",
     "smartWithReminders": "With reminders"
+  },
+  "learningPopup": {
+    "title": "Daily Plant Coach",
+    "subtitle": "Microlearning for {{name}}",
+    "funFactTitle": "Fun fact",
+    "tipTitle": "Micro tip",
+    "pairsWellTitle": "Pairs well with",
+    "avoidTitle": "Avoid pairing with",
+    "noFunFact": "No specific fun fact yet for this plant.",
+    "noGoodPairs": "No clear companion match in your collection yet.",
+    "noBadPairs": "No conflicting pairing detected in your collection.",
+    "close": "Close",
+    "openPlant": "Open plant",
+    "waterTip": "Water rhythm: about every {{days}} days.",
+    "sunlightTip": "Light preference: {{sunlight}}.",
+    "humidityTip": "Humidity comfort: {{humidity}}."
   },
   "entry": {
     "kind": {
@@ -246,28 +319,38 @@
       "observedWithPlaceholder": "Alone, with Anna, during a walk..."
     },
     "care": {
+      "summaryTitle": "Care Schedule",
+      "summaryBody": "Follow these guidelines to keep your plant healthy and thriving.",
       "watering": "Watering",
       "light": "Light",
       "temperature": "Temperature",
       "humidity": "Humidity",
-      "seasonalTemps": "Seasonal Temperatures",
       "fertilization": "Fertilization",
+      "repotting": "Repotting",
       "pruning": "Pruning",
-      "pests": "Pests & Remedies",
-      "summaryTitle": "Care Snapshot",
-      "summaryBody": "A quick reading of this plant's care rhythm, environment, and the main things worth watching over time.",
-      "emptyTitle": "Care profile not ready",
+      "pests": "Pests & Diseases",
+      "notAvailable": "Not available",
+      "emptyTitle": "No Care Info",
       "toxicWarning": "Warning: toxic to pets.",
+      "toxicityWarning": "Warning: Toxicity",
       "safePets": "Marked as safer around pets.",
-      "tipTitle": "Care Tip",
-      "remedyLabel": "Remedy",
-      "notAvailable": "Not available for this species",
-      "tapToExpand": "Tap for remedy",
+      "safePlant": "Safe for everyone.",
       "spring": "Spring",
       "summer": "Summer",
       "autumn": "Autumn",
       "winter": "Winter",
-      "tempRange": "{{min}}–{{max}}°C"
+      "tempRange": "{{min}} - {{max}} °C",
+      "remedyLabel": "Organic Remedy",
+      "tapToExpand": "Tap to see remedy",
+      "tipTitle": "Pro Tip",
+      "addToCalendar": "Add to Calendar",
+      "calendarAdded": "Reminder added to your calendar.",
+      "calendarEventExists": "Calendar Event Exists",
+      "calendarEventExistsBody": "Do you want to update or delete the existing calendar event?",
+      "calendarEventDeleted": "Calendar event deleted.",
+      "calendarEventDeleteError": "Failed to delete calendar event.",
+      "calendarEventUpdated": "Calendar event updated.",
+      "calendarEventUpdateError": "Failed to update calendar event."
     },
     "notes": {
       "placeholder": "Add notes about this plant...",
@@ -377,7 +460,13 @@
     "notifications": "Notifications",
     "statistics": "Statistics",
     "viewStats": "View Statistics",
-    "legalInfo": "Legal & Info"
+    "legalInfo": "Legal & Info",
+    "calendarIntegration": "Calendar Integration",
+    "calendarDescription": "Sync plant care reminders with your device calendar.",
+    "syncCalendar": "Connect Calendar",
+    "calendarPermissionDenied": "Calendar permission is required to sync reminders.",
+    "calendarConnected": "Calendar connected successfully!",
+    "calendarError": "Failed to connect to calendar."
   },
   "rateLimit": {
     "title": "Daily Limit Reached",
@@ -456,19 +545,25 @@
     "emptyFollowing": "You're not following anyone yet",
     "emptyFollowingCTA": "Discover plant lovers",
     "emptyFeed": "No posts yet",
-    "emptyFeedCTA": "Be the first to share a plant!"
+    "emptyFeedCTA": "Be the first to share a plant!",
+    "noLikedPosts": "Posts you like will appear here"
   },
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",
+    "edit": "Edit Profile",
     "displayName": "Display Name",
     "bio": "Bio",
+    "bioPlaceholder": "Tell us about yourself and your plants...",
     "save": "Save",
     "cancel": "Cancel",
+    "saveProfile": "Save Profile",
     "changeAvatar": "Change Avatar",
     "chooseFromLibrary": "Choose from Library",
     "takePhoto": "Take Photo",
     "plants_identified": "Plants Identified",
+    "plants": "Plants",
+    "posts": "Posts",
     "followers": "Followers",
     "following": "Following",
     "joined": "Joined {{date}}",
@@ -476,7 +571,22 @@
     "follow": "Follow",
     "following_button": "Following",
     "unfollow": "Unfollow",
+    "plantsTab": "Plants",
+    "likedTab": "Liked",
+    "noPlantsHint": "Your identified plants will appear here",
+    "gamificationTitle": "Growth Journey",
+    "level": "Level",
+    "totalXp": "Total XP",
+    "wateringStreak": "Watering Streak",
+    "badges": "Badges",
+    "dailyChallenges": "Today's Challenges",
+    "recentActivity": "Recent Activity",
+    "challengeProgress": "{{current}} / {{target}}",
+    "noBadgesYet": "Keep caring for your plants to unlock your first badge.",
+    "noChallengesToday": "No active challenges for today.",
+    "noRecentActivity": "Your latest XP actions will show up here.",
     "errors": {
+      "nameRequired": "Display name is required",
       "displayNameRequired": "Display name is required",
       "displayNameTooLong": "Display name must be 50 characters or less",
       "bioTooLong": "Bio must be 500 characters or less",
@@ -488,47 +598,77 @@
   },
   "tabs": {
     "home": "Home",
+    "community": "Community",
     "camera": "Camera",
     "settings": "Settings",
     "profile": "Profile"
   },
   "lightMeter": {
     "title": "Light Meter",
-    "subtitle": "Measure ambient light for optimal plant placement",
-    "start": "Start Measurement",
-    "stop": "Stop",
-    "save": "Save to Plant",
-    "measuring": "Measuring...",
-    "accuracy": {
-      "high": "±15% accuracy",
-      "estimate": "Estimate (±30%)"
+    "measure": "Measure",
+    "calibrate": "Calibrate",
+    "lux": "lux",
+    "footCandles": "fc"
+  },
+  "gamification": {
+    "toast": {
+      "xpGained": "XP gained",
+      "levelUp": "Level up",
+      "badgeUnlocked": "Badge unlocked",
+      "levelLabel": "Level {{level}}"
     },
-    "categories": {
-      "low": "Low Light",
-      "medium": "Medium Light",
-      "brightIndirect": "Bright Indirect",
-      "directSun": "Direct Sun"
+    "events": {
+      "watering_completed": "Watered a plant",
+      "reminder_completed": "Completed a reminder",
+      "plant_added": "Added a plant",
+      "post_published": "Published a post",
+      "like_received": "Received a like",
+      "daily_checkin": "Daily check-in"
     },
-    "recommendations": {
-      "title": "Good for:",
-      "low": "Snake Plants, ZZ Plants, Pothos",
-      "medium": "Monstera, Philodendron, Spider Plant",
-      "brightIndirect": "Fiddle Leaf Fig, Bird of Paradise",
-      "directSun": "Cacti, Succulents, Citrus"
+    "badges": {
+      "watering_streak_7": {
+        "title": "7-Day Watering Streak",
+        "description": "Maintain your watering routine for seven consecutive days."
+      },
+      "watering_streak_30": {
+        "title": "30-Day Watering Streak",
+        "description": "Keep your watering streak alive for thirty days."
+      },
+      "level_5": {
+        "title": "Level 5 Gardener",
+        "description": "Reach level 5 in your growth journey."
+      },
+      "level_10": {
+        "title": "Level 10 Botanist",
+        "description": "Reach level 10 and become a true plant nerd."
+      }
     },
-    "instructions": {
-      "title": "How to measure",
-      "point": "Point your device toward the light source",
-      "steady": "Hold steady for best results",
-      "multiple": "Take multiple readings throughout the day"
-    },
-    "disclaimer": "This is a guide only. For precise measurements, use professional equipment.",
-    "calibration": {
-      "title": "Calibrate",
-      "instruction": "Place a white paper in view and select a known light level",
-      "reference": "Reference brightness",
-      "save": "Save Calibration"
-    },
-    "measureLight": "Measure Light"
+    "challenges": {
+      "daily_watering_3": {
+        "title": "Daily Watering Sprint",
+        "description": "Complete three watering actions today."
+      },
+      "daily_reminder_2": {
+        "title": "Reminder Master",
+        "description": "Complete two reminders today."
+      }
+    }
+  },
+  "league": {
+    "title": "League",
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "platinum": "Platinum",
+    "diamond": "Diamond",
+    "promoted": "Promoted to {{tier}}!",
+    "relegated": "Moved to {{tier}}",
+    "promotionZone": "Promotion Zone",
+    "relegationZone": "Relegation Zone",
+    "yourRank": "Your Rank: {{rank}}",
+    "xpThisWeek": "{{xp}} XP this week",
+    "weekEndsIn": "Week ends in {{days}} days",
+    "leaderboard": "Leaderboard",
+    "notAssigned": "Complete activities to join a league!"
   }
 }
