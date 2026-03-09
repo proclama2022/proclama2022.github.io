@@ -20,7 +20,9 @@ export type GamificationEventType =
   | 'plant_added'
   | 'post_published'
   | 'like_received'
-  | 'daily_checkin';
+  | 'daily_checkin'
+  | 'plant_identified'
+  | 'followers_gained';
 
 export interface GamificationAwardResult {
   awarded: boolean;
