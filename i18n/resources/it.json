@@ -673,6 +673,34 @@
       "level_10": {
         "title": "Botanico Livello 10",
         "description": "Raggiungi il livello 10 e diventa un vero plant nerd."
+      },
+      "first_plant": {
+        "title": "Prima Pianta",
+        "description": "Hai identificato la tua prima pianta!"
+      },
+      "green_thumb": {
+        "title": "Pollice Verde",
+        "description": "7 giorni di fila di annaffiature"
+      },
+      "plant_parent": {
+        "title": "Genitore di Piante",
+        "description": "Hai aggiunto 10 piante alla collezione"
+      },
+      "community_star": {
+        "title": "Stella della Community",
+        "description": "Hai ricevuto 50 like totali"
+      },
+      "early_bird": {
+        "title": "Mattiniero",
+        "description": "Hai annaffiato prima delle 7:00"
+      },
+      "plant_doctor": {
+        "title": "Dottore delle Piante",
+        "description": "Hai identificato 5 piante malate"
+      },
+      "social_butterfly": {
+        "title": "Farfalla Sociale",
+        "description": "Hai raggiunto 10 follower"
       }
     },
     "challenges": {

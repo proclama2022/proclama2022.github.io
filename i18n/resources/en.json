@@ -641,6 +641,34 @@
       "level_10": {
         "title": "Level 10 Botanist",
         "description": "Reach level 10 and become a true plant nerd."
+      },
+      "first_plant": {
+        "title": "First Plant",
+        "description": "You identified your first plant!"
+      },
+      "green_thumb": {
+        "title": "Green Thumb",
+        "description": "7 days of consecutive watering"
+      },
+      "plant_parent": {
+        "title": "Plant Parent",
+        "description": "You added 10 plants to your collection"
+      },
+      "community_star": {
+        "title": "Community Star",
+        "description": "You received 50 total likes"
+      },
+      "early_bird": {
+        "title": "Early Bird",
+        "description": "You watered before 7:00 AM"
+      },
+      "plant_doctor": {
+        "title": "Plant Doctor",
+        "description": "You identified 5 diseased plants"
+      },
+      "social_butterfly": {
+        "title": "Social Butterfly",
+        "description": "You gained 10 followers"
       }
     },
     "challenges": {
