@@ -1,14 +1,14 @@
 ---
 gsd_state_version: 1.0
-milestone: v3.0
-milestone_name: Gamification 2.0
+milestone: v2.0
+milestone_name: Community
 status: in_progress
-last_updated: "2026-03-09T17:45:00Z"
+last_updated: "2026-03-09T17:38:23.132Z"
 progress:
-  total_phases: 5
-  completed_phases: 0
-  total_plans: 15
-  completed_plans: 1
+  total_phases: 21
+  completed_phases: 16
+  total_plans: 65
+  completed_plans: 64
   percent: 7
 ---
 
@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 phase: 17 (in progress)
-plan: 02
+plan: 03
 status: in_progress
-last_activity: 2026-03-09 — Completed 17-01: League Database Schema & Dependencies
+last_activity: 2026-03-09 — Completed 17-02: League Service Layer
 
-Progress: [--------------------] 7% (Phase 17, Plan 01/5 complete)
+Progress: [████----] 40% (Phase 17, Plan 02/5 complete)
 
 ## Milestone Goals
 
@@ -101,3 +101,4 @@ Recent decisions affecting current work:
 - (15-01): Use Open-Meteo API (free, no key) and store location locally for privacy.
 - (15-02): Use simple heuristics (Rain > 5mm, Temp > 30°C) for climate advice; display in WeatherWidget.
 - (17-01): Separate tables for tiers/cohorts/memberships for league flexibility; extended user_progress with league_tier and timezone.
+- (17-02): Used RPC fallback pattern for getLeagueLeaderboard; extended gamificationStore with league_promotion/relegation event types with metadata.

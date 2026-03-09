@@ -429,7 +429,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 14. Follow System & Engagement Polish | v2.0 | 5/5 | Complete | 2026-03-05 |
 | 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
-| 17. League System | v3.0 | 1/5 | In Progress | 2026-03-09 |
+| 17. League System | 2/5 | In Progress|  | 2026-03-09 |
 | 18. Extended Badges | v3.0 | 0/3 | Pending | - |
 | 19. Level & Streak Enhancement | v3.0 | 0/3 | Pending | - |
 | 20. Celebrations | v3.0 | 0/2 | Pending | - |
