@@ -10,8 +10,8 @@ Plantid transforms from personal plant tracker to community platform through 5 m
 - ✅ **v1.1 Enhanced Plant Detail** - Phase 4 (shipped 2026-02-24)
 - ✅ **v1.2 Multi-Photo Gallery + Custom Reminders** - Phases 5-6 (shipped 2026-02-25)
 - ✅ **v1.3 Enhanced UX** - Phases 7-10 (shipped 2026-02-26)
-- 📋 **v2.0 Community** - Phases 11-14 (planned)
-- 📋 **v2.1 Smart Features** - Decimal phases 13-light-meter (planned)
+- ✅ **v2.0 Community** - Phases 11-12 (shipped 2026-03-04)
+- ✅ **v2.1 Smart Features** - Phases 13-16 (shipped 2026-03-09)
 
 ## Phases
 
@@ -34,29 +34,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 11: Auth Infrastructure & Supabase Setup** - User authentication with optional access (completed 2026-02-27)
 - [x] **Phase 12: Database Schema & User Profiles** - User profiles with avatars and stats (completed 2026-03-02)
 - [x] **Phase 13: Community Feed Core & Moderation** - Feed with posts, comments, likes, and moderation (completed 2026-03-04)
-- [ ] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed
-
-### 📋 v2.1 Smart Features (INSERTED)
-
-**Phase 13-light-meter: Light Meter** — *Inserted between Phase 12 and Phase 13*
-
-**Goal**: Users can measure ambient light levels to determine optimal plant placement
-**Depends on**: Phase 12
-**Requirements**: v2.1-light-meter
-**Success Criteria** (what must be TRUE):
-  1. Android shows accurate lux readings on devices with light sensors (±15% accuracy)
-  2. iOS provides reasonable light estimates using camera analysis (±30% estimate)
-  3. Color-coded gauge shows light category (Low/Medium/Bright/Direct)
-  4. Plant recommendations appear based on current light category
-  5. Users can save measurements linked to specific plants
-**Plans**: 5 plans
-
-Plans:
-- [ ] 13-01: Android Light Sensor Implementation — expo-sensors LightSensor with smoothing
-- [ ] 13-02: iOS Camera-based Light Estimation — Camera brightness analysis with calibration
-- [ ] 13-03: Light Meter UI/UX & Integration — Gauge component, recommendations, bilingual support
-- [ ] 13-04-PLAN.md — REQUIREMENTS.md documentation fix (v2.1-light-meter traceability)
-- [ ] 13-05-PLAN.md — Navigation entry point (CareTab button) + iOS camera smoothing
+- [x] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed (completed 2026-03-05)
+- [x] **Phase 15: Weather Integration & Climate-Aware Reminders** - Adjust watering based on local weather (completed 2026-03-05)
+- [x] **Phase 16: Calendar Sync** - Sync care tasks with device calendar (completed 2026-03-05)
 
 ## Phase Details
 
@@ -227,7 +207,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 09-01-PLAN.md — Replace hardcoded green watering color with colors.tint in calendar.tsx
+- [x] 09-01-PLAN.md — Replace hardcoded green watering color with colors.tint in calendar.tsx
 
 ### Phase 10: UI Polish & Dark Mode
 **Goal**: Improved visual design with dark mode support
@@ -267,7 +247,7 @@ Plans:
 - [x] 11-02: Auth State Management & Service Layer
 - [x] 11-03: Auth UI Components
 - [x] 11-04: Auth Integration
-- [ ] 11-05: Local-to-Cloud Migration
+- [x] 11-05: Local-to-Cloud Migration
 
 #### Phase 12: Database Schema & User Profiles
 **Goal**: Users can create profiles, upload avatars, and view public profiles
@@ -286,7 +266,7 @@ Plans:
 - [x] 12-02: Avatar Upload & Profile Services
 - [x] 12-03: Profile UI Components
 - [x] 12-04: Profile Tab & Edit UI
-- [ ] 12-05: Public Profile Viewing
+- [x] 12-05: Public Profile Viewing
 
 #### Phase 13: Community Feed Core & Moderation
 **Goal**: Users can view, create, and engage with community posts in a moderated environment
@@ -301,24 +281,22 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 13-01: TBD
+- [x] 13-01: Community Feed Core Implementation
 
-#### Phase 14: Follow System & Engagement Polish
-**Goal**: Complete engagement features with Following feed filter, likes list, and liked posts profile section
-**Depends on**: Phase 13
-**Requirements**: LIKE-04, LIKE-05, FOLL-04
-**Success Criteria** (what must be TRUE):
-  1. "Following" feed filter shows posts only from followed users
-  2. Liked posts appear in user's profile ("Liked Plants" tab)
-  3. User can view list of users who liked a post
-**Plans**: 5 plans
+### Phase 14: Follow System & Engagement Polish
+- [x] 14-01: Follow System Database Schema & Policies
+- [x] 14-02: Follow Button & User Lists
+- [x] 14-03: Feed Filtering (Following vs Global)
+- [x] 14-04: Notification Polish (Likes, Comments, Follows)
+- [x] 14-05: Engagement Polish (Optimistic Updates, Skeleton Loading)
 
-Plans:
-- [ ] 14-01-PLAN.md — Backend Infrastructure: Supabase posts/likes queries, likeService, feedStore
-- [x] 14-02-PLAN.md — Likes List UI: LikesList component, LikesListModal, translations (2026-03-05)
-- [ ] 14-03-PLAN.md — Liked Posts Profile Tab: LikedPostsTab component, profile tab navigation
-- [ ] 14-04-PLAN.md — Feed Filter UI: FeedFilterTabs, EmptyFeedState components
-- [ ] 14-05-PLAN.md — Community Feed Integration: community.tsx screen, PostCard, tab navigation
+### Phase 15: Weather Integration
+- [x] 15-01: Weather Infrastructure & UI (Services, Store, Widget, Settings)
+- [x] 15-02: Smart Logic (Rain Delay, Heat Acceleration)
+
+### Phase 16: Calendar Sync
+- [x] 16-01: Calendar Infrastructure & Service
+- [x] 16-02: UI Integration & Event Management
 
 ## Progress
 
@@ -339,9 +317,11 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 10. UI Polish & Dark Mode | 2/2 | Complete    | 2026-03-02 | 2026-02-26 |
 | 11. Auth Infrastructure & Supabase Setup | 5/5 | Complete    | 2026-02-27 |
 | 12. Database Schema & User Profiles | 6/5 | Complete    | 2026-03-02 | - |
-| 13-light-meter. Light Meter | v2.1 | 3/5 | Gap Closure | - |
-| 13. Community Feed Core & Moderation | 5/5 | Complete   | 2026-03-04 | - |
-| 14. Follow System & Engagement Polish | v2.0 | 2/5 | In Progress | - |
+| 13-light-meter. Light Meter | v2.1 | 5/5 | Complete | 2026-03-04 |
+| 13. Community Feed Core & Moderation | v2.0 | 5/5 | Complete | 2026-03-04 |
+| 14. Follow System & Engagement Polish | v2.0 | 5/5 | Complete | 2026-03-05 |
+| 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
+| 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
 
 ---
 

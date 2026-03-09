@@ -1,5 +1,19 @@
 # Milestones
 
+## v2.1 Smart Features (Shipped: 2026-03-09)
+
+**Phases completed:** 4 phases (13-16), 14 plans, 31 tasks
+
+**Key accomplishments:**
+- **Light Meter** — Dual-path: Android native sensor (expo-sensors, ±15% lux) + iOS camera estimation with weighted smoothing
+- **Community Feed** — Posts with photos, captions, PlantNet integration, infinite scroll, filter tabs
+- **Follow System** — Follow/unfollow, follower/following counts, Following feed filter
+- **Likes & Engagement** — Like toggle, like count, likes list modal with user avatars
+- **Weather Integration** — Open-Meteo API (free, no key), 1-hour cache, location persistence
+- **Calendar Sync** — expo-calendar integration, device calendar events for plant care
+
+---
+
 ## v1.0 MVP (Shipped: 2026-02-20)
 
 **Phases completed:** 3 phases, 19 plans, 3 tasks
@@ -41,4 +55,16 @@
 - UI Polish — Dark mode support, improved onboarding with animations, settings reorganization
 
 ---
+
+## v2.0 Community (Shipped: 2026-03-04)
+
+**Phases completed:** 1 phase (12), 5 plans
+
+**Key accomplishments:**
+- Database Schema — Supabase with RLS policies, profiles, follows, plants tables
+- User Profiles — Display name, avatar upload with compression, bio (max 500 chars)
+- Avatar System — Circular crop, 1200px max, quality 0.7, 200x200 display transform
+- Public Profiles — Dynamic routes (`/profile/{userId}`) with follow/unfollow
+- Profile Stats — Plants identified, followers, following, joined date
+- Social Features — Follow system with optimistic UI updates
 

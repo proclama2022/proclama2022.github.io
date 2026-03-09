@@ -7,19 +7,46 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 
-## Current Milestone: v2.0 Community
+## Current Milestone: v3.0 Planning
 
-**Goal:** Add social/community features with Supabase backend — transform from personal plant tracker to plant community platform.
+**Goal:** Define next major milestone features and roadmap
 
-**Target features:**
-- Community Feed — Share plant photos/identifications publicly
-- Plant Tips/Wiki — Community-contributed care advice
-- User Profiles & Follow — Follow plant enthusiasts, view collections
-- Comments & Likes — Engage with shared content
-- Auth System — Email + OAuth (Google/Apple) via Supabase
-- Report System — Flag inappropriate content, admin review
+**Target areas:**
+- Advanced community features (comments, posts feed)
+- Gamification enhancements
+- Performance optimization
+- Platform expansion considerations
+
+## Previous Milestone: v2.1 Smart Features (COMPLETED)
+
+**Shipped:** 2026-03-09
+
+**Delivered:**
+- Light Meter — Dual-path: Android native sensor (expo-sensors) + iOS camera estimation
+- Community Feed — Posts with photos, PlantNet integration, infinite scroll
+- Follow System — Follow/unfollow, follower counts, Following feed filter
+- Likes & Engagement — Like toggle, like count, likes list modal
+- Weather Integration — Open-Meteo API (free, no key), 1-hour cache
+- Calendar Sync — expo-calendar integration for device calendar events
 
 **Tech additions:**
+- expo-sensors (LightSensor for Android)
+- expo-camera (brightness analysis for iOS)
+- Open-Meteo Weather API
+- expo-calendar
+
+## Previous Milestone: v2.0 Community (COMPLETED)
+
+**Shipped:** 2026-03-04
+
+**Delivered:**
+- Database Schema — Supabase with RLS policies, profiles/follows/plants tables
+- User Profiles — Display name, avatar upload with compression, bio
+- Public Profile Viewing — Dynamic routes with follow/unfollow functionality
+- Profile Statistics — Plants identified, followers, following, joined date
+- Avatar System — Circular crop, 1200px max, quality 0.7
+
+**Tech:**
 - Supabase (PostgreSQL, Auth, Storage, Realtime)
 
 ## Core Value
@@ -76,17 +103,37 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Improved onboarding with Ionicons and entrance animations — v1.3
 - ✓ Settings reorganized into card sections — v1.3
 
+**Community Features (v2.0):**
+- ✓ Database Schema — Supabase with profiles, follows, plants tables — v2.0
+- ✓ User Profiles — Display name, avatar upload, bio — v2.0
+- ✓ Public Profile Viewing — Dynamic routes with follow/unfollow — v2.0
+- ✓ Profile Statistics — Plants, followers, following, joined date — v2.0
+- ✓ Avatar System — Compression, circular crop, 200x200 display — v2.0
+
 ### Active
 
-(No active requirements — v1.3 complete)
+**Next Milestone (v3.0):**
+- Define feature priorities and roadmap
+- Community feedback integration
+- Performance optimization opportunities
+
+### Validated
+
+**Smart Features (v2.1):**
+- ✓ Light Meter — Dual-path implementation (Android sensor + iOS camera) — v2.1
+- ✓ Weather Integration — Open-Meteo API with smart watering adjustments — v2.1
+- ✓ Calendar Sync — expo-calendar integration with device events — v2.1
+- ✓ Community Feed — Posts with photos, captions, infinite scroll — v2.1
+- ✓ Follow System — Follow/unfollow, follower counts, Following filter — v2.1
+- ✓ Likes & Engagement — Like toggle, like count, likes list modal — v2.1
 
 ### Out of Scope
 
-- Real-time multiplayer/social features (v2+)
-- Community plant tips database (v2+)
-- Video identification (e mail processing cost, v2+)
-- Export dati CSV (Pro feature v2+)
-- Widget home screen (Pro feature v2+)
+- Community Feed with posts/comments (v2.2+)
+- Plant Tips/Wiki community contributions (v2.2+)
+- Video identification (e mail processing cost, v2+ consideration)
+- Export dati CSV (Pro feature v2+ consideration)
+- Widget home screen (Pro feature v2+ consideration)
 - On-device ML fallback (fino a >500 scan/giorno con plan commercial)
 - Subscription model (explicitly rejected for MVP)
 
@@ -101,18 +148,21 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - PlantNet API (free tier 500 scan/giorno)
 - RevenueCat for IAP
 - react-native-google-mobile-ads for AdMob
+- Supabase (Auth, Database, Storage)
+- expo-sensors, expo-camera, expo-calendar
 
-**Codebase Stato (v1.3):**
-- ~13,000 lines TypeScript/TSX
-- 10 phases executed across 4 milestones (v1.0–v1.3)
-- 7 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail) + 4 Detail tab components
+**Codebase Stato (v2.1):**
+- ~18,000 lines TypeScript/TSX
+- 16 phases executed across 6 milestones (v1.0–v2.1)
+- 12 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail, Community, Light Meter, Profile, Gamification, Weather)
 - Bilingual (IT/EN) with i18next
 - Dark mode support via extended Colors.ts + useThemeColors hook
-- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService
-- Stores: plantsStore, settingsStore, proStore, onboardingStore
-- Components: SearchFilterBar, PlantGrid, PlantCard, Onboarding (animated), BarChart
+- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService, weatherService, calendarService, lightMeterService, followService, likeService
+- Stores: plantsStore, settingsStore, proStore, onboardingStore, profileStore, feedStore, gamificationStore, weatherStore
+- Components: SearchFilterBar, PlantGrid, PlantCard, Onboarding (animated), BarChart, LightMeterGauge, FollowButton, PostCard
 - Photo system: PhotoGallery, PhotoLightbox, AddPhotoButton with expo-image-manipulator
 - Reminder system: ReminderModal, ReminderFab, unified History timeline
+- Community: Feed with infinite scroll, likes, follows, profile viewing
 
 **Database Cure Piante:**
 - 100 species with care info (extensible to 500)
@@ -149,4 +199,4 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 
 ---
 
-*Last updated: 2026-02-26 after v1.3 milestone (Phases 7-10 — Enhanced UX)*
+*Last updated: 2026-03-04 — Milestone v2.0 Community COMPLETED, v2.1 Smart Features started with Phase 13 (Light Meter)*
