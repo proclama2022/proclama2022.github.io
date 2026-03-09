@@ -27,8 +27,8 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 - [ ] **BADG-06**: User earns "Weekend Warrior" badge when completing all weekend care tasks
 - [x] **BADG-07**: User earns "Plant Doctor" badge when identifying 5 diseased/ailing plants
 - [x] **BADG-08**: User earns "Social Butterfly" badge when gaining 10 followers
-- [ ] **BADG-09**: User can view all earned badges in profile
-- [ ] **BADG-10**: User can view locked badges with progress indicator (e.g., "5/10 plants")
+- [x] **BADG-09**: User can view all earned badges in profile
+- [x] **BADG-10**: User can view locked badges with progress indicator (e.g., "5/10 plants")
 
 ### Level Titles
 

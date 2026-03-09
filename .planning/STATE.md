@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: in_progress
-last_updated: "2026-03-09T19:18:44.040Z"
+last_updated: "2026-03-09T19:27:24.764Z"
 progress:
   total_phases: 21
-  completed_phases: 17
+  completed_phases: 18
   total_plans: 68
-  completed_plans: 69
+  completed_plans: 70
   percent: 46
 ---
 
@@ -88,6 +88,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 17 P03 | 360 | 5 tasks | 5 files |
 | Phase 17 P04 | 327 | 6 tasks | 5 files |
 | Phase 17 P05 | 464 | 5 tasks | 7 files |
+| Phase 18 P03 | 360 | 4 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -111,3 +112,4 @@ Recent decisions affecting current work:
 - (18-01): 6 new achievement badges with server-side progress calculation via get_badge_progress RPC; BadgeProgress type and getBadgeProgress service
 - [Phase 18-02]: Gamification triggers use fire-and-forget pattern to never block core UX
 - [Phase 18-02]: Disease detection uses keyword matching in PlantNet common names
+- [Phase 18]: Updated gamification.tsx instead of GamificationStats.tsx for badge progress wiring (BadgeGrid is rendered in gamification.tsx)
