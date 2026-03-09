@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: in_progress
-last_updated: "2026-03-09T17:38:23.132Z"
+last_updated: "2026-03-09T17:46:26.814Z"
 progress:
   total_phases: 21
   completed_phases: 16
   total_plans: 65
-  completed_plans: 64
-  percent: 7
+  completed_plans: 65
+  percent: 40
 ---
 
 # Project State
@@ -85,6 +85,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 14 P02 | 10 | 4 tasks | 6 files |
 | Phase 15 P01 | -- | 8 tasks | 6 files |
 | Phase 15 P02 | -- | 4 tasks | 4 files |
+| Phase 17 P03 | 360 | 5 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -102,3 +103,4 @@ Recent decisions affecting current work:
 - (15-02): Use simple heuristics (Rain > 5mm, Temp > 30°C) for climate advice; display in WeatherWidget.
 - (17-01): Separate tables for tiers/cohorts/memberships for league flexibility; extended user_progress with league_tier and timezone.
 - (17-02): Used RPC fallback pattern for getLeagueLeaderboard; extended gamificationStore with league_promotion/relegation event types with metadata.
+- [Phase 17]: League UI uses emoji tier badges, zone colors as transparent tints, tab navigation in gamification hub
