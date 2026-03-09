@@ -183,7 +183,12 @@ export default function GamificationScreen() {
       )}
 
       {/* Badge Grid */}
-      {summary && <BadgeGrid badges={summary.badges} />}
+      {summary && (
+        <BadgeGrid
+          badges={summary.badges}
+          badgeProgress={summary.badge_progress}
+        />
+      )}
 
       {/* Recent Activity */}
       {summary && summary.recent_activity.length > 0 && (
