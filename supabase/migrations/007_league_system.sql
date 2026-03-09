@@ -295,3 +295,118 @@ $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 GRANT EXECUTE ON FUNCTION award_league_badge(UUID, TEXT) TO authenticated;
 REVOKE ALL ON FUNCTION award_league_badge(UUID, TEXT) FROM PUBLIC;
+
+-- ============================================================================
+-- Weekly Promotion/Relegation Functions (Task 1 - Plan 17-04)
+-- ============================================================================
+
+-- Get tier order for promotion/relegation lookup
+CREATE OR REPLACE FUNCTION get_adjacent_tier(
+  p_current_tier TEXT,
+  p_direction TEXT  -- 'up' or 'down'
+) RETURNS TEXT AS $$
+DECLARE
+  v_current_order INT;
+  v_new_order INT;
+BEGIN
+  SELECT tier_order INTO v_current_order
+  FROM league_tiers WHERE tier_key = p_current_tier;
+
+  IF v_current_order IS NULL THEN
+    RETURN p_current_tier;
+  END IF;
+
+  IF p_direction = 'up' THEN
+    v_new_order := v_current_order + 1;
+  ELSE
+    v_new_order := GREATEST(v_current_order - 1, 1); -- Floor at Bronze
+  END IF;
+
+  RETURN (
+    SELECT tier_key FROM league_tiers WHERE tier_order = v_new_order
+  );
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Main promotion/relegation processor (Task 1 - Plan 17-04)
+CREATE OR REPLACE FUNCTION process_weekly_promotion_relegation()
+RETURNS void AS $$
+DECLARE
+  v_cohort RECORD;
+  v_membership RECORD;
+  v_new_tier TEXT;
+  v_old_tier TEXT;
+  v_week_start DATE := date_trunc('week', CURRENT_DATE)::DATE;
+BEGIN
+  -- Process each active cohort
+  FOR v_cohort IN
+    SELECT id, tier_key FROM league_cohorts
+    WHERE week_start_date = v_week_start
+  LOOP
+    -- Update final ranks and xp_at_end
+    UPDATE lm SET
+      final_rank = ranked.rn,
+      xp_at_end = ranked.xp_total
+    FROM (
+      SELECT
+        lm_inner.id,
+        ROW_NUMBER() OVER (
+          ORDER BY (up.xp_total - lm_inner.xp_at_start) DESC
+        ) as rn,
+        up.xp_total
+      FROM league_memberships lm_inner
+      JOIN user_progress up ON up.user_id = lm_inner.user_id
+      WHERE lm_inner.cohort_id = v_cohort.id
+    ) ranked
+    WHERE league_memberships.id = ranked.id;
+
+    -- Promote top 10
+    FOR v_membership IN
+      SELECT lm.*, up.league_tier
+      FROM league_memberships lm
+      JOIN user_progress up ON up.user_id = lm.user_id
+      WHERE lm.cohort_id = v_cohort.id
+        AND lm.final_rank <= 10
+        AND lm.final_rank IS NOT NULL
+    LOOP
+      v_new_tier := get_adjacent_tier(v_membership.league_tier, 'up');
+      IF v_new_tier IS NOT NULL AND v_new_tier != v_membership.league_tier THEN
+        UPDATE user_progress SET league_tier = v_new_tier
+        WHERE user_id = v_membership.user_id;
+
+        UPDATE league_memberships SET promotion_result = 'promoted'
+        WHERE id = v_membership.id;
+
+        -- Award league badge (LEAG-07)
+        INSERT INTO user_badges (user_id, badge_key)
+        VALUES (v_membership.user_id, v_new_tier || '_member')
+        ON CONFLICT DO NOTHING;
+      END IF;
+    END LOOP;
+
+    -- Relegate bottom 5 (not Bronze)
+    FOR v_membership IN
+      SELECT lm.*, up.league_tier
+      FROM league_memberships lm
+      JOIN user_progress up ON up.user_id = lm.user_id
+      WHERE lm.cohort_id = v_cohort.id
+        AND lm.final_rank >= 26
+        AND lm.final_rank IS NOT NULL
+        AND up.league_tier != 'bronze'
+    LOOP
+      v_new_tier := get_adjacent_tier(v_membership.league_tier, 'down');
+      IF v_new_tier IS NOT NULL THEN
+        UPDATE user_progress SET league_tier = v_new_tier
+        WHERE user_id = v_membership.user_id;
+
+        UPDATE league_memberships SET promotion_result = 'relegated'
+        WHERE id = v_membership.id;
+      END IF;
+    END LOOP;
+
+    -- Mark remaining as stayed
+    UPDATE league_memberships SET promotion_result = 'stayed'
+    WHERE cohort_id = v_cohort.id AND promotion_result IS NULL;
+  END LOOP;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
