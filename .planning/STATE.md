@@ -1,43 +1,42 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.1
-milestone_name: Smart Features
-status: completed
-last_updated: "2026-03-09T08:13:49.403Z"
+milestone: v3.0
+milestone_name: Gamification 2.0
+status: in_progress
+last_updated: "2026-03-09T08:20:00Z"
 progress:
-  total_phases: 16
-  completed_phases: 16
-  total_plans: 60
-  completed_plans: 62
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-26)
+See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** Phase 15 - Weather Integration & Climate-Aware Reminders
+**Current focus:** v3.0 Gamification 2.0 — Defining requirements
 
 ## Current Position
 
-phase: 15 (Weather Integration)
-plan: 15-02 (Smart Logic)
-status: completed
-last_activity: 2026-03-05 — Completed Phase 15-02 (Smart Logic & Climate Advice)
+phase: — (not started)
+plan: —
+status: defining_requirements
+last_activity: 2026-03-09 — Milestone v3.0 Gamification 2.0 started
 
-Progress: [====================] 100% (Phase 15: 2/2 plans complete)
+Progress: [--------------------] 0% (Milestone started)
 
 ## Milestone Goals
 
-Transform Plantid from personal plant tracker to community platform:
-- Community Feed (share plants publicly)
-- User Profiles & Follow (connect with plant enthusiasts)
-- Comments & Likes (engage with shared content)
-- Supabase Auth (email + Google + Apple OAuth)
-- Report/Moderation system (keep community safe)
+Aumentare retention e daily engagement attraverso:
+- Achievement badges multi-livello
+- Weekly challenges
+- Leaderboard settimanale
+- XP/Level system con titoli visible
 
 ## Performance Metrics
 

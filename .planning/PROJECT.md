@@ -7,15 +7,20 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 
-## Current Milestone: v3.0 Planning
+## Current Milestone: v3.0 Gamification 2.0
 
-**Goal:** Define next major milestone features and roadmap
+**Goal:** Espandere il sistema gamification esistente con achievements, challenges e leaderboard per aumentare retention e daily engagement
 
-**Target areas:**
-- Advanced community features (comments, posts feed)
-- Gamification enhancements
-- Performance optimization
-- Platform expansion considerations
+**Target features:**
+- Achievement badges (First Plant, Green Thumb, Community Star, 30-Day Streak)
+- Weekly challenges (Identify 5 plants, Water all plants, Post a photo)
+- Leaderboard settimanale (piante identificate, streak)
+- XP/Level system con titoli (Novice → Expert → Botanist)
+
+**Why now:**
+- GamificationStore esiste già ma sottoutilizzato
+- Aumenta retention e daily active users
+- Differenzia vs competitor (PictureThis non ha gamification)
 
 ## Previous Milestone: v2.1 Smart Features (COMPLETED)
 
