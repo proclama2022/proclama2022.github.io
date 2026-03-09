@@ -1,5 +1,7 @@
 import Constants from 'expo-constants';
+import * as ImageManipulator from 'expo-image-manipulator';
 import { PlantNetResponse, OrganType } from '@/types';
+import { awardPlantIdentifiedEvent } from './gamificationService';
 
 // Cloudflare Workers proxy URL for production (hides API key from client bundle)
 // Development still uses direct API with EXPO_PUBLIC_PLANTNET_API_KEY
@@ -76,6 +78,8 @@ export interface IdentifyPlantResult {
   success: boolean;
   data?: PlantNetResponse;
   error?: string;
+  /** Unique ID for this identification, can be used for gamification */
+  identificationId?: string;
 }
 
 /**
@@ -93,6 +97,13 @@ export interface IdentifyPlantResult {
 export async function identifyPlant(params: IdentifyPlantParams): Promise<IdentifyPlantResult> {
   const { imageUri, organ = 'auto', lang = 'en' } = params;
 
+  if (!__DEV__ && PROXY_URL.includes('YOUR_SUBDOMAIN')) {
+    return {
+      success: false,
+      error: 'Plant identification service is not configured for production.',
+    };
+  }
+
   // In development, check for API key
   // In production, proxy handles the API key
   if (__DEV__) {
@@ -107,19 +118,18 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
   }
 
   try {
-    // Create form data for image upload
+    // Convert to JPEG — PlantNet only accepts JPEG (simulator returns PNG, iPhone may return HEIC)
+    const converted = await ImageManipulator.manipulateAsync(
+      imageUri,
+      [],
+      { compress: 0.85, format: ImageManipulator.SaveFormat.JPEG }
+    );
+
     const formData = new FormData();
-
-    // Get the filename from URI
-    const filename = imageUri.split('/').pop() || 'image.jpg';
-    const match = /\.(\w+)$/.exec(filename);
-    const type = match ? `image/${match[1]}` : 'image/jpeg';
-
-    // Append the image
     formData.append('images', {
-      uri: imageUri,
-      name: filename,
-      type,
+      uri: converted.uri,
+      name: 'plant.jpg',
+      type: 'image/jpeg',
     } as any);
 
     // Append organ if not auto
@@ -128,10 +138,15 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
     }
 
     // Build URL with query params
-    // Note: Production proxy adds API key, so we don't include it here
     const url = new URL(PROXY_URL);
     url.searchParams.append('lang', lang);
-    url.searchParams.append('includeRelatedImages', 'true');
+    // includeRelatedImages not available on free tier
+
+    // In development, add API key directly (production proxy handles this server-side)
+    if (__DEV__) {
+      const apiKey = Constants.expoConfig?.extra?.plantnetApiKey || process.env.EXPO_PUBLIC_PLANTNET_API_KEY;
+      if (apiKey) url.searchParams.append('api-key', apiKey);
+    }
 
     const response = await fetch(url.toString(), {
       method: 'POST',
@@ -160,9 +175,19 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
 
     const data: PlantNetResponse = await response.json();
 
+    // Generate unique identification ID for gamification tracking
+    const identificationId = `id-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+    // Trigger gamification event (fire-and-forget)
+    // Only trigger if there are actual results (successful identification)
+    if (data.results && data.results.length > 0) {
+      triggerIdentificationGamification(identificationId, data);
+    }
+
     return {
       success: true,
       data,
+      identificationId,
     };
   } catch (error) {
     return {
@@ -170,6 +195,15 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
       error: error instanceof Error ? error.message : 'Unknown error occurred',
     };
   }
+}
+
+/**
+ * Extract string from PlantNet name field (API returns objects, not strings)
+ */
+export function extractName(field: { scientificNameWithoutAuthor?: string; scientificName?: string } | string | undefined): string {
+  if (!field) return '';
+  if (typeof field === 'string') return field;
+  return field.scientificNameWithoutAuthor || field.scientificName || '';
 }
 
 /**
@@ -196,4 +230,57 @@ export function formatScientificName(result: {
   return scientificNameAuthorship
     ? `${scientificName} ${scientificNameAuthorship}`
     : scientificName;
+}
+
+/**
+ * Check if the PlantNet result indicates a diseased plant
+ * Looks for health-related keywords in common names and metadata
+ */
+function detectDisease(result: any): boolean {
+  if (!result) return false;
+
+  const diseaseKeywords = [
+    'disease', 'diseased', 'fungal', 'bacterial', 'virus', 'viral',
+    'pest', 'infected', 'blight', 'rot', 'mildew', 'rust',
+    'leaf spot', 'canker', 'wilt', 'mosaic', 'scab'
+  ];
+
+  // Check common names
+  const commonNames = result.species?.commonNames || [];
+  for (const name of commonNames) {
+    const nameStr = String(name).toLowerCase();
+    if (diseaseKeywords.some(keyword => nameStr.includes(keyword))) {
+      return true;
+    }
+  }
+
+  // Check remaining results for disease indicators
+  if (Array.isArray(result.results)) {
+    for (const res of result.results) {
+      const names = res.species?.commonNames || [];
+      for (const name of names) {
+        const nameStr = String(name).toLowerCase();
+        if (diseaseKeywords.some(keyword => nameStr.includes(keyword))) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Trigger gamification event for plant identification
+ * Fire-and-forget - does not block the identification flow
+ */
+export function triggerIdentificationGamification(
+  plantId: string,
+  plantNetResponse: PlantNetResponse
+): void {
+  // Don't await - gamification is secondary to the identification
+  const hasDisease = detectDisease(plantNetResponse);
+  awardPlantIdentifiedEvent(plantId, hasDisease).catch((err) => {
+    console.warn('[plantnet] Failed to award plant identification event:', err);
+  });
 }
