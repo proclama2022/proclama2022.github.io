@@ -1,164 +1,161 @@
-/**
- * Follow Service
- *
- * Business logic layer for follow/unfollow operations.
- * Wraps Supabase queries with validation and structured responses.
- * Prevents self-follows and handles duplicate follows.
- *
- * Features:
- * - Follow/unfollow users
- * - Check follow status
- * - Structured { success, error? } responses
- * - User-friendly error messages
- *
- * @module services/followService
- */
 
 import {
-  followUser as followUserQuery,
-  unfollowUser as unfollowUserQuery,
-  isFollowing as isFollowingQuery,
-} from '@/lib/supabase/profiles';
+    checkIsFollowing as checkIsFollowingApi,
+    followUser as followUserApi,
+    getFollowCounts as getFollowCountsApi,
+    getFollowers as getFollowersApi,
+    getFollowing as getFollowingApi,
+    unfollowUser as unfollowUserApi,
+} from '@/lib/supabase/follows';
+import { awardFollowersGainedEvent } from './gamificationService';
 
-// ============================================================================
-// Types
-// ============================================================================
-
-/**
- * Follow service result
- *
- * Standard result pattern for follow operations.
- */
-export interface FollowServiceResult {
-  /** Whether the operation succeeded */
+export interface FollowServiceResult<T> {
   success: boolean;
-  /** User-friendly error message on failure (optional) */
+  data?: T;
   error?: string;
 }
 
-// ============================================================================
-// Error Messages
-// ============================================================================
-
-const ERROR_MESSAGES = {
-  SELF_FOLLOW: 'You cannot follow yourself',
-  FOLLOW_FAILED: 'Failed to follow user',
-  UNFOLLOW_FAILED: 'Failed to unfollow user',
-  CHECK_FAILED: 'Failed to check follow status',
-} as const;
-
-// ============================================================================
-// Public Functions
-// ============================================================================
-
 /**
  * Follow a user
- *
- * Algorithm:
- * 1. Validate: followerId !== followingId (can't follow self)
- * 2. Call followUser(followerId, followingId) from Supabase layer
- * 3. On success: Return { success: true }
- * 4. On error: Return { success: false, error: error.message }
- *
- * @param followerId - User ID of the follower
- * @param followingId - User ID of the user to follow
- * @returns Promise<FollowServiceResult> with success status
- *
- * Example:
- *   const result = await followUser('user-123', 'user-456');
- *   if (result.success) {
- *     console.log('Now following user-456');
- *   } else {
- *     console.error(result.error);
- *   }
  */
 export const followUser = async (
   followerId: string,
   followingId: string
-): Promise<FollowServiceResult> => {
-  // Prevent self-follow
-  if (followerId === followingId) {
-    return {
-      success: false,
-      error: ERROR_MESSAGES.SELF_FOLLOW,
-    };
-  }
-
-  try {
-    await followUserQuery(followerId, followingId);
-    return {
-      success: true,
-    };
-  } catch (err) {
-    console.error('Failed to follow user:', err);
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : ERROR_MESSAGES.FOLLOW_FAILED,
-    };
-  }
+): Promise<FollowServiceResult<void>> => {
+  return toggleFollow(followerId, followingId, false);
 };
 
 /**
  * Unfollow a user
- *
- * Algorithm:
- * 1. Call unfollowUser(followerId, followingId) from Supabase layer
- * 2. On success: Return { success: true }
- * 3. On error: Return { success: false, error: error.message }
- *
- * @param followerId - User ID of the follower
- * @param followingId - User ID of the user to unfollow
- * @returns Promise<FollowServiceResult> with success status
- *
- * Example:
- *   const result = await unfollowUser('user-123', 'user-456');
- *   if (result.success) {
- *     console.log('Unfollowed user-456');
- *   }
  */
 export const unfollowUser = async (
   followerId: string,
   followingId: string
-): Promise<FollowServiceResult> => {
-  try {
-    await unfollowUserQuery(followerId, followingId);
-    return {
-      success: true,
-    };
-  } catch (err) {
-    console.error('Failed to unfollow user:', err);
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : ERROR_MESSAGES.UNFOLLOW_FAILED,
-    };
-  }
+): Promise<FollowServiceResult<void>> => {
+  return toggleFollow(followerId, followingId, true);
 };
 
 /**
- * Check if user is following another user
- *
- * Algorithm:
- * 1. Call isFollowing(followerId, followingId) from Supabase layer
- * 2. Return boolean result
- *
- * @param followerId - User ID of the follower
- * @param followingId - User ID of the user to check
- * @returns Promise<boolean> true if following, false otherwise
- *
- * Example:
- *   const isFollowing = await checkIsFollowing('user-123', 'user-456');
- *   if (isFollowing) {
- *     console.log('Already following');
- *   }
+ * Check if following
  */
 export const checkIsFollowing = async (
   followerId: string,
   followingId: string
 ): Promise<boolean> => {
+  const result = await getFollowStatus(followerId, followingId);
+  return result.data || false;
+};
+
+/**
+ * Toggle follow status for a user
+ */
+export const toggleFollow = async (
+  followerId: string,
+  followingId: string,
+  isFollowing: boolean
+): Promise<FollowServiceResult<void>> => {
   try {
-    return await isFollowingQuery(followerId, followingId);
+    if (isFollowing) {
+      await unfollowUserApi(followerId, followingId);
+    } else {
+      await followUserApi(followerId, followingId);
+
+      // Trigger gamification event for the followed user (fire-and-forget)
+      // Get their new follower count and award the followers_gained event
+      try {
+        const counts = await getFollowCountsApi(followingId);
+        // Fire-and-forget - don't await
+        awardFollowersGainedEvent(followingId, counts.followers).catch((err) => {
+          console.warn('[follow] Failed to award followers gained event:', err);
+        });
+      } catch (gamificationErr) {
+        // Don't block follow action on gamification failure
+        console.warn('[follow] Failed to get follower counts for gamification:', gamificationErr);
+      }
+    }
+    return { success: true };
   } catch (err) {
-    console.error('Failed to check follow status:', err);
-    return false;
+    console.error('Failed to toggle follow:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to update follow status',
+    };
+  }
+};
+
+/**
+ * Get follow status between two users
+ */
+export const getFollowStatus = async (
+  followerId: string,
+  followingId: string
+): Promise<FollowServiceResult<boolean>> => {
+  try {
+    const isFollowing = await checkIsFollowingApi(followerId, followingId);
+    return { success: true, data: isFollowing };
+  } catch (err) {
+    console.error('Failed to get follow status:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to get follow status',
+    };
+  }
+};
+
+/**
+ * Get user's followers
+ */
+export const getUserFollowers = async (
+  userId: string,
+  limit = 20,
+  offset = 0
+): Promise<FollowServiceResult<any[]>> => {
+  try {
+    const followers = await getFollowersApi(userId, limit, offset);
+    return { success: true, data: followers };
+  } catch (err) {
+    console.error('Failed to get followers:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to get followers',
+    };
+  }
+};
+
+/**
+ * Get users a user is following
+ */
+export const getUserFollowing = async (
+  userId: string,
+  limit = 20,
+  offset = 0
+): Promise<FollowServiceResult<any[]>> => {
+  try {
+    const following = await getFollowingApi(userId, limit, offset);
+    return { success: true, data: following };
+  } catch (err) {
+    console.error('Failed to get following:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to get following',
+    };
+  }
+};
+
+/**
+ * Get follow counts for a user
+ */
+export const getUserFollowCounts = async (
+  userId: string
+): Promise<FollowServiceResult<{ following: number; followers: number }>> => {
+  try {
+    const counts = await getFollowCountsApi(userId);
+    return { success: true, data: counts };
+  } catch (err) {
+    console.error('Failed to get follow counts:', err);
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to get follow counts',
+    };
   }
 };
