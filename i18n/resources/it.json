@@ -701,7 +701,8 @@
       "social_butterfly": {
         "title": "Farfalla Sociale",
         "description": "Hai raggiunto 10 follower"
-      }
+      },
+      "progress": "{{current}}/{{target}}"
     },
     "challenges": {
       "daily_watering_3": {

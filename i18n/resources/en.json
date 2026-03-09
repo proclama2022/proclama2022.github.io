@@ -669,7 +669,8 @@
       "social_butterfly": {
         "title": "Social Butterfly",
         "description": "You gained 10 followers"
-      }
+      },
+      "progress": "{{current}}/{{target}}"
     },
     "challenges": {
       "daily_watering_3": {
