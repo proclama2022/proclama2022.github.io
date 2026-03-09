@@ -73,9 +73,17 @@ export interface GamificationActivityItem {
   metadata: Record<string, unknown>;
 }
 
+export interface BadgeProgress {
+  badge_key: string;
+  current: number;
+  target: number;
+  is_unlocked: boolean;
+}
+
 export interface GamificationSummary {
   progress: UserProgress;
   badges: UserBadge[];
+  badge_progress: BadgeProgress[];
   daily_challenges: DailyChallengeSummary[];
   recent_activity: GamificationActivityItem[];
 }
