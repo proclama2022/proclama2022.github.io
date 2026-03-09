@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v3.0
 milestone_name: Gamification 2.0
 status: in_progress
-last_updated: "2026-03-09T08:20:00Z"
+last_updated: "2026-03-09T17:45:00Z"
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 15
+  completed_plans: 1
+  percent: 7
 ---
 
 # Project State
@@ -23,12 +23,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-phase: — (not started)
-plan: —
-status: defining_requirements
-last_activity: 2026-03-09 — Milestone v3.0 Gamification 2.0 started
+phase: 17 (in progress)
+plan: 02
+status: in_progress
+last_activity: 2026-03-09 — Completed 17-01: League Database Schema & Dependencies
 
-Progress: [--------------------] 0% (Milestone started)
+Progress: [--------------------] 7% (Phase 17, Plan 01/5 complete)
 
 ## Milestone Goals
 
@@ -100,3 +100,4 @@ Recent decisions affecting current work:
 - (11-01): Expo SecureStore for session persistence—encrypted storage (iOS Keychain, Android Keystore) required for App Store
 - (15-01): Use Open-Meteo API (free, no key) and store location locally for privacy.
 - (15-02): Use simple heuristics (Rain > 5mm, Temp > 30°C) for climate advice; display in WeatherWidget.
+- (17-01): Separate tables for tiers/cohorts/memberships for league flexibility; extended user_progress with league_tier and timezone.
