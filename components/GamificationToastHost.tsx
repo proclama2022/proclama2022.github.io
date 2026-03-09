@@ -67,7 +67,9 @@ export default function GamificationToastHost() {
     case 'badge':
       iconName = 'ribbon-outline';
       title = t('gamification.toast.badgeUnlocked');
-      body = getBadgeLabel(t, currentToast.message);
+      // Include emoji in body if available
+      const badgeLabel = getBadgeLabel(t, currentToast.message);
+      body = currentToast.emoji ? `${currentToast.emoji} ${badgeLabel}` : badgeLabel;
       break;
     case 'level':
       iconName = 'trophy-outline';

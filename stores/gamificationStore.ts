@@ -7,7 +7,25 @@ export interface GamificationToastItem {
   kind: 'xp' | 'level' | 'badge' | 'league_promotion' | 'league_relegation';
   message: string;
   metadata?: { newTier?: string; oldTier?: string };
+  emoji?: string;
 }
+
+/**
+ * Badge emoji mapping for toast notifications
+ */
+const BADGE_EMOJIS: Record<string, string> = {
+  watering_streak_7: '🌿',
+  watering_streak_30: '🌳',
+  level_5: '⭐',
+  level_10: '🌟',
+  first_plant: '🌱',
+  green_thumb: '🌿',
+  plant_parent: '👨‍🌾',
+  community_star: '⭐',
+  early_bird: '🌅',
+  plant_doctor: '🩺',
+  social_butterfly: '🦋',
+};
 
 interface GamificationState {
   currentToast: GamificationToastItem | null;
@@ -43,10 +61,12 @@ function createToastQueue(result: GamificationAwardResult): GamificationToastIte
   }
 
   result.new_badges.forEach((badgeKey) => {
+    const emoji = BADGE_EMOJIS[badgeKey];
     items.push({
       id: createId('badge'),
       kind: 'badge',
       message: badgeKey,
+      emoji,
     });
   });
 
