@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
-status: completed
-last_updated: "2026-03-09T18:11:22.964Z"
+status: in_progress
+last_updated: "2026-03-09T19:18:44.040Z"
 progress:
   total_phases: 21
   completed_phases: 17
-  total_plans: 65
-  completed_plans: 67
+  total_plans: 68
+  completed_plans: 69
   percent: 46
 ---
 
@@ -109,3 +109,5 @@ Recent decisions affecting current work:
 - (17-04): pg_cron scheduled at Sunday 00:00 UTC for weekly promotion; confetti with tier-colored particles on promotion
 - (17-05): Wave 0 tests for all 7 LEAG requirements; league badge in PostCard (non-Bronze only) and ProfileStats (all tiers)
 - (18-01): 6 new achievement badges with server-side progress calculation via get_badge_progress RPC; BadgeProgress type and getBadgeProgress service
+- [Phase 18-02]: Gamification triggers use fire-and-forget pattern to never block core UX
+- [Phase 18-02]: Disease detection uses keyword matching in PlantNet common names

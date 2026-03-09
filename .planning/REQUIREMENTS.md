@@ -19,14 +19,14 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 
 ### Extended Badges
 
-- [ ] **BADG-01**: User earns "First Plant" badge when identifying first plant
+- [x] **BADG-01**: User earns "First Plant" badge when identifying first plant
 - [ ] **BADG-02**: User earns "Green Thumb" badge when reaching 7-day watering streak
-- [ ] **BADG-03**: User earns "Plant Parent" badge when adding 10 plants to collection
-- [ ] **BADG-04**: User earns "Community Star" badge when receiving 50 total likes
-- [ ] **BADG-05**: User earns "Early Bird" badge when watering before 7am (local time)
+- [x] **BADG-03**: User earns "Plant Parent" badge when adding 10 plants to collection
+- [x] **BADG-04**: User earns "Community Star" badge when receiving 50 total likes
+- [x] **BADG-05**: User earns "Early Bird" badge when watering before 7am (local time)
 - [ ] **BADG-06**: User earns "Weekend Warrior" badge when completing all weekend care tasks
-- [ ] **BADG-07**: User earns "Plant Doctor" badge when identifying 5 diseased/ailing plants
-- [ ] **BADG-08**: User earns "Social Butterfly" badge when gaining 10 followers
+- [x] **BADG-07**: User earns "Plant Doctor" badge when identifying 5 diseased/ailing plants
+- [x] **BADG-08**: User earns "Social Butterfly" badge when gaining 10 followers
 - [ ] **BADG-09**: User can view all earned badges in profile
 - [ ] **BADG-10**: User can view locked badges with progress indicator (e.g., "5/10 plants")
 
