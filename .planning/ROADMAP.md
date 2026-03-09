@@ -38,7 +38,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed (completed 2026-03-05)
 - [x] **Phase 15: Weather Integration & Climate-Aware Reminders** - Adjust watering based on local weather (completed 2026-03-05)
 - [x] **Phase 16: Calendar Sync** - Sync care tasks with device calendar (completed 2026-03-05)
-- [ ] **Phase 17: League System** - Duolingo-style leagues with weekly promotion/relegation
+- [x] **Phase 17: League System** - Duolingo-style leagues with weekly promotion/relegation (completed 2026-03-09)
 - [ ] **Phase 18: Extended Badges** - 8 new achievement badges with progress tracking
 - [ ] **Phase 19: Level & Streak Enhancement** - Level titles, streak freeze, timezone support
 - [ ] **Phase 20: Celebrations** - Confetti animations, haptic feedback, cooldown system
@@ -429,7 +429,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 14. Follow System & Engagement Polish | v2.0 | 5/5 | Complete | 2026-03-05 |
 | 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
-| 17. League System | 5/5 | Complete | 2026-03-09 |
+| 17. League System | 5/5 | Complete    | 2026-03-09 |
 | 18. Extended Badges | v3.0 | 0/3 | Pending | - |
 | 19. Level & Streak Enhancement | v3.0 | 0/3 | Pending | - |
 | 20. Celebrations | v3.0 | 0/2 | Pending | - |

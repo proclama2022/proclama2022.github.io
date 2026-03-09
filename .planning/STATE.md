@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
-status: phase_complete
-last_updated: "2026-03-09T18:04:19.000Z"
+status: completed
+last_updated: "2026-03-09T18:11:22.964Z"
 progress:
   total_phases: 21
   completed_phases: 17
   total_plans: 65
-  completed_plans: 69
+  completed_plans: 67
   percent: 46
 ---
 
