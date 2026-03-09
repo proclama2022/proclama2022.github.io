@@ -6,7 +6,14 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:status": "supabase status",
+    "supabase:db:reset": "supabase db reset",
+    "supabase:env:local": "sh ./scripts/supabase-local-env.sh",
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -17,6 +24,7 @@
     "@supabase/supabase-js": "^2.98.0",
     "async-mutex": "^0.5.0",
     "expo": "~54.0.33",
+    "expo-calendar": "~15.0.8",
     "expo-camera": "^17.0.10",
     "expo-constants": "~18.0.13",
     "expo-crypto": "^15.0.8",
@@ -26,6 +34,7 @@
     "expo-image-picker": "^17.0.10",
     "expo-linking": "~8.0.11",
     "expo-localization": "^17.0.8",
+    "expo-location": "~19.0.8",
     "expo-notifications": "~0.32.16",
     "expo-router": "~6.0.23",
     "expo-secure-store": "~13.0.2",
@@ -40,6 +49,7 @@
     "react-i18next": "^16.5.4",
     "react-native": "0.81.5",
     "react-native-calendars": "^1.1314.0",
+    "react-native-confetti-cannon": "^1.5.2",
     "react-native-google-mobile-ads": "^16.0.3",
     "react-native-pager-view": "6.9.1",
     "react-native-progress": "^5.0.1",
@@ -54,6 +64,8 @@
   "devDependencies": {
     "@types/lru-cache": "^7.10.9",
     "@types/react": "~19.1.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~10.0.0",
     "react-test-renderer": "19.1.0",
     "typescript": "~5.9.2"
   },

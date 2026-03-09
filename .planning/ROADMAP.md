@@ -2,7 +2,7 @@
 
 ## Overview
 
-Plantid transforms from personal plant tracker to community platform through 5 major milestones. v1.0-v1.3 delivered offline-first plant identification, care tracking, and enhanced UX. v2.0 adds Supabase backend for authentication, user profiles, community feed, social engagement (likes, comments, follows), and content moderation.
+Plantid transforms from personal plant tracker to community platform through 6 major milestones. v1.0-v1.3 delivered offline-first plant identification, care tracking, and enhanced UX. v2.0-v2.1 added Supabase backend for authentication, user profiles, community feed, social engagement, weather integration, and calendar sync. v3.0 expands gamification with leagues, badges, celebrations, and enhanced UI.
 
 ## Milestones
 
@@ -12,6 +12,7 @@ Plantid transforms from personal plant tracker to community platform through 5 m
 - ✅ **v1.3 Enhanced UX** - Phases 7-10 (shipped 2026-02-26)
 - ✅ **v2.0 Community** - Phases 11-12 (shipped 2026-03-04)
 - ✅ **v2.1 Smart Features** - Phases 13-16 (shipped 2026-03-09)
+- 📋 **v3.0 Gamification 2.0** - Phases 17-21 (in progress)
 
 ## Phases
 
@@ -37,6 +38,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 14: Follow System & Engagement Polish** - Follow users and filter feed (completed 2026-03-05)
 - [x] **Phase 15: Weather Integration & Climate-Aware Reminders** - Adjust watering based on local weather (completed 2026-03-05)
 - [x] **Phase 16: Calendar Sync** - Sync care tasks with device calendar (completed 2026-03-05)
+- [ ] **Phase 17: League System** - Duolingo-style leagues with weekly promotion/relegation
+- [ ] **Phase 18: Extended Badges** - 8 new achievement badges with progress tracking
+- [ ] **Phase 19: Level & Streak Enhancement** - Level titles, streak freeze, timezone support
+- [ ] **Phase 20: Celebrations** - Confetti animations, haptic feedback, cooldown system
+- [ ] **Phase 21: Gamification UI** - Gamification hub, badge grid, XP progress bar
 
 ## Phase Details
 
@@ -298,6 +304,107 @@ Plans:
 - [x] 16-01: Calendar Infrastructure & Service
 - [x] 16-02: UI Integration & Event Management
 
+### 📋 v3.0 Gamification 2.0 (Phases 17-21) — IN PROGRESS
+
+#### Phase 17: League System
+**Goal**: Duolingo-style leagues with weekly promotion/relegation
+**Depends on**: Phase 16
+**Requirements**: LEAG-01, LEAG-02, LEAG-03, LEAG-04, LEAG-05, LEAG-06, LEAG-07
+**Success Criteria** (what must be TRUE):
+  1. User is assigned to a league based on XP (Bronze → Silver → Gold → Platinum → Diamond)
+  2. User can view weekly leaderboard showing top 30 users in their league
+  3. Top 10 users promote to higher league at week end (Sunday midnight local time)
+  4. Bottom 5 users relegate to lower league at week end
+  5. League tab shows current rank, XP progress, and promotion/relegation zone
+  6. New users start in Bronze league
+  7. League badges are awarded on promotion (Bronze Member, Silver Member, etc.)
+**Plans**: 5 plans
+
+Plans:
+- [ ] 17-01: League Database Schema & Dependencies (confetti install, migration, types)
+- [ ] 17-02: League Service Layer (assignment, leaderboard, toast queue)
+- [ ] 17-03: League UI Components (Leaderboard extension, mini-widget, tab)
+- [ ] 17-04: Weekly Promotion & Celebration (pg_cron, confetti, haptics)
+- [ ] 17-05: Integration & Wave 0 Tests (all tests, PostCard/Profile integration)
+
+#### Phase 18: Extended Badges
+**Goal**: 8 new achievement badges with progress tracking
+**Depends on**: Phase 17
+**Requirements**: BADG-01, BADG-02, BADG-03, BADG-04, BADG-05, BADG-06, BADG-07, BADG-08, BADG-09, BADG-10
+**Success Criteria** (what must be TRUE):
+  1. User earns "First Plant" badge when identifying first plant
+  2. User earns "Green Thumb" badge when reaching 7-day watering streak
+  3. User earns "Plant Parent" badge when adding 10 plants to collection
+  4. User earns "Community Star" badge when receiving 50 total likes
+  5. User earns "Early Bird" badge when watering before 7am (local time)
+  6. User earns "Weekend Warrior" badge when completing all weekend care tasks
+  7. User earns "Plant Doctor" badge when identifying 5 diseased/ailing plants
+  8. User earns "Social Butterfly" badge when gaining 10 followers
+  9. User can view all earned badges in profile
+  10. User can view locked badges with progress indicator (e.g., "5/10 plants")
+**Plans**: 3 plans
+
+Plans:
+- [ ] 18-01: Badge Definitions & Progress Service
+- [ ] 18-02: Badge Trigger Hooks (Plant ID, Watering, Community)
+- [ ] 18-03: Badge Grid UI & Progress Display
+
+#### Phase 19: Level & Streak Enhancement
+**Goal**: Level titles, streak freeze, and timezone support
+**Depends on**: Phase 18
+**Requirements**: TITL-01, TITL-02, TITL-03, TITL-04, STRK-01, STRK-02, STRK-03, STRK-04, STRK-05
+**Success Criteria** (what must be TRUE):
+  1. User level is displayed with title (Seedling, Sprout, Gardener, Expert, Master, Legend)
+  2. Title is visible in profile header
+  3. Title is visible in leaderboard entries
+  4. Title changes with visual indication (toast) on level-up
+  5. User has 1 streak freeze per week (free, not Pro-only)
+  6. Streak freeze is automatically applied when user misses a day
+  7. User sees streak freeze count remaining in streak widget
+  8. Streak freeze resets every Sunday (1/week, doesn't accumulate)
+  9. Streak calculation uses user's local timezone (not UTC)
+**Plans**: 3 plans
+
+Plans:
+- [ ] 19-01: Level Title System & Display
+- [ ] 19-02: Streak Freeze Logic & Service
+- [ ] 19-03: Timezone-Aware Streak Calculation
+
+#### Phase 20: Celebrations
+**Goal**: Confetti animations, haptic feedback, and cooldown system
+**Depends on**: Phase 19
+**Requirements**: CELE-01, CELE-02, CELE-03, CELE-04, CELE-05, CELE-06
+**Success Criteria** (what must be TRUE):
+  1. User sees confetti animation when earning a badge
+  2. User sees confetti animation when leveling up
+  3. User sees confetti animation when promoting to higher league
+  4. User feels haptic feedback (vibration) during celebrations
+  5. Celebration animations do not block UI (non-modal, auto-dismiss)
+  6. Celebration cooldown prevents spam (max 1 celebration per 3 seconds)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 20-01: Confetti Animation & Haptic Service
+- [ ] 20-02: Celebration Coordination & Cooldown
+
+#### Phase 21: Gamification UI
+**Goal**: Gamification hub, badge grid, and XP progress bar
+**Depends on**: Phase 20
+**Requirements**: GMUI-01, GMUI-02, GMUI-03, GMUI-04, GMUI-05, GMUI-06
+**Success Criteria** (what must be TRUE):
+  1. User can access gamification hub from profile screen
+  2. User sees XP progress bar in profile header
+  3. User sees current level, title, and XP in gamification hub
+  4. User sees badge collection grid with locked/unlocked states
+  5. User sees weekly streak calendar in gamification hub
+  6. User sees league badge next to their name in community feed
+**Plans**: 3 plans
+
+Plans:
+- [ ] 21-01: Gamification Hub Screen
+- [ ] 21-02: Profile Header XP Integration
+- [ ] 21-03: Community Feed League Badge Display
+
 ## Progress
 
 **Execution Order:**
@@ -322,6 +429,11 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 14. Follow System & Engagement Polish | v2.0 | 5/5 | Complete | 2026-03-05 |
 | 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
+| 17. League System | v3.0 | 0/5 | Ready | - |
+| 18. Extended Badges | v3.0 | 0/3 | Pending | - |
+| 19. Level & Streak Enhancement | v3.0 | 0/3 | Pending | - |
+| 20. Celebrations | v3.0 | 0/2 | Pending | - |
+| 21. Gamification UI | v3.0 | 0/3 | Pending | - |
 
 ---
 
