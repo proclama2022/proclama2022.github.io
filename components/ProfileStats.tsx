@@ -6,11 +6,13 @@ import {
   ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemedView } from './Themed';
-import { ThemedText } from './Themed';
+import { useTranslation } from 'react-i18next';
+import { ThemedView , ThemedText } from './Themed';
 import { useColorScheme } from './useColorScheme';
 import Colors from '@/constants/Colors';
 import { formatJoinedDate } from '@/lib/utils/dateFormatter';
+import { LeagueBadge } from '@/components/Gamification/LeagueBadge';
+import type { LeagueTierKey } from '@/types/gamification';
 
 interface ProfileStatsProps {
   stats: {
@@ -18,6 +20,8 @@ interface ProfileStatsProps {
     followers_count: number;
     following_count: number;
     joined_date?: string; // ISO timestamp
+    /** User's current league tier */
+    league_tier?: LeagueTierKey;
   };
   onStatPress?: (statType: 'plants' | 'followers' | 'following') => void;
   style?: ViewStyle;
@@ -36,6 +40,7 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
   onStatPress,
   style,
 }) => {
+  const { t } = useTranslation();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
 
@@ -78,29 +83,48 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
       {statItem(
         'leaf-outline',
         formatNumber(stats.plants_identified),
-        'Plants',
+        t('profile.plants'),
         'plants'
       )}
       {statItem(
         'people-outline',
         formatNumber(stats.followers_count),
-        'Followers',
+        t('profile.followers'),
         'followers'
       )}
       {statItem(
         'person-add-outline',
         formatNumber(stats.following_count),
-        'Following',
+        t('profile.following'),
         'following'
       )}
       <View style={styles.statContainer}>
         <ThemedView style={styles.statItem}>
           <Ionicons name="calendar-outline" size={24} color={colors.tint} />
           <ThemedText style={styles.statValue}>
-            {stats.joined_date ? formatJoinedDate(stats.joined_date) : 'Joined'}
+            {stats.joined_date ? formatJoinedDate(stats.joined_date) : t('profile.joined')}
           </ThemedText>
         </ThemedView>
       </View>
+      {/* League tier display */}
+      {stats.league_tier && (
+        <View style={styles.statContainer}>
+          <ThemedView style={[styles.statItem, styles.leagueItem]}>
+            <LeagueBadge
+              tier={stats.league_tier}
+              size={24}
+              showBackground={true}
+              showBronze={true}
+            />
+            <ThemedText style={styles.statValue}>
+              {t(`league.${stats.league_tier}`)}
+            </ThemedText>
+            <ThemedText style={styles.statLabel}>
+              {t('league.title')}
+            </ThemedText>
+          </ThemedView>
+        </View>
+      )}
     </ThemedView>
   );
 };
@@ -120,6 +144,10 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     borderWidth: 1,
+  },
+  leagueItem: {
+    flexDirection: 'column',
+    gap: 4,
   },
   statValue: {
     fontSize: 20,
