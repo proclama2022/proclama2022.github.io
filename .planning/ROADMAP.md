@@ -322,10 +322,10 @@ Plans:
 
 Plans:
 - [x] 17-01: League Database Schema & Dependencies (confetti install, migration, types)
-- [ ] 17-02: League Service Layer (assignment, leaderboard, toast queue)
-- [ ] 17-03: League UI Components (Leaderboard extension, mini-widget, tab)
-- [ ] 17-04: Weekly Promotion & Celebration (pg_cron, confetti, haptics)
-- [ ] 17-05: Integration & Wave 0 Tests (all tests, PostCard/Profile integration)
+- [x] 17-02: League Service Layer (assignment, leaderboard, toast queue)
+- [x] 17-03: League UI Components (Leaderboard extension, mini-widget, tab)
+- [x] 17-04: Weekly Promotion & Celebration (pg_cron, confetti, haptics)
+- [x] 17-05: Integration & Wave 0 Tests (all tests, PostCard/Profile integration)
 
 #### Phase 18: Extended Badges
 **Goal**: 8 new achievement badges with progress tracking
@@ -429,7 +429,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 14. Follow System & Engagement Polish | v2.0 | 5/5 | Complete | 2026-03-05 |
 | 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
-| 17. League System | 4/5 | In Progress|  | 2026-03-09 |
+| 17. League System | 5/5 | Complete | 2026-03-09 |
 | 18. Extended Badges | v3.0 | 0/3 | Pending | - |
 | 19. Level & Streak Enhancement | v3.0 | 0/3 | Pending | - |
 | 20. Celebrations | v3.0 | 0/2 | Pending | - |

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
-status: in_progress
-last_updated: "2026-03-09T17:53:20.000Z"
+status: phase_complete
+last_updated: "2026-03-09T18:04:19.000Z"
 progress:
   total_phases: 21
-  completed_phases: 16
+  completed_phases: 17
   total_plans: 65
-  completed_plans: 68
-  percent: 44
+  completed_plans: 69
+  percent: 46
 ---
 
 # Project State
@@ -19,16 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-09)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** v3.0 Gamification 2.0 — League System
+**Current focus:** v3.0 Gamification 2.0 — League System COMPLETE
 
 ## Current Position
 
-phase: 17 (in progress)
-plan: 04
-status: in_progress
-last_activity: 2026-03-09 — Completed 17-04: Weekly Promotion & Celebration
+phase: 17 (complete)
+plan: 05
+status: phase_complete
+last_activity: 2026-03-09 — Completed 17-05: Integration & Wave 0 Tests — Phase 17 Complete
 
-Progress: [████----] 44% (Phase 17, Plan 04/5 complete)
+Progress: [████----] 46% (Phase 17, Plan 05/5 complete)
 
 ## Milestone Goals
 
@@ -87,6 +87,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 15 P02 | -- | 4 tasks | 4 files |
 | Phase 17 P03 | 360 | 5 tasks | 5 files |
 | Phase 17 P04 | 327 | 6 tasks | 5 files |
+| Phase 17 P05 | 464 | 5 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -106,3 +107,4 @@ Recent decisions affecting current work:
 - (17-02): Used RPC fallback pattern for getLeagueLeaderboard; extended gamificationStore with league_promotion/relegation event types with metadata.
 - (17-03): League UI uses emoji tier badges, zone colors as transparent tints, tab navigation in gamification hub
 - (17-04): pg_cron scheduled at Sunday 00:00 UTC for weekly promotion; confetti with tier-colored particles on promotion
+- (17-05): Wave 0 tests for all 7 LEAG requirements; league badge in PostCard (non-Bronze only) and ProfileStats (all tiers)
