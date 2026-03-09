@@ -345,7 +345,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 18-01: Badge Definitions & Progress Service
+- [x] 18-01: Badge Definitions & Progress Service
 - [ ] 18-02: Badge Trigger Hooks (Plant ID, Watering, Community)
 - [ ] 18-03: Badge Grid UI & Progress Display
 
@@ -430,7 +430,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 15. Weather Integration | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 16. Calendar Sync | v2.1 | 2/2 | Complete | 2026-03-05 |
 | 17. League System | 5/5 | Complete    | 2026-03-09 |
-| 18. Extended Badges | v3.0 | 0/3 | Pending | - |
+| 18. Extended Badges | v3.0 | 1/3 | In Progress | - |
 | 19. Level & Streak Enhancement | v3.0 | 0/3 | Pending | - |
 | 20. Celebrations | v3.0 | 0/2 | Pending | - |
 | 21. Gamification UI | v3.0 | 0/3 | Pending | - |

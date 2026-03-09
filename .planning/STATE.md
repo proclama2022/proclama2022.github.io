@@ -23,12 +23,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-phase: 17 (complete)
-plan: 05
-status: phase_complete
-last_activity: 2026-03-09 — Completed 17-05: Integration & Wave 0 Tests — Phase 17 Complete
+phase: 18 (extended-badges)
+plan: 01
+status: in_progress
+last_activity: 2026-03-09 — Completed 18-01: Extended Badge Definitions
 
-Progress: [████----] 46% (Phase 17, Plan 05/5 complete)
+Progress: [████----] 46% (Phase 18, Plan 01/? complete)
 
 ## Milestone Goals
 
@@ -108,3 +108,4 @@ Recent decisions affecting current work:
 - (17-03): League UI uses emoji tier badges, zone colors as transparent tints, tab navigation in gamification hub
 - (17-04): pg_cron scheduled at Sunday 00:00 UTC for weekly promotion; confetti with tier-colored particles on promotion
 - (17-05): Wave 0 tests for all 7 LEAG requirements; league badge in PostCard (non-Bronze only) and ProfileStats (all tiers)
+- (18-01): 6 new achievement badges with server-side progress calculation via get_badge_progress RPC; BadgeProgress type and getBadgeProgress service
