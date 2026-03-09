@@ -410,3 +410,19 @@ BEGIN
   END LOOP;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- ============================================================================
+-- pg_cron Schedule for Weekly Promotion (Task 2 - Plan 17-04)
+-- ============================================================================
+
+-- Enable pg_cron extension (if not already enabled)
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+
+-- Schedule weekly promotion at Sunday midnight UTC
+SELECT cron.schedule(
+  'weekly-league-promotion',
+  '0 0 * * 0',  -- Every Sunday at 00:00 UTC
+  $$
+  SELECT process_weekly_promotion_relegation();
+  $$
+);
