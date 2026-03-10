@@ -32,6 +32,7 @@ export interface GamificationAwardResult {
   xp_in_level: number;
   xp_for_next_level: number;
   watering_streak: number;
+  streak_freeze_remaining: number;
   leveled_up: boolean;
   new_badges: string[];
 }
@@ -46,6 +47,7 @@ export interface UserProgress {
   last_watering_date: string | null;
   league_tier: LeagueTierKey;
   timezone: string;
+  streak_freeze_remaining: number;
   created_at: string;
   updated_at: string;
 }

@@ -19,6 +19,7 @@ const DEFAULT_PROGRESS = {
   xp_for_next_level: 100,
   watering_streak: 0,
   last_watering_date: null,
+  streak_freeze_remaining: 1,
 } as const;
 
 function getUtcDateKey(date: Date = new Date()): string {
@@ -56,6 +57,7 @@ function normalizeAwardResult(raw: any): GamificationAwardResult | null {
     xp_in_level: Number(raw.xp_in_level ?? 0),
     xp_for_next_level: Number(raw.xp_for_next_level ?? 100),
     watering_streak: Number(raw.watering_streak ?? 0),
+    streak_freeze_remaining: Number(raw.streak_freeze_remaining ?? 1),
     leveled_up: Boolean(raw.leveled_up),
     new_badges: Array.isArray(raw.new_badges) ? raw.new_badges : [],
   };
@@ -268,12 +270,17 @@ export async function getUserGamificationSummary(): Promise<GamificationSummary 
           xp_for_next_level: progressResponse.data.xp_for_next_level,
           watering_streak: progressResponse.data.watering_streak,
           last_watering_date: progressResponse.data.last_watering_date,
+          league_tier: progressResponse.data.league_tier ?? 'bronze',
+          timezone: progressResponse.data.timezone ?? 'UTC',
+          streak_freeze_remaining: progressResponse.data.streak_freeze_remaining ?? 1,
           created_at: progressResponse.data.created_at,
           updated_at: progressResponse.data.updated_at,
         }
       : {
           user_id: userId,
           ...DEFAULT_PROGRESS,
+          league_tier: 'bronze',
+          timezone: 'UTC',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         };
