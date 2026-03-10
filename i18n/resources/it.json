@@ -647,7 +647,8 @@
       "xpGained": "XP ottenuti",
       "levelUp": "Livello aumentato",
       "badgeUnlocked": "Badge sbloccato",
-      "levelLabel": "Livello {{level}}"
+      "levelLabel": "Livello {{level}}",
+      "titleChange": "Titolo sbloccato!"
     },
     "events": {
       "watering_completed": "Hai annaffiato una pianta",
@@ -656,6 +657,19 @@
       "post_published": "Hai pubblicato un post",
       "like_received": "Hai ricevuto un like",
       "daily_checkin": "Check-in giornaliero"
+    },
+    "titles": {
+      "seedling": "Piantina",
+      "sprout": "Germoglio",
+      "gardener": "Giardiniere",
+      "expert": "Esperto",
+      "master": "Maestro",
+      "legend": "Leggenda",
+      "titleChangeToast": "Nuovo titolo: {{title}}!"
+    },
+    "streak": {
+      "freezeAvailable": "{{count}} freeze disponibile",
+      "freezeAvailable_one": "1 freeze disponibile"
     },
     "badges": {
       "watering_streak_7": {

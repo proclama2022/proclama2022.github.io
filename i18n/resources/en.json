@@ -615,7 +615,8 @@
       "xpGained": "XP gained",
       "levelUp": "Level up",
       "badgeUnlocked": "Badge unlocked",
-      "levelLabel": "Level {{level}}"
+      "levelLabel": "Level {{level}}",
+      "titleChange": "Title Unlocked!"
     },
     "events": {
       "watering_completed": "Watered a plant",
@@ -624,6 +625,19 @@
       "post_published": "Published a post",
       "like_received": "Received a like",
       "daily_checkin": "Daily check-in"
+    },
+    "titles": {
+      "seedling": "Seedling",
+      "sprout": "Sprout",
+      "gardener": "Gardener",
+      "expert": "Expert",
+      "master": "Master",
+      "legend": "Legend",
+      "titleChangeToast": "New title: {{title}}!"
+    },
+    "streak": {
+      "freezeAvailable": "{{count}} freeze available",
+      "freezeAvailable_one": "1 freeze available"
     },
     "badges": {
       "watering_streak_7": {
