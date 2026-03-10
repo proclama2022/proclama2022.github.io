@@ -25,6 +25,7 @@ import { getSupabaseClient } from '@/lib/supabase';
 import { useAuthStore } from '@/stores/authStore';
 import { getLeagueLeaderboard } from '@/services/leagueService';
 import type { LeaderboardEntry as LeagueLeaderboardEntry, LeagueTierKey } from '@/types/gamification';
+import { getLevelTitle } from '@/types/gamification';
 
 export type LeaderboardType = 'xp' | 'streak' | 'badges' | 'league';
 
@@ -386,20 +387,22 @@ export function Leaderboard({ type, onTypeChange, limit = 20 }: LeaderboardProps
             </Text>
             <LeagueBadge tier={item.league_tier} size={14} />
           </View>
+          {/* Title subtext - hidden for Bronze league to reduce noise */}
+          {item.league_tier !== 'bronze' && (
+            <Text style={[styles.titleSubtext, { color: colors.textSecondary }]}>
+              {getLevelTitle(item.level).emoji} {t(getLevelTitle(item.level).i18nKey)} · {item.xp_this_week.toLocaleString()} XP
+            </Text>
+          )}
+          {item.league_tier === 'bronze' && (
+            <Text style={[styles.titleSubtext, { color: colors.textSecondary }]}>
+              {item.xp_this_week.toLocaleString()} XP
+            </Text>
+          )}
           {item.is_current_user && (
             <Text style={[styles.youBadge, { color: colors.tint }]}>
               ({t('common.you') || 'You'})
             </Text>
           )}
-        </View>
-
-        <View style={styles.scoreContainer}>
-          <Text style={[styles.score, { color: colors.text }]}>
-            {item.xp_this_week.toLocaleString()}
-          </Text>
-          <Text style={[styles.scoreLabel, { color: colors.textSecondary }]}>
-            XP
-          </Text>
         </View>
       </View>
     );
@@ -530,6 +533,10 @@ const styles = StyleSheet.create({
   displayName: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  titleSubtext: {
+    fontSize: 12,
+    marginTop: 2,
   },
   youBadge: {
     fontSize: 11,
