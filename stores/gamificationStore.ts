@@ -4,7 +4,7 @@ import type { GamificationAwardResult } from '@/types/gamification';
 
 export interface GamificationToastItem {
   id: string;
-  kind: 'xp' | 'level' | 'badge' | 'league_promotion' | 'league_relegation';
+  kind: 'xp' | 'level' | 'badge' | 'league_promotion' | 'league_relegation' | 'title';
   message: string;
   metadata?: { newTier?: string; oldTier?: string };
   emoji?: string;
@@ -33,6 +33,7 @@ interface GamificationState {
   enqueueAwardResult: (result: GamificationAwardResult) => void;
   enqueueLeaguePromotion: (newTier: string, oldTier?: string) => void;
   enqueueLeagueRelegation: (newTier: string, oldTier?: string) => void;
+  enqueueTitleChange: (titleKey: string, titleEmoji: string) => void;
   dismissToast: () => void;
   reset: () => void;
 }
@@ -123,6 +124,21 @@ export const useGamificationStore = create<GamificationState>((set, get) => ({
       kind: 'league_relegation',
       message: `Moved to ${newTier}`,
       metadata: { newTier, oldTier },
+    };
+
+    const { currentToast, queue } = get();
+    if (!currentToast) {
+      set({ currentToast: item, queue });
+    } else {
+      set({ queue: [...queue, item] });
+    }
+  },
+  enqueueTitleChange: (titleKey: string, titleEmoji: string) => {
+    const item: GamificationToastItem = {
+      id: createId('title'),
+      kind: 'title',
+      message: titleKey,
+      emoji: titleEmoji,
     };
 
     const { currentToast, queue } = get();
