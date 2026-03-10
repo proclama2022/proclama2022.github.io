@@ -39,11 +39,11 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 
 ### Streak System Enhancement
 
-- [ ] **STRK-01**: User has 1 streak freeze per week (free, not Pro-only)
-- [ ] **STRK-02**: Streak freeze is automatically applied when user misses a day
-- [ ] **STRK-03**: User sees streak freeze count remaining in streak widget
-- [ ] **STRK-04**: Streak freeze resets every Sunday (1/week, doesn't accumulate)
-- [ ] **STRK-05**: Streak calculation uses user's local timezone (not UTC)
+- [x] **STRK-01**: User has 1 streak freeze per week (free, not Pro-only)
+- [x] **STRK-02**: Streak freeze is automatically applied when user misses a day
+- [x] **STRK-03**: User sees streak freeze count remaining in streak widget
+- [x] **STRK-04**: Streak freeze resets every Sunday (1/week, doesn't accumulate)
+- [x] **STRK-05**: Streak calculation uses user's local timezone (not UTC)
 
 ### Celebrations
 
