@@ -37,8 +37,8 @@ export default function GamificationToastHost() {
       setShowCelebration(true);
       // Haptic is handled by LeagueCelebration component
     } else {
-      // For other toasts (except relegation), use standard haptic
-      if (currentToast.kind !== 'league_relegation') {
+      // For other toasts (except relegation and title), use standard haptic
+      if (currentToast.kind !== 'league_relegation' && currentToast.kind !== 'title') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
       }
     }
@@ -92,6 +92,15 @@ export default function GamificationToastHost() {
         defaultValue: `You're now in ${currentToast.metadata?.newTier || 'Bronze'} league`
       });
       // Per CONTEXT.md: subtle toast without celebration for relegation
+      break;
+    case 'title':
+      iconName = 'star-outline';
+      title = t('gamification.toast.titleChange', { defaultValue: 'Title Unlocked!' });
+      body = t('gamification.titles.titleChangeToast', { title: currentToast.message });
+      // Include emoji in body if available
+      if (currentToast.emoji) {
+        body = `${currentToast.emoji} ${body}`;
+      }
       break;
     default:
       iconName = 'sparkles-outline';
