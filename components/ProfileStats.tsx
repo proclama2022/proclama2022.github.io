@@ -13,6 +13,7 @@ import Colors from '@/constants/Colors';
 import { formatJoinedDate } from '@/lib/utils/dateFormatter';
 import { LeagueBadge } from '@/components/Gamification/LeagueBadge';
 import type { LeagueTierKey } from '@/types/gamification';
+import { getLevelTitle } from '@/types/gamification';
 
 interface ProfileStatsProps {
   stats: {
@@ -22,6 +23,8 @@ interface ProfileStatsProps {
     joined_date?: string; // ISO timestamp
     /** User's current league tier */
     league_tier?: LeagueTierKey;
+    /** User's current level for title display */
+    level?: number;
   };
   onStatPress?: (statType: 'plants' | 'followers' | 'following') => void;
   style?: ViewStyle;
@@ -125,6 +128,22 @@ export const ProfileStats: React.FC<ProfileStatsProps> = ({
           </ThemedView>
         </View>
       )}
+      {/* Level title display */}
+      {stats.level && (
+        <View style={styles.statContainer}>
+          <ThemedView style={[styles.statItem, styles.levelTitleItem]}>
+            <ThemedText style={styles.levelTitleEmoji}>
+              {getLevelTitle(stats.level).emoji}
+            </ThemedText>
+            <ThemedText style={styles.statValue}>
+              {t(getLevelTitle(stats.level).i18nKey)}
+            </ThemedText>
+            <ThemedText style={styles.statLabel}>
+              {t('profile.level')}
+            </ThemedText>
+          </ThemedView>
+        </View>
+      )}
     </ThemedView>
   );
 };
@@ -148,6 +167,13 @@ const styles = StyleSheet.create({
   leagueItem: {
     flexDirection: 'column',
     gap: 4,
+  },
+  levelTitleItem: {
+    flexDirection: 'column',
+    gap: 4,
+  },
+  levelTitleEmoji: {
+    fontSize: 24,
   },
   statValue: {
     fontSize: 20,
