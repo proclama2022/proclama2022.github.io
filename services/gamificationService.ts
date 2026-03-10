@@ -26,6 +26,96 @@ function getUtcDateKey(date: Date = new Date()): string {
   return date.toISOString().slice(0, 10);
 }
 
+/**
+ * Format a date in the user's timezone as YYYY-MM-DD
+ */
+function formatDateInTimezone(date: Date, timezone: string): string {
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(date);
+  } catch {
+    // Fallback to UTC if timezone invalid
+    return date.toISOString().slice(0, 10);
+  }
+}
+
+/**
+ * Subtract days from a date string (YYYY-MM-DD format)
+ */
+function subtractDaysFromDateString(dateStr: string, days: number): string {
+  const date = new Date(dateStr + 'T00:00:00Z');
+  date.setUTCDate(date.getUTCDate() - days);
+  return date.toISOString().slice(0, 10);
+}
+
+/**
+ * Check if streak freeze should be applied and update database.
+ * Returns true if freeze was applied, false otherwise.
+ *
+ * Per CONTEXT.md:
+ * - Auto-apply when user misses a day
+ * - Uses user's local timezone
+ * - Max 1 freeze per week
+ */
+export async function checkAndApplyStreakFreeze(
+  userId: string,
+  userTimezone: string
+): Promise<{ applied: boolean; streakPreserved: boolean }> {
+  const supabase = getSupabaseClient();
+
+  // Get current progress
+  const { data: progress, error: fetchError } = await supabase
+    .from('user_progress')
+    .select('watering_streak, last_watering_date, streak_freeze_remaining')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (fetchError || !progress || progress.watering_streak === 0) {
+    return { applied: false, streakPreserved: true };
+  }
+
+  if (!progress.last_watering_date) {
+    return { applied: false, streakPreserved: true };
+  }
+
+  // Calculate dates in user's timezone
+  const today = formatDateInTimezone(new Date(), userTimezone || 'UTC');
+  const yesterday = subtractDaysFromDateString(today, 1);
+  const lastWateringDate = formatDateInTimezone(
+    new Date(progress.last_watering_date),
+    userTimezone || 'UTC'
+  );
+
+  // If last watering was yesterday or today, no freeze needed
+  if (lastWateringDate === today || lastWateringDate === yesterday) {
+    return { applied: false, streakPreserved: true };
+  }
+
+  // User missed a day - check if freeze available
+  if (progress.streak_freeze_remaining > 0) {
+    // Auto-apply freeze (STRK-02)
+    const { error: updateError } = await supabase
+      .from('user_progress')
+      .update({ streak_freeze_remaining: 0 })
+      .eq('user_id', userId);
+
+    if (updateError) {
+      console.warn('[streak-freeze] Failed to apply freeze:', updateError.message);
+      return { applied: false, streakPreserved: false };
+    }
+
+    console.log('[streak-freeze] Applied freeze for user', userId);
+    return { applied: true, streakPreserved: true };
+  }
+
+  // No freeze available - streak will break
+  return { applied: false, streakPreserved: false };
+}
+
 async function getCurrentUserId(): Promise<string | null> {
   const authUser = useAuthStore.getState().user;
   if (authUser?.id) {
@@ -318,6 +408,23 @@ export async function awardWateringEvent(
   eventDateIso: string,
   wateringTime?: Date
 ): Promise<GamificationAwardResult | null> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return null;
+  }
+
+  // Check streak freeze before awarding (STRK-02, STRK-05)
+  const supabase = getSupabaseClient();
+  const { data: progress } = await supabase
+    .from('user_progress')
+    .select('timezone')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (progress?.timezone) {
+    await checkAndApplyStreakFreeze(userId, progress.timezone);
+  }
+
   // Check for early bird badge (watering before 7am)
   let earlyWatering = false;
   if (wateringTime) {
