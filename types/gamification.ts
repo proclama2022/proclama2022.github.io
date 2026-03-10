@@ -132,3 +132,37 @@ export interface LeaderboardEntry {
   is_promotion_zone: boolean;
   is_relegation_zone: boolean;
 }
+
+// ============================================================================
+// Level Title System Types
+// ============================================================================
+
+export type LevelTitleKey = 'seedling' | 'sprout' | 'gardener' | 'expert' | 'master' | 'legend';
+
+export interface LevelTitleInfo {
+  key: LevelTitleKey;
+  emoji: string;
+  i18nKey: string;
+  minLevel: number;
+  maxLevel: number | null;
+}
+
+export const LEVEL_TITLE_RANGES: LevelTitleInfo[] = [
+  { key: 'seedling', emoji: '🌱', i18nKey: 'gamification.titles.seedling', minLevel: 1, maxLevel: 5 },
+  { key: 'sprout', emoji: '🌿', i18nKey: 'gamification.titles.sprout', minLevel: 6, maxLevel: 15 },
+  { key: 'gardener', emoji: '👨‍🌾', i18nKey: 'gamification.titles.gardener', minLevel: 16, maxLevel: 30 },
+  { key: 'expert', emoji: '🎓', i18nKey: 'gamification.titles.expert', minLevel: 31, maxLevel: 50 },
+  { key: 'master', emoji: '🏆', i18nKey: 'gamification.titles.master', minLevel: 51, maxLevel: 75 },
+  { key: 'legend', emoji: '👑', i18nKey: 'gamification.titles.legend', minLevel: 76, maxLevel: null },
+];
+
+export function getLevelTitle(level: number): LevelTitleInfo {
+  for (const title of LEVEL_TITLE_RANGES) {
+    if (title.maxLevel === null) {
+      if (level >= title.minLevel) return title;
+    } else {
+      if (level >= title.minLevel && level <= title.maxLevel) return title;
+    }
+  }
+  return LEVEL_TITLE_RANGES[0];
+}
