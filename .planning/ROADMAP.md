@@ -402,9 +402,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 21-01: Gamification Hub Screen
-- [ ] 21-02: Profile Header XP Integration
-- [ ] 21-03: Community Feed League Badge Display
+- [ ] 21-01-PLAN.md — CompactLevelProgress component + profile header integration (GMUI-02)
+- [ ] 21-02-PLAN.md — WeeklyStreakCalendar component (GMUI-05)
+- [ ] 21-03-PLAN.md — BadgeGrid vertical 4-col + empty state + hub access (GMUI-01, GMUI-03, GMUI-04)
 
 ## Progress
 
