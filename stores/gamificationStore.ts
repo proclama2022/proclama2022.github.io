@@ -2,6 +2,11 @@ import { create } from 'zustand';
 
 import type { GamificationAwardResult } from '@/types/gamification';
 
+/**
+ * Cooldown period between celebrations to prevent spam (CELE-06)
+ */
+const CELEBRATION_COOLDOWN_MS = 3000;
+
 export interface GamificationToastItem {
   id: string;
   kind: 'xp' | 'level' | 'badge' | 'league_promotion' | 'league_relegation' | 'title';
@@ -30,6 +35,9 @@ const BADGE_EMOJIS: Record<string, string> = {
 interface GamificationState {
   currentToast: GamificationToastItem | null;
   queue: GamificationToastItem[];
+  lastCelebrationAt: number | null;
+  canTriggerCelebration: () => boolean;
+  recordCelebration: () => void;
   enqueueAwardResult: (result: GamificationAwardResult) => void;
   enqueueLeaguePromotion: (newTier: string, oldTier?: string) => void;
   enqueueLeagueRelegation: (newTier: string, oldTier?: string) => void;
@@ -77,6 +85,17 @@ function createToastQueue(result: GamificationAwardResult): GamificationToastIte
 export const useGamificationStore = create<GamificationState>((set, get) => ({
   currentToast: null,
   queue: [],
+  lastCelebrationAt: null,
+  canTriggerCelebration: () => {
+    const { lastCelebrationAt } = get();
+    if (lastCelebrationAt === null) {
+      return true;
+    }
+    return Date.now() - lastCelebrationAt >= CELEBRATION_COOLDOWN_MS;
+  },
+  recordCelebration: () => {
+    set({ lastCelebrationAt: Date.now() });
+  },
   enqueueAwardResult: (result) => {
     const items = createToastQueue(result);
     if (items.length === 0) {
@@ -102,7 +121,7 @@ export const useGamificationStore = create<GamificationState>((set, get) => ({
     const [nextToast, ...rest] = queue;
     set({ currentToast: nextToast, queue: rest });
   },
-  reset: () => set({ currentToast: null, queue: [] }),
+  reset: () => set({ currentToast: null, queue: [], lastCelebrationAt: null }),
   enqueueLeaguePromotion: (newTier: string, oldTier?: string) => {
     const item: GamificationToastItem = {
       id: createId('league_promotion'),
