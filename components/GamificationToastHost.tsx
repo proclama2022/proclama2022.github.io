@@ -8,8 +8,7 @@ import { ThemedText } from '@/components/Themed';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 import { useGamificationStore } from '@/stores/gamificationStore';
-import { LeagueCelebration } from '@/components/Gamification/LeagueCelebration';
-import type { LeagueTierKey } from '@/types/gamification';
+import { CelebrationOverlay, CelebrationType } from '@/components/Gamification/CelebrationOverlay';
 
 function getBadgeLabel(t: (key: string, options?: any) => string, badgeKey: string): string {
   return t(`gamification.badges.${badgeKey}.title`, { defaultValue: badgeKey });
@@ -21,23 +20,38 @@ export default function GamificationToastHost() {
   const colors = Colors[colorScheme];
   const currentToast = useGamificationStore((state) => state.currentToast);
   const dismissToast = useGamificationStore((state) => state.dismissToast);
+  const canTriggerCelebration = useGamificationStore((state) => state.canTriggerCelebration);
+  const recordCelebration = useGamificationStore((state) => state.recordCelebration);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [celebrationTier, setCelebrationTier] = useState<LeagueTierKey>('bronze');
+  const [celebrationType, setCelebrationType] = useState<CelebrationType | null>(null);
 
   useEffect(() => {
     if (!currentToast) {
       setShowCelebration(false);
+      setCelebrationType(null);
       return;
     }
 
-    // For league_promotion, trigger confetti celebration
-    if (currentToast.kind === 'league_promotion') {
-      const tier = (currentToast.metadata?.newTier as LeagueTierKey) || 'bronze';
-      setCelebrationTier(tier);
-      setShowCelebration(true);
-      // Haptic is handled by LeagueCelebration component
+    // Define which events deserve confetti (CELE-01, CELE-02, CELE-03)
+    const celebrationWorthyKinds = ['badge', 'level', 'league_promotion'];
+    const shouldCelebrate = celebrationWorthyKinds.includes(currentToast.kind);
+
+    if (shouldCelebrate) {
+      // Check cooldown before triggering (CELE-06)
+      if (canTriggerCelebration()) {
+        const type: CelebrationType = currentToast.kind === 'league_promotion' ? 'league_promotion' : currentToast.kind as CelebrationType;
+        setCelebrationType(type);
+        setShowCelebration(true);
+        recordCelebration();
+        // Haptic is handled by CelebrationOverlay component (CELE-04)
+      } else {
+        // Cooldown active - skip confetti but still show toast
+        setShowCelebration(false);
+        // Use standard haptic for suppressed celebrations
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
+      }
     } else {
-      // For other toasts (except relegation and title), use standard haptic
+      // For non-celebration toasts (except relegation and title), use standard haptic
       if (currentToast.kind !== 'league_relegation' && currentToast.kind !== 'title') {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => undefined);
       }
@@ -45,13 +59,14 @@ export default function GamificationToastHost() {
 
     const timer = setTimeout(() => {
       dismissToast();
-    }, 3000); // Extended to 3s for league celebrations
+    }, 3000); // Extended to 3s for celebrations
 
     return () => clearTimeout(timer);
-  }, [currentToast, dismissToast]);
+  }, [currentToast, dismissToast, canTriggerCelebration, recordCelebration]);
 
   const handleCelebrationComplete = () => {
     setShowCelebration(false);
+    setCelebrationType(null);
   };
 
   if (!currentToast) {
@@ -110,12 +125,14 @@ export default function GamificationToastHost() {
 
   return (
     <>
-      {/* Confetti celebration for league promotion */}
-      <LeagueCelebration
-        visible={showCelebration}
-        tier={celebrationTier}
-        onComplete={handleCelebrationComplete}
-      />
+      {/* Confetti celebration for badge/level/league_promotion (CELE-01, CELE-02, CELE-03) */}
+      {showCelebration && celebrationType && (
+        <CelebrationOverlay
+          visible={showCelebration}
+          type={celebrationType === 'level' ? 'level' : celebrationType === 'badge' ? 'badge' : 'league_promotion'}
+          onComplete={handleCelebrationComplete}
+        />
+      )}
 
       <Modal visible transparent animationType="fade" onRequestClose={dismissToast}>
         <View style={styles.overlay} pointerEvents="box-none">
