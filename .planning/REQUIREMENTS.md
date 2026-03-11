@@ -47,12 +47,12 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 
 ### Celebrations
 
-- [ ] **CELE-01**: User sees confetti animation when earning a badge
-- [ ] **CELE-02**: User sees confetti animation when leveling up
-- [ ] **CELE-03**: User sees confetti animation when promoting to higher league
-- [ ] **CELE-04**: User feels haptic feedback (vibration) during celebrations
-- [ ] **CELE-05**: Celebration animations do not block UI (non-modal, auto-dismiss)
-- [ ] **CELE-06**: Celebration cooldown prevents spam (max 1 celebration per 3 seconds)
+- [x] **CELE-01**: User sees confetti animation when earning a badge
+- [x] **CELE-02**: User sees confetti animation when leveling up
+- [x] **CELE-03**: User sees confetti animation when promoting to higher league
+- [x] **CELE-04**: User feels haptic feedback (vibration) during celebrations
+- [x] **CELE-05**: Celebration animations do not block UI (non-modal, auto-dismiss)
+- [x] **CELE-06**: Celebration cooldown prevents spam (max 1 celebration per 3 seconds)
 
 ### Gamification UI
 
