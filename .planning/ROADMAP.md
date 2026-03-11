@@ -384,8 +384,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 20-01: Confetti Animation & Haptic Service
-- [ ] 20-02: Celebration Coordination & Cooldown
+- [ ] 20-01-PLAN.md — Create CelebrationOverlay component and cooldown logic
+- [ ] 20-02-PLAN.md — Wire GamificationToastHost and create Wave 0 tests
 
 #### Phase 21: Gamification UI
 **Goal**: Gamification hub, badge grid, and XP progress bar
