@@ -384,6 +384,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
+- [x] 20-00-PLAN.md — Create test scaffolds for TDD Wave 0
 - [ ] 20-01-PLAN.md — Create CelebrationOverlay component and cooldown logic
 - [ ] 20-02-PLAN.md — Wire GamificationToastHost and create Wave 0 tests
 
@@ -432,7 +433,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 17. League System | 5/5 | Complete    | 2026-03-09 |
 | 18. Extended Badges | 3/3 | Complete    | 2026-03-09 | - |
 | 19. Level & Streak Enhancement | 2/2 | Complete   | 2026-03-10 | - |
-| 20. Celebrations | v3.0 | 0/2 | Pending | - |
+| 20. Celebrations | v3.0 | 1/3 | In Progress | 2026-03-11 |
 | 21. Gamification UI | v3.0 | 0/3 | Pending | - |
 
 ---

@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: in_progress
-last_updated: "2026-03-10T09:41:08.248Z"
+last_updated: "2026-03-11T11:56:12Z"
 progress:
   total_phases: 21
   completed_phases: 19
@@ -23,12 +23,12 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 
 ## Current Position
 
-phase: 18 (extended-badges)
+phase: 20 (celebrations)
 plan: 01
 status: in_progress
-last_activity: 2026-03-09 — Completed 18-01: Extended Badge Definitions
+last_activity: 2026-03-11 — Completed 20-00: Celebration Test Scaffolds
 
-Progress: [████----] 46% (Phase 18, Plan 01/? complete)
+Progress: [████----] 47% (Phase 20, Plan 01/03 complete)
 
 ## Milestone Goals
 
@@ -91,6 +91,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 18 P03 | 360 | 4 tasks | 5 files |
 | Phase 19 P01 | 180 | 7 tasks | 8 files |
 | Phase 19 P02 | 900 | 5 tasks | 6 files |
+| Phase 20 P00 | 84 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -116,3 +117,4 @@ Recent decisions affecting current work:
 - [Phase 18-02]: Disease detection uses keyword matching in PlantNet common names
 - [Phase 18]: Updated gamification.tsx instead of GamificationStats.tsx for badge progress wiring (BadgeGrid is rendered in gamification.tsx)
 - [Phase 19-02]: Streak freeze: 1/week free, auto-apply on missed day, timezone-aware calculation, weekly pg_cron reset Sunday 00:00 UTC
+- [Phase 20-00]: TDD Wave 0 test scaffolds for CelebrationOverlay and gamificationStore cooldown logic
