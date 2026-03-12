@@ -684,7 +684,9 @@
         "title": "Social Butterfly",
         "description": "You gained 10 followers"
       },
-      "progress": "{{current}}/{{target}}"
+      "progress": "{{current}}/{{target}}",
+      "emptyTitle": "No badges yet!",
+      "emptySubtitle": "Complete your first challenge to unlock badges!"
     },
     "challenges": {
       "daily_watering_3": {

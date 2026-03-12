@@ -188,6 +188,7 @@ export default function GamificationScreen() {
         <BadgeGrid
           badges={summary.badges}
           badgeProgress={summary.badge_progress}
+          horizontal={false}
         />
       )}
 

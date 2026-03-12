@@ -716,7 +716,9 @@
         "title": "Farfalla Sociale",
         "description": "Hai raggiunto 10 follower"
       },
-      "progress": "{{current}}/{{target}}"
+      "progress": "{{current}}/{{target}}",
+      "emptyTitle": "Nessun badge ancora!",
+      "emptySubtitle": "Completa la tua prima sfida per sbloccare i badge!"
     },
     "challenges": {
       "daily_watering_3": {
