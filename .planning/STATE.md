@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
 status: in_progress
-last_updated: "2026-03-12T08:57:00Z"
+last_updated: "2026-03-12T09:02:00Z"
 progress:
   total_phases: 21
   completed_phases: 19
@@ -24,11 +24,11 @@ See: .planning/PROJECT.md (updated 2026-03-09)
 ## Current Position
 
 phase: 21 (gamification-ui)
-plan: 02
-status: in_progress
-last_activity: 2026-03-12 — Completed 21-02: Weekly Streak Calendar
+plan: 01
+status: completed
+last_activity: 2026-03-12 — Completed 21-01: Compact XP Progress Bar
 
-Progress: [████----] 47% (Phase 21, Plan 02/03 complete)
+Progress: [████----] 47% (Phase 21, Plan 01/03 complete)
 
 ## Milestone Goals
 
@@ -92,6 +92,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 19 P01 | 180 | 7 tasks | 8 files |
 | Phase 19 P02 | 900 | 5 tasks | 6 files |
 | Phase 20 P00 | 84 | 2 tasks | 2 files |
+| Phase 21 P01 | 5 | 2 tasks | 2 files |
 | Phase 21 P02 | 3 | 2 tasks | 3 files |
 
 ## Accumulated Context
@@ -119,4 +120,7 @@ Recent decisions affecting current work:
 - [Phase 18]: Updated gamification.tsx instead of GamificationStats.tsx for badge progress wiring (BadgeGrid is rendered in gamification.tsx)
 - [Phase 19-02]: Streak freeze: 1/week free, auto-apply on missed day, timezone-aware calculation, weekly pg_cron reset Sunday 00:00 UTC
 - [Phase 20-00]: TDD Wave 0 test scaffolds for CelebrationOverlay and gamificationStore cooldown logic
+- [Phase 21-01]: Compact XP bar placed between displayName and bio in profile header; 4px progress bar height for compact sizing; TouchableOpacity with activeOpacity 0.7 for button feel
+- [Session 2026-03-12]: Completed 21-01 (Compact XP Progress Bar) in 5 minutes; 2 tasks, 2 files, 2 commits
+- [Phase 21-01]: Compact XP bar placed between displayName and bio in profile header; 4px progress bar height for compact sizing; TouchableOpacity with activeOpacity 0.7 for button feel
 - [Phase 21-02]: Weekly streak calendar with 7-day visualization using Italian weekday labels (L-D), completed days as filled circles, current day double-border highlight, freeze days with snowflake emoji (❄️), and stats row showing streak count + freeze remaining

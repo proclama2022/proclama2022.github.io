@@ -402,7 +402,7 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 21-01-PLAN.md — CompactLevelProgress component + profile header integration (GMUI-02)
+- [x] 21-01-PLAN.md — CompactLevelProgress component + profile header integration (GMUI-02) ✅
 - [ ] 21-02-PLAN.md — WeeklyStreakCalendar component (GMUI-05)
 - [ ] 21-03-PLAN.md — BadgeGrid vertical 4-col + empty state + hub access (GMUI-01, GMUI-03, GMUI-04)
 
@@ -434,6 +434,7 @@ Phases execute in numeric order: 11 → 12 → 13-light-meter → 13 → 14
 | 18. Extended Badges | 3/3 | Complete    | 2026-03-09 | - |
 | 19. Level & Streak Enhancement | 2/2 | Complete   | 2026-03-10 | - |
 | 20. Celebrations | v3.0 | 1/3 | In Progress | 2026-03-11 |
+| 21. Gamification UI | v3.0 | 1/3 | In Progress | 2026-03-12 |
 | 21. Gamification UI | 1/3 | In Progress|  | - |
 
 ---
