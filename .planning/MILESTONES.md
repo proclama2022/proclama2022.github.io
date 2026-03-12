@@ -1,5 +1,14 @@
 # Milestones
 
+## v2.0 v2.0 (Shipped: 2026-03-12)
+
+**Phases completed:** 21 phases, 76 plans, 42 tasks
+
+**Key accomplishments:**
+- Full-screen auth modal with OAuth buttons and email form for sign-in/sign-up
+
+---
+
 ## v2.1 Smart Features (Shipped: 2026-03-09)
 
 **Phases completed:** 4 phases (13-16), 14 plans, 31 tasks

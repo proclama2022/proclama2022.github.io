@@ -62,7 +62,7 @@ Each task was committed atomically:
 
 1. **Task 1: Replace hardcoded green values with colors.tint in calendar.tsx** - `a457fdd` (feat)
 
-**Plan metadata:** _(to be added in final commit)_
+**Plan metadata:** `06c8657` (docs: complete Care Calendar color token plan)
 
 ## Files Created/Modified
 - `app/calendar.tsx` - 4 inline style color values updated from hardcoded green to colors.tint theme tokens
@@ -85,6 +85,15 @@ None - no external service configuration required.
 - Phase 09 color token substitution complete
 - Calendar visually consistent with rest of app (statistics bar chart, filter chips, FAB all use colors.tint)
 - No blockers for subsequent phases
+
+## Self-Check: PASSED
+
+- FOUND: app/calendar.tsx (modified, committed a457fdd)
+- FOUND: .planning/phases/09-care-calendar/09-01-SUMMARY.md
+- FOUND: commit a457fdd (feat: replace hardcoded green values)
+- FOUND: commit 06c8657 (docs: complete plan)
+- Grep confirms zero #2e7d32/#e8f5e9 in inline styles (only line 437 StyleSheet.create remains)
+- TypeScript: no errors in calendar.tsx
 
 ---
 *Phase: 09-care-calendar*
