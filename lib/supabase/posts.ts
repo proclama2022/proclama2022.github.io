@@ -182,14 +182,31 @@ export const getFollowingFeed = async (
 
     const { data: profilesData, error: profilesError } = await supabase
       .from('profiles')
-      .select('id, display_name, avatar_url')
+      .select(`
+        id,
+        display_name,
+        avatar_url,
+        user_progress(
+          league_tier
+        )
+      `)
       .in('id', userIds);
 
     if (profilesError) {
       throw profilesError;
     }
 
-    const profilesMap = new Map(profilesData?.map((p) => [p.id, p]));
+    const profilesMap = new Map(
+      profilesData?.map((p: any) => [
+        p.id,
+        {
+          id: p.id,
+          display_name: p.display_name,
+          avatar_url: p.avatar_url,
+          league_tier: p.user_progress?.[0]?.league_tier || null,
+        },
+      ])
+    );
 
     // Combine posts with profiles
     const posts = data.map((post: any) => ({
@@ -259,6 +276,9 @@ export const getRecentFeed = async (
           id,
           display_name,
           avatar_url
+        ),
+        user_progress!user_progress_user_id_fkey(
+          league_tier
         )
       `)
       .eq('is_public', true)
@@ -287,7 +307,10 @@ export const getRecentFeed = async (
       is_public: item.is_public,
       created_at: item.created_at,
       updated_at: item.updated_at,
-      profiles: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles,
+      profiles: {
+        ...(Array.isArray(item.profiles) ? item.profiles[0] : item.profiles),
+        league_tier: item.user_progress?.league_tier || null,
+      },
     })) as PostWithAuthor[];
 
     return enrichPostInteractions(posts, currentUserId);
@@ -343,6 +366,9 @@ export const getPopularFeed = async (
           id,
           display_name,
           avatar_url
+        ),
+        user_progress!user_progress_user_id_fkey(
+          league_tier
         )
       `)
       .eq('is_public', true)
@@ -377,7 +403,10 @@ export const getPopularFeed = async (
       is_public: item.is_public,
       created_at: item.created_at,
       updated_at: item.updated_at,
-      profiles: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles,
+      profiles: {
+        ...(Array.isArray(item.profiles) ? item.profiles[0] : item.profiles),
+        league_tier: item.user_progress?.league_tier || null,
+      },
     })) as PostWithAuthor[];
 
     return enrichPostInteractions(posts, currentUserId);
@@ -419,6 +448,9 @@ export const getPostById = async (
           id,
           display_name,
           avatar_url
+        ),
+        user_progress!user_progress_user_id_fkey(
+          league_tier
         )
       `)
       .eq('id', postId)
@@ -443,7 +475,10 @@ export const getPostById = async (
       is_public: data.is_public,
       created_at: data.created_at,
       updated_at: data.updated_at,
-      profiles: Array.isArray(data.profiles) ? data.profiles[0] : data.profiles,
+      profiles: {
+        ...(Array.isArray(data.profiles) ? data.profiles[0] : data.profiles),
+        league_tier: data.user_progress?.league_tier || null,
+      },
     } as PostWithAuthor;
 
     const enriched = await enrichPostInteractions([post], currentUserId);
@@ -490,6 +525,9 @@ export const getUserPosts = async (
           id,
           display_name,
           avatar_url
+        ),
+        user_progress!user_progress_user_id_fkey(
+          league_tier
         )
       `)
       .eq('user_id', userId)
@@ -518,7 +556,10 @@ export const getUserPosts = async (
       is_public: item.is_public,
       created_at: item.created_at,
       updated_at: item.updated_at,
-      profiles: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles,
+      profiles: {
+        ...(Array.isArray(item.profiles) ? item.profiles[0] : item.profiles),
+        league_tier: item.user_progress?.league_tier || null,
+      },
     })) as PostWithAuthor[];
 
     return enrichPostInteractions(posts, currentUserId);
