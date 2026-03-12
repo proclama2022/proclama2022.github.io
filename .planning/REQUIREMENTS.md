@@ -56,12 +56,12 @@ Requirements for Gamification 2.0 milestone. Each maps to roadmap phases.
 
 ### Gamification UI
 
-- [ ] **GMUI-01**: User can access gamification hub from profile screen
+- [x] **GMUI-01**: User can access gamification hub from profile screen
 - [ ] **GMUI-02**: User sees XP progress bar in profile header
-- [ ] **GMUI-03**: User sees current level, title, and XP in gamification hub
-- [ ] **GMUI-04**: User sees badge collection grid with locked/unlocked states
+- [x] **GMUI-03**: User sees current level, title, and XP in gamification hub
+- [x] **GMUI-04**: User sees badge collection grid with locked/unlocked states
 - [x] **GMUI-05**: User sees weekly streak calendar in gamification hub
-- [ ] **GMUI-06**: User sees league badge next to their name in community feed
+- [x] **GMUI-06**: User sees league badge next to their name in community feed
 
 ## Future Requirements
 

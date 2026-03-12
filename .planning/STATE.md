@@ -2,13 +2,13 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Community
-status: in_progress
-last_updated: "2026-03-12T09:02:00Z"
+status: completed
+last_updated: "2026-03-12T09:14:13.917Z"
 progress:
   total_phases: 21
-  completed_phases: 19
-  total_plans: 70
-  completed_plans: 73
+  completed_phases: 21
+  total_plans: 76
+  completed_plans: 79
   percent: 47
 ---
 
@@ -94,6 +94,7 @@ Aumentare retention e daily engagement attraverso:
 | Phase 20 P00 | 84 | 2 tasks | 2 files |
 | Phase 21 P01 | 5 | 2 tasks | 2 files |
 | Phase 21 P02 | 3 | 2 tasks | 3 files |
+| Phase 21 P03 | 427 | 4 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -124,3 +125,7 @@ Recent decisions affecting current work:
 - [Session 2026-03-12]: Completed 21-01 (Compact XP Progress Bar) in 5 minutes; 2 tasks, 2 files, 2 commits
 - [Phase 21-01]: Compact XP bar placed between displayName and bio in profile header; 4px progress bar height for compact sizing; TouchableOpacity with activeOpacity 0.7 for button feel
 - [Phase 21-02]: Weekly streak calendar with 7-day visualization using Italian weekday labels (L-D), completed days as filled circles, current day double-border highlight, freeze days with snowflake emoji (❄️), and stats row showing streak count + freeze remaining
+- [Phase 21]: Empty state only in vertical mode to avoid breaking existing horizontal BadgeGrid usages
+- [Phase 21]: i18n for all user-facing strings - changed hardcoded 'View Full Profile' to use i18n
+- [Phase 21]: League tier optional in PostWithAuthor type to handle users without gamification data
+- [Phase 21]: BadgeGrid uses flexWrap with gap for 4-column vertical layout
