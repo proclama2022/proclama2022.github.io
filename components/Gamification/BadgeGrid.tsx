@@ -60,12 +60,13 @@ interface BadgeGridProps {
   badges: UserBadge[];
   allBadgeKeys?: string[];
   badgeProgress?: BadgeProgress[];
+  horizontal?: boolean; // Layout: horizontal scroll (default) or vertical grid
 }
 
 /**
  * Badge grid showing unlocked and locked badges
  */
-export function BadgeGrid({ badges, allBadgeKeys = [], badgeProgress }: BadgeGridProps) {
+export function BadgeGrid({ badges, allBadgeKeys = [], badgeProgress, horizontal = true }: BadgeGridProps) {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
   const { t } = useTranslation();
@@ -85,7 +86,11 @@ export function BadgeGrid({ badges, allBadgeKeys = [], badgeProgress }: BadgeGri
   const allBadges = allBadgeKeys.length > 0 ? allBadgeKeys : [...ALL_BADGE_KEYS];
 
   const screenWidth = Dimensions.get('window').width;
-  const badgeSize = (screenWidth - 48 - 24) / 4; // 16px margin + 12px gap * 3 / 4 items
+  // Horizontal: 16px padding * 2 + 12px gap * 3 / 4 items
+  // Vertical: 16px padding * 2 + 12px gap * 3 / 4 items
+  const badgeSize = horizontal
+    ? (screenWidth - 48 - 24) / 4
+    : (screenWidth - 32 - 36) / 4;
 
   const renderBadge = (badgeKey: string, index: number) => {
     const isUnlocked = unlockedKeys.has(badgeKey);
@@ -148,13 +153,36 @@ export function BadgeGrid({ badges, allBadgeKeys = [], badgeProgress }: BadgeGri
         {t('profile.badges')}
       </Text>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {allBadges.map(renderBadge)}
-      </ScrollView>
+      {/* Empty state for vertical layout when no badges */}
+      {allBadges.length === 0 && !horizontal && (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyIcon}>🏆</Text>
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>
+            {t('gamification.badges.emptyTitle')}
+          </Text>
+          <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+            {t('gamification.badges.emptySubtitle')}
+          </Text>
+        </View>
+      )}
+
+      {/* Horizontal scroll layout */}
+      {horizontal && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          {allBadges.map(renderBadge)}
+        </ScrollView>
+      )}
+
+      {/* Vertical grid layout */}
+      {!horizontal && allBadges.length > 0 && (
+        <View style={styles.gridContainer}>
+          {allBadges.map(renderBadge)}
+        </View>
+      )}
 
       <Modal
         visible={selectedBadge !== null}
@@ -251,12 +279,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 12,
   },
+  gridContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    gap: 12,
+  },
   badgeItem: {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 12,
     padding: 8,
-    marginRight: 12,
   },
   badgeIcon: {
     width: 48,
@@ -278,6 +311,26 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '600',
     marginTop: 2,
+  },
+  emptyState: {
+    alignItems: 'center',
+    paddingVertical: 32,
+    paddingHorizontal: 24,
+  },
+  emptyIcon: {
+    fontSize: 48,
+    marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 20,
   },
   modalOverlay: {
     flex: 1,
