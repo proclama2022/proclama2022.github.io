@@ -585,6 +585,7 @@
     "noBadgesYet": "Keep caring for your plants to unlock your first badge.",
     "noChallengesToday": "No active challenges for today.",
     "noRecentActivity": "Your latest XP actions will show up here.",
+    "viewFullProfile": "View Full Profile",
     "errors": {
       "nameRequired": "Display name is required",
       "displayNameRequired": "Display name is required",

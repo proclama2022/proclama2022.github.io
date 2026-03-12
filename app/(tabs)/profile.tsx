@@ -329,7 +329,7 @@ export default function ProfileScreen() {
                   onPress={() => router.push('/gamification')}
                 >
                   <ThemedText style={styles.viewAllButtonText}>
-                    View Full Profile
+                    {t('profile.viewFullProfile')}
                   </ThemedText>
                   <Ionicons name="chevron-forward" size={16} color="#fff" />
                 </TouchableOpacity>
