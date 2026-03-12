@@ -29,6 +29,7 @@ import {
   GamificationStats,
   LevelProgressCard,
 } from '@/components/Gamification';
+import { WeeklyStreakCalendar } from '@/components/Gamification/WeeklyStreakCalendar';
 import { Leaderboard } from '@/components/Gamification/Leaderboard';
 import { ThemedView } from '@/components/Themed';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -187,6 +188,14 @@ export default function GamificationScreen() {
         <BadgeGrid
           badges={summary.badges}
           badgeProgress={summary.badge_progress}
+        />
+      )}
+
+      {/* Weekly Streak Calendar */}
+      {summary && (
+        <WeeklyStreakCalendar
+          streak={summary.progress.watering_streak}
+          freezeRemaining={summary.progress.streak_freeze_remaining}
         />
       )}
 

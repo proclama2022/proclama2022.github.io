@@ -149,6 +149,17 @@ export interface LevelTitleInfo {
   maxLevel: number | null;
 }
 
+// ============================================================================
+// Weekly Streak Calendar Types
+// ============================================================================
+
+export type DayStatusValue = 'completed' | 'current' | 'future' | 'freeze';
+
+export interface DayStatus {
+  day: string; // Localized day initial
+  status: DayStatusValue;
+}
+
 export const LEVEL_TITLE_RANGES: LevelTitleInfo[] = [
   { key: 'seedling', emoji: '🌱', i18nKey: 'gamification.titles.seedling', minLevel: 1, maxLevel: 5 },
   { key: 'sprout', emoji: '🌿', i18nKey: 'gamification.titles.sprout', minLevel: 6, maxLevel: 15 },
