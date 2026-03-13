@@ -6,21 +6,36 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
+**Shipped v3.0 Gamification 2.0** — League system, badges, celebrations, gamification UI.
 
-## Current Milestone: v3.0 Gamification 2.0
+## Current State: Ready for v4.0 Planning
 
-**Goal:** Espandere il sistema gamification esistente con achievements, challenges e leaderboard per aumentare retention e daily engagement
+**Next Steps:**
+- Define v4.0 milestone priorities
+- Community feedback integration
+- Performance optimization
 
-**Target features:**
-- Achievement badges (First Plant, Green Thumb, Community Star, 30-Day Streak)
-- Weekly challenges (Identify 5 plants, Water all plants, Post a photo)
-- Leaderboard settimanale (piante identificate, streak)
-- XP/Level system con titoli (Novice → Expert → Botanist)
+## Previous Milestone: v3.0 Gamification 2.0 (COMPLETED)
 
-**Why now:**
-- GamificationStore esiste già ma sottoutilizzato
-- Aumenta retention e daily active users
-- Differenzia vs competitor (PictureThis non ha gamification)
+**Shipped:** 2026-03-12
+
+**Delivered:**
+- League System — Duolingo-style leagues (Bronze → Diamond) with weekly promotion/relegation
+- Extended Badges — 8 achievement badges with progress tracking (First Plant, Plant Parent, Community Star, Early Bird, Plant Doctor, Social Butterfly)
+- Level & Streak Enhancement — Streak freeze (1/week), timezone support, level progress
+- Celebrations — Confetti animations, haptic feedback, celebration cooldown
+- Gamification UI — Hub with badge grid, XP display, weekly streak calendar
+
+**Known Gaps (deferred to v3.1+):**
+- BADG-02: Green Thumb badge (7-day watering streak)
+- BADG-06: Weekend Warrior badge
+- TITL-01..04: Level titles display (Seedling → Legend)
+- GMUI-02: XP progress bar in profile header
+
+**Tech additions:**
+- Supabase gamification tables (leagues, badges, celebrations)
+- react-native-haptic-feedback
+- react-native-confetti-cannon
 
 ## Previous Milestone: v2.1 Smart Features (COMPLETED)
 
@@ -115,6 +130,23 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Profile Statistics — Plants, followers, following, joined date — v2.0
 - ✓ Avatar System — Compression, circular crop, 200x200 display — v2.0
 
+**Smart Features (v2.1):**
+- ✓ Light Meter — Dual-path implementation (Android sensor + iOS camera) — v2.1
+- ✓ Weather Integration — Open-Meteo API with smart watering adjustments — v2.1
+- ✓ Calendar Sync — expo-calendar integration with device events — v2.1
+- ✓ Community Feed — Posts with photos, captions, infinite scroll — v2.1
+- ✓ Follow System — Follow/unfollow, follower counts, Following filter — v2.1
+- ✓ Likes & Engagement — Like toggle, like count, likes list modal — v2.1
+
+**Gamification 2.0 (v3.0):**
+- ✓ League System — Duolingo-style leagues (Bronze → Diamond) with promotion/relegation — v3.0
+- ✓ Extended Badges — 8 achievement badges with progress tracking — v3.0
+- ✓ Streak Freeze — 1 freeze per week, timezone-aware, auto-apply — v3.0
+- ✓ Celebrations — Confetti, haptics, cooldown system — v3.0
+- ✓ Gamification Hub — Badge grid, XP display, weekly calendar — v3.0
+- ⚠ Level Titles — Display in profile/leaderboard (deferred) — v3.1+
+- ⚠ XP Progress Bar — Profile header display (deferred) — v3.1+
+
 ### Active
 
 **Next Milestone (v3.0):**
@@ -156,18 +188,19 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - Supabase (Auth, Database, Storage)
 - expo-sensors, expo-camera, expo-calendar
 
-**Codebase Stato (v2.1):**
-- ~18,000 lines TypeScript/TSX
-- 16 phases executed across 6 milestones (v1.0–v2.1)
-- 12 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail, Community, Light Meter, Profile, Gamification, Weather)
+**Codebase Stato (v3.0):**
+- ~24,000 lines TypeScript/TSX
+- 21 phases executed across 7 milestones (v1.0–v3.0)
+- 16 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail, Community, Light Meter, Profile, Gamification, Weather, League, Badges, Celebration, Streak)
 - Bilingual (IT/EN) with i18next
 - Dark mode support via extended Colors.ts + useThemeColors hook
-- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService, weatherService, calendarService, lightMeterService, followService, likeService
+- Services: plantnet, cache, rateLimiter, watering, notification, purchase, careDB, reminderService, weatherService, calendarService, lightMeterService, followService, likeService, badgeService, leagueService, celebrationService
 - Stores: plantsStore, settingsStore, proStore, onboardingStore, profileStore, feedStore, gamificationStore, weatherStore
-- Components: SearchFilterBar, PlantGrid, PlantCard, Onboarding (animated), BarChart, LightMeterGauge, FollowButton, PostCard
+- Components: SearchFilterBar, PlantGrid, PlantCard, Onboarding (animated), BarChart, LightMeterGauge, FollowButton, PostCard, BadgeGrid, LeagueTable, StreakCalendar, CelebrationOverlay
 - Photo system: PhotoGallery, PhotoLightbox, AddPhotoButton with expo-image-manipulator
 - Reminder system: ReminderModal, ReminderFab, unified History timeline
 - Community: Feed with infinite scroll, likes, follows, profile viewing
+- Gamification: League system, 8 badges, celebrations, gamification hub
 
 **Database Cure Piante:**
 - 100 species with care info (extensible to 500)
@@ -201,7 +234,10 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 | React Native Modal for bottom sheet | No external library needed for ReminderModal, native-feeling slide animation | ✓ Working — matches ProUpgradeModal pattern |
 | CalendarTrigger for reminders | One-time notifications (not recurring), uses global Settings time | ✓ Working — extends Phase 2 notification infrastructure |
 | Unified History timeline | Watering events + reminders in one chronological list | ✓ Working — tap-to-complete, long-press edit/delete |
+| League System | Duolingo-style weekly competition with promotion/relegation | ✓ Working — Bronze → Diamond leagues |
+| Streak Freeze | 1 free freeze per week, auto-applied, timezone-aware | ✓ Working — Sunday reset |
+| Celebration System | Confetti + haptics for milestones with cooldown | ✓ Working — Non-blocking overlay |
 
 ---
 
-*Last updated: 2026-03-04 — Milestone v2.0 Community COMPLETED, v2.1 Smart Features started with Phase 13 (Light Meter)*
+*Last updated: 2026-03-13 — Milestone v3.0 Gamification 2.0 COMPLETED*
