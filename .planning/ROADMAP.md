@@ -26,7 +26,7 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 - Decimal phases (2.1, 2.2): Urgent insertions (marked with INSERTED)
 - v3.1 starts at Phase 22 (v3.0 ended at Phase 21)
 
-- [ ] **Phase 22: Level Titles + XP Bar** - Display user level with title and XP progress in profile/leaderboard
+- [x] **Phase 22: Level Titles + XP Bar** - Display user level with title and XP progress in profile/leaderboard
 - [ ] **Phase 23: Extended Badges** - Implement Green Thumb and Weekend Warrior badges with progress tracking
 
 ---
@@ -48,7 +48,7 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 4. User receives a toast notification when their title changes on level-up
 5. All 6 titles are correctly mapped to level ranges: Seedling (1-5), Sprout (6-10), Gardener (11-20), Expert (21-35), Master (36-50), Legend (51+)
 
-**Plans:** TBD
+**Plans:** 1 plan (verification only - all requirements pre-existing)
 
 ---
 
@@ -67,7 +67,11 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 4. Badge unlock triggers celebration animation and toast notification
 5. Badges appear in the gamification hub badge grid with earned/unearned state
 
-**Plans:** TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 23-01-PLAN.md — Verify/fix Green Thumb badge progress display (BADG-02)
+- [ ] 23-02-PLAN.md — Implement Weekend Warrior badge with full stack (BADG-06)
 
 ---
 
@@ -75,8 +79,8 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 22. Level Titles + XP Bar | v3.1 | 0/0 | Not started | - |
-| 23. Extended Badges | v3.1 | 0/0 | Not started | - |
+| 22. Level Titles + XP Bar | v3.1 | 1/1 | ✅ Complete | 2026-03-13 |
+| 23. Extended Badges | v3.1 | 0/2 | Planning | - |
 
 ---
 
@@ -97,3 +101,4 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 ---
 
 *Roadmap created: 2026-03-13*
+*Roadmap updated: 2026-03-13*
