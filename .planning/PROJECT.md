@@ -8,12 +8,17 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 **Shipped v3.0 Gamification 2.0** — League system, badges, celebrations, gamification UI.
 
-## Current State: Ready for v4.0 Planning
+## Current Milestone: v3.1 Gap Closure
 
-**Next Steps:**
-- Define v4.0 milestone priorities
-- Community feedback integration
-- Performance optimization
+**Goal:** Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0
+
+**Target features:**
+- Level Titles — Display user level with title (Seedling → Legend) in profile, leaderboard, level-up toast
+- XP Progress Bar — Visual XP progress in profile header
+- Green Thumb Badge — 7-day watering streak achievement
+- Weekend Warrior Badge — Complete all weekend care tasks achievement
+
+**Status:** Defining requirements
 
 ## Previous Milestone: v3.0 Gamification 2.0 (COMPLETED)
 
@@ -149,10 +154,14 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 
 ### Active
 
-**Next Milestone (v3.0):**
-- Define feature priorities and roadmap
-- Community feedback integration
-- Performance optimization opportunities
+**v3.1 Gap Closure:**
+- [ ] TITL-01: User level displayed with title (Seedling → Legend)
+- [ ] TITL-02: Title visible in profile header
+- [ ] TITL-03: Title visible in leaderboard entries
+- [ ] TITL-04: Title change toast on level-up
+- [ ] GMUI-02: XP progress bar in profile header
+- [ ] BADG-02: Green Thumb badge (7-day watering streak)
+- [ ] BADG-06: Weekend Warrior badge (complete all weekend care tasks)
 
 ### Validated
 

@@ -1,42 +1,42 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Community
-status: completed
-last_updated: "2026-03-13T09:41:00.132Z"
+milestone: v3.1
+milestone_name: Gap Closure
+status: planning
+last_updated: "2026-03-13T12:00:00.000Z"
 progress:
-  total_phases: 21
-  completed_phases: 21
-  total_plans: 76
-  completed_plans: 79
-  percent: 47
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-09)
+See: .planning/PROJECT.md (updated 2026-03-13)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** v3.0 Gamification 2.0 — League System COMPLETE
+**Current focus:** v3.1 Gap Closure — Level Titles, XP Bar, Remaining Badges
 
 ## Current Position
 
-phase: 21 (gamification-ui)
-plan: 01
-status: completed
-last_activity: 2026-03-12 — Completed 21-01: Compact XP Progress Bar
+phase: —
+plan: —
+status: Defining requirements
+last_activity: 2026-03-13 — Milestone v3.1 started
 
-Progress: [████----] 47% (Phase 21, Plan 01/03 complete)
+Progress: [░░░░░░░░░░] 0% (Requirements definition)
 
 ## Milestone Goals
 
-Aumentare retention e daily engagement attraverso:
-- Achievement badges multi-livello
-- Weekly challenges
-- Leaderboard settimanale
-- XP/Level system con titoli visible
+Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0:
+- Level Titles — Display in profile, leaderboard, level-up toast
+- XP Progress Bar — Visual progress in profile header
+- Green Thumb Badge — 7-day watering streak
+- Weekend Warrior Badge — Complete all weekend care tasks
 
 ## Performance Metrics
 
