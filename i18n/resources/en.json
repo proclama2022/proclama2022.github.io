@@ -685,6 +685,10 @@
         "title": "Social Butterfly",
         "description": "You gained 10 followers"
       },
+      "weekend_warrior": {
+        "title": "Weekend Warrior",
+        "description": "Complete all care tasks on both Saturday and Sunday"
+      },
       "progress": "{{current}}/{{target}}",
       "emptyTitle": "No badges yet!",
       "emptySubtitle": "Complete your first challenge to unlock badges!"

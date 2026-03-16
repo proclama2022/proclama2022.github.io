@@ -717,6 +717,10 @@
         "title": "Farfalla Sociale",
         "description": "Hai raggiunto 10 follower"
       },
+      "weekend_warrior": {
+        "title": "Weekend Warrior",
+        "description": "Completa tutte le attività di cura sia sabato che domenica"
+      },
       "progress": "{{current}}/{{target}}",
       "emptyTitle": "Nessun badge ancora!",
       "emptySubtitle": "Completa la tua prima sfida per sbloccare i badge!"
