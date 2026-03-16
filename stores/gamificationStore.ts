@@ -30,6 +30,7 @@ const BADGE_EMOJIS: Record<string, string> = {
   early_bird: '🌅',
   plant_doctor: '🩺',
   social_butterfly: '🦋',
+  weekend_warrior: '🏆',
 };
 
 interface GamificationState {
