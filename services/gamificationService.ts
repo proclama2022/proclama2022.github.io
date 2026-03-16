@@ -11,6 +11,7 @@ import type {
   UserBadge,
   UserProgress,
 } from '@/types/gamification';
+import { getLevelTitle } from '@/types/gamification';
 
 const DEFAULT_PROGRESS = {
   level: 1,
@@ -200,6 +201,21 @@ function maybeNotifyAward(result: GamificationAwardResult | null) {
   }
 
   useGamificationStore.getState().enqueueAwardResult(result);
+
+  // Check for title tier change on level-up (TITL-04)
+  if (result.leveled_up && result.level > 1) {
+    const previousLevel = result.level - 1;
+    const oldTitle = getLevelTitle(previousLevel);
+    const newTitle = getLevelTitle(result.level);
+
+    // Only notify if title tier changed (e.g., Seedling → Sprout)
+    if (oldTitle.key !== newTitle.key) {
+      useGamificationStore.getState().enqueueTitleChange(
+        newTitle.i18nKey,
+        newTitle.emoji
+      );
+    }
+  }
 }
 
 /**
@@ -288,6 +304,11 @@ export async function getUserGamificationSummary(): Promise<GamificationSummary 
     if (upsertError) {
       console.warn('[gamification] Failed to ensure user_progress row:', upsertError.message);
     }
+
+    // Check and award Weekend Warrior badge (runs in background, non-blocking)
+    checkAndAwardWeekendWarriorBadge().catch((err) => {
+      console.warn('[gamification] Weekend warrior check error:', err);
+    });
 
     const [
       progressResponse,
@@ -506,4 +527,78 @@ export async function awardFollowersGainedEvent(
       total_followers: totalFollowers,
     }
   );
+}
+
+/**
+ * Checks and awards Weekend Warrior badge for previous weekend.
+ * Should be called on app open to check weekend completion.
+ *
+ * Weekend Warrior criteria:
+ * - User must complete at least one care task (watering or reminder) on Saturday
+ * - User must complete at least one care task (watering or reminder) on Sunday
+ * - Both days must be in the same calendar week (ISO week)
+ */
+export async function checkAndAwardWeekendWarriorBadge(): Promise<boolean> {
+  const userId = await getCurrentUserId();
+  if (!userId) return false;
+
+  try {
+    const supabase = getSupabaseClient();
+
+    // Check if user already has the badge
+    const { data: existingBadge } = await supabase
+      .from('user_badges')
+      .select('badge_key')
+      .eq('user_id', userId)
+      .eq('badge_key', 'weekend_warrior')
+      .maybeSingle();
+
+    // If already has badge, no need to check again
+    if (existingBadge) {
+      return false;
+    }
+
+    // Call the database function to check eligibility
+    const { data, error } = await supabase.rpc('check_weekend_warrior_eligibility', {
+      p_user_id: userId,
+    });
+
+    if (error) {
+      console.warn('[gamification] Weekend warrior check failed:', error.message);
+      return false;
+    }
+
+    if (data === true) {
+      // Award the badge directly
+      const { error: insertError } = await supabase
+        .from('user_badges')
+        .insert({ user_id: userId, badge_key: 'weekend_warrior' });
+
+      if (insertError && insertError.code !== '23505') { // Ignore duplicate key error
+        console.warn('[gamification] Failed to award weekend warrior:', insertError.message);
+        return false;
+      }
+
+      // Notify the user via toast
+      useGamificationStore.getState().enqueueAwardResult({
+        awarded: true,
+        xp_awarded: 0,
+        total_xp: 0,
+        level: 1,
+        xp_in_level: 0,
+        xp_for_next_level: 100,
+        watering_streak: 0,
+        streak_freeze_remaining: 1,
+        leveled_up: false,
+        new_badges: ['weekend_warrior'],
+      });
+
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.warn('[gamification] Weekend warrior exception:', error);
+    return false;
+  }
 }
