@@ -80,7 +80,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 22. Level Titles + XP Bar | v3.1 | 1/1 | ✅ Complete | 2026-03-13 |
-| 23. Extended Badges | 2/2 | Complete   | 2026-03-16 | - |
+| 23. Extended Badges | 2/2 | Complete    | 2026-03-16 | - |
 
 ---
 
