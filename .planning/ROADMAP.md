@@ -67,7 +67,7 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0: Level Titles, XP Progre
 4. Badge unlock triggers celebration animation and toast notification
 5. Badges appear in the gamification hub badge grid with earned/unearned state
 
-**Plans:** 2 plans
+**Plans:** 1/2 plans executed
 
 Plans:
 - [ ] 23-01-PLAN.md — Verify/fix Green Thumb badge progress display (BADG-02)
@@ -80,7 +80,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 22. Level Titles + XP Bar | v3.1 | 1/1 | ✅ Complete | 2026-03-13 |
-| 23. Extended Badges | v3.1 | 0/2 | Planning | - |
+| 23. Extended Badges | 1/2 | In Progress|  | - |
 
 ---
 
