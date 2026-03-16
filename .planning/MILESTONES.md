@@ -1,5 +1,14 @@
 # Milestones
 
+## v3.1 Gap Closure (Shipped: 2026-03-16)
+
+**Phases completed:** 2 phases, 3 plans, 0 tasks
+
+**Key accomplishments:**
+- (none recorded)
+
+---
+
 ## v3.0 Gamification 2.0 (Shipped: 2026-03-13)
 
 **Phases completed:** 21 phases, 76 plans, 42 tasks

@@ -7,40 +7,31 @@ Una app mobile cross-platform (iOS + Android) che identifica piante fotografate 
 **Shipped v1.2 Multi-Photo + Custom Reminders** — Photo gallery with lightbox, reminder system with notifications.
 **Shipped v1.3 Enhanced UX** — Search & filter, statistics dashboard, care calendar, dark mode, UI polish.
 **Shipped v3.0 Gamification 2.0** — League system, badges, celebrations, gamification UI.
+**Shipped v3.1 Gap Closure** — Level titles validated, Green Thumb + Weekend Warrior badges.
 
-## Current Milestone: v3.1 Gap Closure
+<details>
+<summary>✅ v3.0 Gamification 2.0 (COMPLETED 2026-03-12)</summary>
 
-**Goal:** Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0
-
-**Target features:**
-- Level Titles — Display user level with title (Seedling → Legend) in profile, leaderboard, level-up toast
-- XP Progress Bar — Visual XP progress in profile header
-- Green Thumb Badge — 7-day watering streak achievement
-- Weekend Warrior Badge — Complete all weekend care tasks achievement
-
-**Status:** Defining requirements
-
-## Previous Milestone: v3.0 Gamification 2.0 (COMPLETED)
-
-**Shipped:** 2026-03-12
-
-**Delivered:**
 - League System — Duolingo-style leagues (Bronze → Diamond) with weekly promotion/relegation
-- Extended Badges — 8 achievement badges with progress tracking (First Plant, Plant Parent, Community Star, Early Bird, Plant Doctor, Social Butterfly)
-- Level & Streak Enhancement — Streak freeze (1/week), timezone support, level progress
+- Extended Badges — 8 achievement badges with progress tracking
+- Level & Streak Enhancement — Streak freeze, timezone support, level progress
 - Celebrations — Confetti animations, haptic feedback, celebration cooldown
 - Gamification UI — Hub with badge grid, XP display, weekly streak calendar
 
-**Known Gaps (deferred to v3.1+):**
-- BADG-02: Green Thumb badge (7-day watering streak)
-- BADG-06: Weekend Warrior badge
-- TITL-01..04: Level titles display (Seedling → Legend)
-- GMUI-02: XP progress bar in profile header
+**Tech:** Supabase gamification tables, react-native-haptic-feedback, react-native-confetti-cannon
 
-**Tech additions:**
-- Supabase gamification tables (leagues, badges, celebrations)
-- react-native-haptic-feedback
-- react-native-confetti-cannon
+</details>
+
+<details>
+<summary>✅ v3.1 Gap Closure (COMPLETED 2026-03-16)</summary>
+
+- Level Titles + XP Bar (Phase 22) — All requirements pre-existing and validated
+- Green Thumb Badge (Phase 23-01) — Fix display progresso X/7 giorni con alias frontend + database
+- Weekend Warrior Badge (Phase 23-02) — Badge weekend con migration, UI, i18n, assegnazione automatica
+
+**Tech:** Migration 010 (green_thumb alias), Migration 011 (weekend_warrior badge), BadgeGrid aliases
+
+</details>
 
 ## Previous Milestone: v2.1 Smart Features (COMPLETED)
 
@@ -149,19 +140,13 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - ✓ Streak Freeze — 1 freeze per week, timezone-aware, auto-apply — v3.0
 - ✓ Celebrations — Confetti, haptics, cooldown system — v3.0
 - ✓ Gamification Hub — Badge grid, XP display, weekly calendar — v3.0
-- ⚠ Level Titles — Display in profile/leaderboard (deferred) — v3.1+
-- ⚠ XP Progress Bar — Profile header display (deferred) — v3.1+
+- ✓ Level Titles — Display in profile/leaderboard — v3.1
+- ✓ XP Progress Bar — Profile header display — v3.1
 
 ### Active
 
-**v3.1 Gap Closure:**
-- [ ] TITL-01: User level displayed with title (Seedling → Legend)
-- [ ] TITL-02: Title visible in profile header
-- [ ] TITL-03: Title visible in leaderboard entries
-- [ ] TITL-04: Title change toast on level-up
-- [ ] GMUI-02: XP progress bar in profile header
-- [ ] BADG-02: Green Thumb badge (7-day watering streak)
-- [ ] BADG-06: Weekend Warrior badge (complete all weekend care tasks)
+_(Nessun requisito attivo — pronto per prossimo milestone)_
+- [ ] TBD: Nuovi requisiti definiti con /gsd:new-milestone
 
 ### Validated
 
@@ -197,9 +182,9 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - Supabase (Auth, Database, Storage)
 - expo-sensors, expo-camera, expo-calendar
 
-**Codebase Stato (v3.0):**
+**Codebase Stato (v3.1):**
 - ~24,000 lines TypeScript/TSX
-- 21 phases executed across 7 milestones (v1.0–v3.0)
+- 23 phases executed across 8 milestones (v1.0–v3.1)
 - 16 main screens (Home, Camera, Settings, Statistics, Calendar, Results, Plant Detail, Community, Light Meter, Profile, Gamification, Weather, League, Badges, Celebration, Streak)
 - Bilingual (IT/EN) with i18next
 - Dark mode support via extended Colors.ts + useThemeColors hook
@@ -209,7 +194,7 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 - Photo system: PhotoGallery, PhotoLightbox, AddPhotoButton with expo-image-manipulator
 - Reminder system: ReminderModal, ReminderFab, unified History timeline
 - Community: Feed with infinite scroll, likes, follows, profile viewing
-- Gamification: League system, 8 badges, celebrations, gamification hub
+- Gamification: League system, 10 badges (8 original + Green Thumb + Weekend Warrior), celebrations, gamification hub
 
 **Database Cure Piante:**
 - 100 species with care info (extensible to 500)
@@ -249,4 +234,4 @@ Rendere accessibile e gratuita l'identificazione precisa di piante con cura pers
 
 ---
 
-*Last updated: 2026-03-13 — Milestone v3.0 Gamification 2.0 COMPLETED*
+*Last updated: 2026-03-16 after v3.1 Gap Closure milestone*
