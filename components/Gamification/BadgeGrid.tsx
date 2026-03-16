@@ -40,6 +40,14 @@ const ALL_BADGE_KEYS = [
 ] as const;
 
 /**
+ * Badge key mapping for RPC compatibility
+ * Maps display badge keys to database badge keys returned by get_badge_progress()
+ */
+const BADGE_KEY_ALIASES: Record<string, string> = {
+  'green_thumb': 'watering_streak_7',
+};
+
+/**
  * Badge emoji mapping for display
  */
 const BADGE_EMOJIS: Record<string, string> = {
@@ -95,7 +103,9 @@ export function BadgeGrid({ badges, allBadgeKeys = [], badgeProgress, horizontal
   const renderBadge = (badgeKey: string, index: number) => {
     const isUnlocked = unlockedKeys.has(badgeKey);
     const badge = badges.find((b) => b.badge_key === badgeKey);
-    const progress = progressByKey.get(badgeKey);
+    // Look up progress using both the original key and the mapped key
+    const dbBadgeKey = BADGE_KEY_ALIASES[badgeKey] || badgeKey;
+    const progress = progressByKey.get(badgeKey) || progressByKey.get(dbBadgeKey);
     const badgeEmoji = BADGE_EMOJIS[badgeKey] || '🏆';
 
     return (
