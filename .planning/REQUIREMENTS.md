@@ -21,7 +21,7 @@ Requirements to close all gaps from v3.0 Gamification 2.0. Each maps to roadmap 
 ### Extended Badges
 
 - [x] **BADG-02**: User earns "Green Thumb" badge when reaching 7-day watering streak
-- [ ] **BADG-06**: User earns "Weekend Warrior" badge when completing all weekend care tasks (Saturday + Sunday)
+- [x] **BADG-06**: User earns "Weekend Warrior" badge when completing all weekend care tasks (Saturday + Sunday)
 
 ## Future Requirements
 
@@ -55,7 +55,7 @@ Deferred to v3.2+ or later.
 | TITL-04 | Phase 22 | Pending |
 | GMUI-02 | Phase 22 | Pending |
 | BADG-02 | Phase 23 | Complete |
-| BADG-06 | Phase 23 | Pending |
+| BADG-06 | Phase 23 | Complete |
 
 **Coverage:**
 - v3.1 requirements: 7 total
