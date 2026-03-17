@@ -1,83 +1,64 @@
 ---
 gsd_state_version: 1.0
 milestone: v3.1
-milestone_name: milestone
-status: planning
-last_updated: "2026-03-16T15:13:17.391Z"
+milestone_name: Gap Closure
+status: milestone_complete
+last_updated: "2026-03-17T09:30:00.000Z"
 progress:
   total_phases: 2
-  completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
-  percent: 0
+  completed_phases: 2
+  total_plans: 3
+  completed_plans: 3
+  percent: 100
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-03-13)
+See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** Free, subscription-free plant identification with species-specific care guidance
-**Current focus:** v3.1 Gap Closure — Level Titles, XP Bar, Extended Badges
+**Current focus:** Planning next milestone
 
 ## Current Position
 
-phase: 22
+phase: —
 plan: —
-status: Roadmap created, ready for planning
-last_activity: 2026-03-13 — Roadmap created for v3.1
+status: Milestone v3.1 complete, ready for next milestone
+last_activity: 2026-03-17 — v3.1 archived
 
-Progress: [░░░░░░░░░░] 0% (0/2 phases complete)
-
-## Milestone Goals
-
-Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0:
-- Level Titles — Display in profile header, leaderboard, level-up toast (TITL-01..04)
-- XP Progress Bar — Visual progress in profile header (GMUI-02)
-- Green Thumb Badge — 7-day watering streak achievement (BADG-02)
-- Weekend Warrior Badge — Complete all weekend care tasks (BADG-06)
+Progress: [████████████████████] 100% (v3.1 complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed (v1.0-v3.0): 76+
+- Total plans completed (v1.0-v3.1): 79+
 - Average duration: ~15 min
-- Total execution time: ~20 hours
+- Total execution time: ~21 hours
 
-**By Phase (v3.0):**
+**By Phase (v3.1):**
 
 | Phase | Plans | Duration | Tasks |
 |-------|-------|----------|-------|
-| 17. League System | 5 | ~25 min | 5 |
-| 18. Extended Badges | 3 | ~20 min | 5 |
-| 19. Level & Streak | 2 | ~18 min | 12 |
-| 20. Celebrations | 1 | ~2 min | 2 |
-| 21. Gamification UI | 3 | ~15 min | 8 |
+| 22. Level Titles + XP Bar | 1 | ~5 min | 0 |
+| 23. Extended Badges | 2 | ~10 min | 5 |
 
 **Recent Trend:**
 - Last 5 plans: Fast execution (avg 5-15 min)
 - Trend: Accelerating
-| Phase 23-extended-badges P01 | 1773673401 | 2 tasks | 2 files |
-| Phase 23 P02 | 2min | 5 tasks | 6 files |
 
 ## Accumulated Context
 
 ### Decisions
 
-- Phase 22 groups all level title + XP bar work (5 requirements) — related UI work in profile header
-- Phase 23 groups badge logic work (2 requirements) — Green Thumb + Weekend Warrior badges
-- Title mapping: Seedling (1-5), Sprout (6-10), Gardener (11-20), Expert (21-35), Master (36-50), Legend (51+)
-- Green Thumb: Requires 7 consecutive days of watering (streak-based)
-- Weekend Warrior: Requires completing ALL care tasks on BOTH Saturday AND Sunday in same week
+- Weekend Warrior checks eligibility automatically on app open (non-blocking)
+- Weekend completion requires at least one care event on both Saturday and Sunday
+- Green Thumb: Dual-layer alias mapping (frontend + DB) for badge key compatibility
 
 ### Active TODOs
 
-- [ ] Create plan for Phase 22: Level Titles + XP Bar
-- [ ] Execute Phase 22
-- [ ] Create plan for Phase 23: Extended Badges
-- [ ] Execute Phase 23
-- [ ] Mark v3.1 complete
+_(None — all v3.1 tasks completed)_
 
 ### Blockers
 
@@ -87,8 +68,8 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0:
 
 ## Session Continuity
 
-**Last Session:** 2026-03-16T15:07:18.354Z
-**Next Action:** Run `/gsd:plan-phase 22` to create first plan
+**Last Session:** 2026-03-17T09:30:00.000Z
+**Next Action:** Run `/gsd:new-milestone` to start next milestone
 
 ---
 
@@ -96,6 +77,7 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0:
 
 | Milestone | Status | Phases | Shipped |
 |-----------|--------|--------|---------|
+| v3.1 Gap Closure | COMPLETED | 22-23 | 2026-03-16 |
 | v3.0 Gamification 2.0 | COMPLETED | 17-21 | 2026-03-12 |
 | v2.1 Smart Features | COMPLETED | 13-16 | 2026-03-09 |
 | v2.0 Community | COMPLETED | 11-12 | 2026-03-04 |
@@ -106,4 +88,4 @@ Chiudere tutti i gap rimanenti da v3.0 Gamification 2.0:
 
 ---
 
-*STATE.md initialized: 2026-03-13*
+*STATE.md updated: 2026-03-17 after v3.1 milestone completion*

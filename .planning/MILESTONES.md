@@ -2,10 +2,13 @@
 
 ## v3.1 Gap Closure (Shipped: 2026-03-16)
 
-**Phases completed:** 2 phases, 3 plans, 0 tasks
+**Phases completed:** 2 phases (22-23), 3 plans, 5 tasks
+**Git range:** a960ba8 → 18000c5
 
 **Key accomplishments:**
-- (none recorded)
+- **Green Thumb Badge Progress** — Dual-layer alias mapping (frontend + migration 010) to fix badge key mismatch between `watering_streak_7` (DB) and `green_thumb` (frontend)
+- **Weekend Warrior Badge** — Full-stack: migration 011, eligibility checking RPC, BadgeGrid display, i18n EN/IT, automatic awarding on app open
+- **Badge System Patterns** — Established reusable RPC patterns: `check_*_eligibility()`, non-blocking background checks, ISO week calculation
 
 ---
 
