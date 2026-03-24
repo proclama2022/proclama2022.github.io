@@ -5,9 +5,7 @@ import { awardPlantIdentifiedEvent } from './gamificationService';
 
 // Cloudflare Workers proxy URL for production (hides API key from client bundle)
 // Development still uses direct API with EXPO_PUBLIC_PLANTNET_API_KEY
-const PROXY_URL = __DEV__
-  ? process.env.EXPO_PUBLIC_PLANTNET_API_URL || 'https://my-api.plantnet.org/v2/identify/all'
-  : 'https://plantid-api-proxy.YOUR_SUBDOMAIN.workers.dev';
+const PROXY_URL = process.env.EXPO_PUBLIC_PLANTNET_API_URL || 'https://my-api.plantnet.org/v2/identify/all';
 
 /*
  * CLOUDFLARE WORKERS SETUP REQUIRED FOR PRODUCTION:
@@ -97,24 +95,12 @@ export interface IdentifyPlantResult {
 export async function identifyPlant(params: IdentifyPlantParams): Promise<IdentifyPlantResult> {
   const { imageUri, organ = 'auto', lang = 'en' } = params;
 
-  if (!__DEV__ && PROXY_URL.includes('YOUR_SUBDOMAIN')) {
+  const apiKey = Constants.expoConfig?.extra?.plantnetApiKey || process.env.EXPO_PUBLIC_PLANTNET_API_KEY;
+  if (!apiKey || apiKey === 'your_api_key_here') {
     return {
       success: false,
-      error: 'Plant identification service is not configured for production.',
+      error: 'API key not configured. Please set EXPO_PUBLIC_PLANTNET_API_KEY in .env',
     };
-  }
-
-  // In development, check for API key
-  // In production, proxy handles the API key
-  if (__DEV__) {
-    const apiKey = Constants.expoConfig?.extra?.plantnetApiKey || process.env.EXPO_PUBLIC_PLANTNET_API_KEY;
-
-    if (!apiKey || apiKey === 'your_api_key_here') {
-      return {
-        success: false,
-        error: 'API key not configured. Please set EXPO_PUBLIC_PLANTNET_API_KEY in .env',
-      };
-    }
   }
 
   try {
@@ -142,11 +128,7 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
     url.searchParams.append('lang', lang);
     // includeRelatedImages not available on free tier
 
-    // In development, add API key directly (production proxy handles this server-side)
-    if (__DEV__) {
-      const apiKey = Constants.expoConfig?.extra?.plantnetApiKey || process.env.EXPO_PUBLIC_PLANTNET_API_KEY;
-      if (apiKey) url.searchParams.append('api-key', apiKey);
-    }
+    if (apiKey) url.searchParams.append('api-key', apiKey);
 
     const response = await fetch(url.toString(), {
       method: 'POST',
