@@ -5,7 +5,9 @@ import { awardPlantIdentifiedEvent } from './gamificationService';
 
 // Cloudflare Workers proxy URL for production (hides API key from client bundle)
 // Development still uses direct API with EXPO_PUBLIC_PLANTNET_API_KEY
-const PROXY_URL = process.env.EXPO_PUBLIC_PLANTNET_API_URL || 'https://my-api.plantnet.org/v2/identify/all';
+const PROXY_URL = __DEV__
+  ? 'https://my-api.plantnet.org/v2/identify/all'
+  : (process.env.EXPO_PUBLIC_PLANTNET_API_URL || '/api/identify');
 
 /*
  * CLOUDFLARE WORKERS SETUP REQUIRED FOR PRODUCTION:
@@ -96,7 +98,7 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
   const { imageUri, organ = 'auto', lang = 'en' } = params;
 
   const apiKey = Constants.expoConfig?.extra?.plantnetApiKey || process.env.EXPO_PUBLIC_PLANTNET_API_KEY;
-  if (!apiKey || apiKey === 'your_api_key_here') {
+  if (__DEV__ && (!apiKey || apiKey === 'your_api_key_here')) {
     return {
       success: false,
       error: 'API key not configured. Please set EXPO_PUBLIC_PLANTNET_API_KEY in .env',
@@ -128,7 +130,7 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
     url.searchParams.append('lang', lang);
     // includeRelatedImages not available on free tier
 
-    if (apiKey) url.searchParams.append('api-key', apiKey);
+    if (__DEV__ && apiKey) url.searchParams.append('api-key', apiKey);
 
     const response = await fetch(url.toString(), {
       method: 'POST',
