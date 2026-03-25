@@ -17,6 +17,7 @@ import {
 
 import AtmosphericBackdrop from '@/components/AtmosphericBackdrop';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
+import { EmptyState } from '@/components/EmptyState';
 import { LeagueMiniWidget } from '@/components/Gamification/LeagueMiniWidget';
 import Onboarding from '@/components/Onboarding';
 import PlantCard from '@/components/PlantCard';
@@ -584,7 +585,7 @@ export default function HomeScreen() {
   if (plants.length === 0) {
     return (
       <>
-        <View style={styles.screenShell}>
+        <View style={[styles.screenShell, { backgroundColor: colors.background }]}>
           <AtmosphericBackdrop variant="home" />
           <SafeAreaView style={styles.safeArea}>
             <ScrollView
@@ -1152,24 +1153,12 @@ export default function HomeScreen() {
       )}
       ListEmptyComponent={
         storeHydrated && hasActiveFilters ? (
-          <View style={styles.noResultsContainer}>
-            <View style={[styles.emptyIconContainer, { backgroundColor: colors.surfaceGlass, borderColor: colors.border, width: 80, height: 80 }]}>
-              <Ionicons name="leaf-outline" size={32} color={colors.textMuted} />
-            </View>
-            <Text style={[styles.noResultsText, { color: colors.textSecondary }]}>
-              {emptyStateMessage}
-            </Text>
-            <TouchableOpacity
-              style={[styles.clearAllButton, { backgroundColor: colors.tint }]}
-              onPress={handleClearFilters}
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityLabel={t('search.clearAll')}
-            >
-              <Ionicons name="close-circle-outline" size={16} color="#fff" />
-              <Text style={styles.clearAllButtonText}>{t('search.clearAll')}</Text>
-            </TouchableOpacity>
-          </View>
+          <EmptyState
+            variant="noResults"
+            title={emptyStateMessage}
+            actionLabel={t('search.clearAll')}
+            onAction={handleClearFilters}
+          />
         ) : null
       }
     />
@@ -1266,7 +1255,7 @@ export default function HomeScreen() {
           </SafeAreaView>
         </Modal>
       )}
-      <View style={styles.screenShell}>
+      <View style={[styles.screenShell, { backgroundColor: colors.background }]}>
         <AtmosphericBackdrop variant="home" />
         <SafeAreaView style={styles.safeArea}>
           {homeMode === 'today' ? renderTodayScreen() : renderCollectionScreen()}
