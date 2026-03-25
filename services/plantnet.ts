@@ -126,7 +126,8 @@ export async function identifyPlant(params: IdentifyPlantParams): Promise<Identi
     }
 
     // Build URL with query params
-    const url = new URL(PROXY_URL);
+    const base = typeof window !== 'undefined' ? window.location.origin : '';
+    const url = new URL(PROXY_URL, base || undefined);
     url.searchParams.append('lang', lang);
     // includeRelatedImages not available on free tier
 
