@@ -1,107 +1,62 @@
-/**
- * Profile Tab Screen
- *
- * Displays user's profile with avatar, display name, bio, and stats.
- * Provides edit functionality for own profile.
- * Refreshes stats when tab gains focus.
- *
- * Usage: Accessed via bottom navigation (4th tab)
- *
- * @module app/(tabs)/profile
- */
-import React, { useState, useEffect, useCallback } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
-  View,
+  ActivityIndicator,
+  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
+  View,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
 
-import AtmosphericBackdrop from '@/components/AtmosphericBackdrop';
-import { ThemedView , ThemedText } from '@/components/Themed';
 import { Avatar } from '@/components/Avatar';
-import { ProfileStats } from '@/components/ProfileStats';
-import { LikedPostsTab } from '@/components/community/LikedPostsTab';
+import { Button } from '@/components/Button';
 import { CompactLevelProgress } from '@/components/Gamification/CompactLevelProgress';
+import { ProfileEditModal } from '@/components/ProfileEditModal';
+import { Text } from '@/components/Themed';
+import { useThemeColors } from '@/hooks/useThemeColors';
+import { getUserGamificationSummary } from '@/services/gamificationService';
 import { useAuthStore } from '@/stores/authStore';
 import { useProfileStore } from '@/stores/profileStore';
-import { ProfileEditModal } from '@/components/ProfileEditModal';
-import { useColorScheme } from '@/components/useColorScheme';
-import Colors from '@/constants/Colors';
-import { getUserGamificationSummary } from '@/services/gamificationService';
+import { usePlantsStore } from '@/stores/plantsStore';
 import type { GamificationSummary } from '@/types/gamification';
 
-function getBadgeCopy(
-  t: ReturnType<typeof useTranslation>['t'],
-  badgeKey: string,
-  fallbackTitle?: string | null,
-  fallbackDescription?: string | null
-) {
-  return {
-    title: t(`gamification.badges.${badgeKey}.title`, { defaultValue: fallbackTitle ?? badgeKey }),
-    description: t(`gamification.badges.${badgeKey}.description`, {
-      defaultValue: fallbackDescription ?? badgeKey,
-    }),
-  };
-}
-
-function getChallengeCopy(t: ReturnType<typeof useTranslation>['t'], challengeKey: string) {
-  return {
-    title: t(`gamification.challenges.${challengeKey}.title`, { defaultValue: challengeKey }),
-    description: t(`gamification.challenges.${challengeKey}.description`, { defaultValue: challengeKey }),
-  };
-}
-
-function getEventCopy(t: ReturnType<typeof useTranslation>['t'], eventType: string) {
-  return t(`gamification.events.${eventType}`, { defaultValue: eventType });
-}
-
-/**
- * Profile tab screen component
- *
- * Shows current user's profile with stats and edit button.
- * Auth-gated - shows sign in prompt if not authenticated.
- */
-export default function ProfileScreen() {
+export default function GardenScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
+  const colors = useThemeColors();
 
   const { user } = useAuthStore();
   const {
     currentProfile,
     isLoading,
-    error,
     fetchCurrentProfile,
     refreshStats,
   } = useProfileStore();
+  const plants = usePlantsStore((s) => s.plants);
 
   const [showEditModal, setShowEditModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'plants' | 'liked'>('plants');
   const [gamificationSummary, setGamificationSummary] = useState<GamificationSummary | null>(null);
   const [isGamificationLoading, setIsGamificationLoading] = useState(false);
+
+  const identifiedCount = plants.filter(p => p.entryKind !== 'sighting').length;
+  const savedCount = plants.length;
+  const sightingsCount = plants.filter(p => p.entryKind === 'sighting').length;
 
   const loadGamificationSummary = useCallback(async () => {
     if (!user) {
       setGamificationSummary(null);
       return;
     }
-
     setIsGamificationLoading(true);
     const summary = await getUserGamificationSummary();
     setGamificationSummary(summary);
     setIsGamificationLoading(false);
   }, [user]);
 
-  /**
-   * Fetch profile on mount or when user changes
-   */
   useEffect(() => {
     if (user && !currentProfile) {
       fetchCurrentProfile(user.id);
@@ -112,10 +67,6 @@ export default function ProfileScreen() {
     void loadGamificationSummary();
   }, [loadGamificationSummary]);
 
-  /**
-   * Refresh stats when tab gains focus
-   * This ensures follower/following counts are up-to-date
-   */
   useFocusEffect(
     useCallback(() => {
       if (user && currentProfile) {
@@ -125,853 +76,429 @@ export default function ProfileScreen() {
     }, [user, currentProfile, refreshStats, loadGamificationSummary])
   );
 
-  /**
-   * Handle edit button press
-   */
-  const handleEditPress = () => {
-    setShowEditModal(true);
-  };
-
-  const shellBackground = { backgroundColor: colors.surfaceGlass, borderColor: colors.border };
-
-  /**
-   * Show sign in prompt
-   */
-  if (!user) {
-    return (
-      <View style={styles.screenShell}>
-        <AtmosphericBackdrop />
-        <ThemedView style={styles.container}>
-          <ScrollView contentContainerStyle={styles.centerContent}>
-            <View style={[styles.stateCard, shellBackground]}>
-              <Ionicons name="person-outline" size={80} color={colors.tabIconDefault} />
-              <ThemedText style={styles.signInPrompt}>{t('profile.signInToView')}</ThemedText>
-            </View>
-          </ScrollView>
-        </ThemedView>
-      </View>
-    );
-  }
-
-  /**
-   * Show loading spinner
-   */
   if (isLoading && !currentProfile) {
     return (
-      <View style={styles.screenShell}>
-        <AtmosphericBackdrop />
-        <ThemedView style={styles.container}>
-          <View style={styles.centerContent}>
-            <View style={[styles.stateCard, shellBackground]}>
-              <ActivityIndicator size="large" color={colors.tint} />
-              <ThemedText style={styles.loadingText}>{t('common.loading')}</ThemedText>
-            </View>
-          </View>
-        </ThemedView>
+      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
+        <ActivityIndicator size="large" color={colors.tint} />
       </View>
     );
   }
 
-  /**
-   * Show error message
-   */
-  if (error && !currentProfile) {
+  const renderPlantCard = ({ item }: { item: typeof plants[0] }) => {
+    const name = item.nickname || item.commonName || item.scientificName || item.species || 'Unknown';
+    const subtitle = item.commonName && item.scientificName
+      ? item.scientificName
+      : item.species || '';
+
     return (
-      <View style={styles.screenShell}>
-        <AtmosphericBackdrop />
-        <ThemedView style={styles.container}>
-          <ScrollView contentContainerStyle={styles.centerContent}>
-            <View style={[styles.stateCard, shellBackground]}>
-              <Ionicons name="alert-circle-outline" size={80} color={colors.tint} />
-              <ThemedText style={styles.errorText}>{error}</ThemedText>
-              <TouchableOpacity
-                style={[styles.retryButton, { backgroundColor: colors.tint }]}
-                onPress={() => user && fetchCurrentProfile(user.id)}
-              >
-                <ThemedText style={styles.retryButtonText}>{t('common.retry')}</ThemedText>
-              </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.plantCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+        onPress={() => router.push(`/plant/${item.id}` as const)}
+        activeOpacity={0.85}
+        accessibilityRole="button"
+      >
+        <View style={styles.plantImageContainer}>
+          {item.photo ? (
+            <Image source={{ uri: item.photo }} style={styles.plantImage} resizeMode="cover" />
+          ) : (
+            <View style={[styles.plantImagePlaceholder, { backgroundColor: colors.surfaceStrong }]}>
+              <MaterialIcons name="local-florist" size={32} color={colors.tint} />
             </View>
-          </ScrollView>
-        </ThemedView>
-      </View>
+          )}
+          {item.entryKind === 'sighting' && (
+            <View style={styles.sightingBadge}>
+              <MaterialIcons name="visibility" size={10} color="#fff" />
+            </View>
+          )}
+        </View>
+        <View style={styles.plantCardContent}>
+          <Text style={[styles.plantName, { color: colors.text }]} numberOfLines={1}>
+            {name}
+          </Text>
+          {subtitle ? (
+            <Text style={[styles.plantSubtitle, { color: colors.textSecondary }]} numberOfLines={1}>
+              {subtitle}
+            </Text>
+          ) : null}
+        </View>
+        <TouchableOpacity style={styles.waterButton} accessibilityRole="button">
+          <MaterialIcons name="water-drop" size={16} color={colors.tint} />
+        </TouchableOpacity>
+      </TouchableOpacity>
     );
-  }
+  };
 
-  /**
-   * Show profile data
-   */
   return (
-    <View style={styles.screenShell}>
-      <AtmosphericBackdrop />
-      <ThemedView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.headerBlock}>
-            <ThemedText style={[styles.eyebrow, { color: colors.textSecondary }]}>
-              {t('common.appName')}
-            </ThemedText>
-            <ThemedText style={styles.screenTitle}>{t('tabs.profile')}</ThemedText>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+        <View style={styles.headerRow}>
+          <Text style={[styles.screenTitle, { color: colors.text }]}>My Garden</Text>
+          <TouchableOpacity style={styles.cameraButton} accessibilityRole="button" onPress={() => router.push('/camera')}>
+            <MaterialIcons name="photo-camera" size={22} color="#0d1117" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Stats Row */}
+        <View style={styles.statsRow}>
+          <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{identifiedCount}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Identified</Text>
           </View>
+          <View style={[styles.statCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <Text style={[styles.statValue, { color: colors.text }]}>{savedCount - sightingsCount}</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Saved</Text>
+          </View>
+        </View>
 
-          <View style={[styles.profileCard, shellBackground]}>
-            <View style={styles.avatarSection}>
-              <Avatar
-                uri={currentProfile?.avatar_url}
-                size={120}
-                borderColor={colors.border}
-                borderWidth={2}
-              />
+        {/* User Profile Mini Card */}
+        {user && currentProfile && (
+          <TouchableOpacity
+            style={[styles.userCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            onPress={() => setShowEditModal(true)}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+          >
+            <Avatar uri={currentProfile.avatar_url} size={44} borderColor={colors.border} borderWidth={1} />
+            <View style={styles.userInfo}>
+              <Text style={[styles.userName, { color: colors.text }]}>
+                {currentProfile.display_name || t('profile.displayName')}
+              </Text>
+              <Text style={[styles.userBio, { color: colors.textSecondary }]} numberOfLines={1}>
+                {currentProfile.bio || t('profile.bioPlaceholder', { defaultValue: 'Create a small corner that tells your plant story.' })}
+              </Text>
             </View>
+            <MaterialIcons name="edit" size={18} color={colors.textMuted} />
+          </TouchableOpacity>
+        )}
 
-            <ThemedText style={styles.displayName}>
-              {currentProfile?.display_name || t('profile.displayName')}
-            </ThemedText>
+        {/* Gamification Level */}
+        {gamificationSummary && (
+          <TouchableOpacity
+            style={[styles.levelCard, { backgroundColor: colors.surface, borderColor: colors.border }]}
+            onPress={() => router.push('/gamification')}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+          >
+            <View style={styles.levelHeader}>
+              <MaterialIcons name="emoji-events" size={18} color={colors.tint} />
+              <Text style={[styles.levelLabel, { color: colors.text }]}>
+                {t('profile.level')} {gamificationSummary.progress.level}
+              </Text>
+              <Text style={[styles.levelXp, { color: colors.textSecondary }]}>
+                {gamificationSummary.progress.xp_in_level}/{gamificationSummary.progress.xp_for_next_level} XP
+              </Text>
+            </View>
+            <CompactLevelProgress progress={gamificationSummary.progress} />
+            <View style={styles.levelStats}>
+              <View style={styles.levelStat}>
+                <Text style={[styles.levelStatValue, { color: colors.text }]}>{gamificationSummary.progress.xp_total}</Text>
+                <Text style={[styles.levelStatLabel, { color: colors.textSecondary }]}>{t('profile.totalXp')}</Text>
+              </View>
+              <View style={styles.levelStat}>
+                <Text style={[styles.levelStatValue, { color: colors.text }]}>{gamificationSummary.progress.watering_streak}</Text>
+                <Text style={[styles.levelStatLabel, { color: colors.textSecondary }]}>{t('profile.wateringStreak')}</Text>
+              </View>
+              <View style={styles.levelStat}>
+                <Text style={[styles.levelStatValue, { color: colors.text }]}>{gamificationSummary.badges.length}</Text>
+                <Text style={[styles.levelStatLabel, { color: colors.textSecondary }]}>{t('profile.badges')}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+        )}
 
-            {gamificationSummary && (
+        {/* Plants Grid */}
+        {plants.length > 0 && (
+          <View style={styles.section}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {t('home.todayCollectionTitle', { defaultValue: 'Your Plants' })}
+            </Text>
+            <View style={styles.plantsGrid}>
+              {plants.slice(0, 8).map(plant => (
+                <View key={plant.id}>
+                  {renderPlantCard({ item: plant })}
+                </View>
+              ))}
+            </View>
+            {plants.length > 8 && (
               <TouchableOpacity
-                style={styles.compactProgressWrapper}
-                onPress={() => router.push('/gamification')}
-                activeOpacity={0.7}
+                style={[styles.seeAllButton, { backgroundColor: colors.surfaceStrong }]}
+                onPress={() => {}}
+                accessibilityRole="button"
               >
-                <CompactLevelProgress progress={gamificationSummary.progress} />
+                <Text style={[styles.seeAllText, { color: colors.tint }]}>
+                  View All ({plants.length})
+                </Text>
               </TouchableOpacity>
             )}
-
-            {currentProfile?.bio ? (
-              <ThemedText style={styles.bio}>{currentProfile.bio}</ThemedText>
-            ) : (
-              <ThemedText style={[styles.bio, { color: colors.textSecondary }]}>
-                {t('profile.bioPlaceholder', { defaultValue: 'Create a small corner that tells your plant story.' })}
-              </ThemedText>
-            )}
-
-            <TouchableOpacity
-              style={[styles.editButton, { backgroundColor: colors.tint }]}
-              onPress={handleEditPress}
-            >
-              <ThemedText style={styles.editButtonText}>{t('profile.editProfile')}</ThemedText>
-            </TouchableOpacity>
           </View>
-
-          {currentProfile?.stats && (
-            <View style={[styles.statsCard, shellBackground]}>
-              <ProfileStats
-                stats={{
-                  plants_identified: currentProfile.stats.plants_identified,
-                  followers_count: currentProfile.stats.followers_count,
-                  following_count: currentProfile.stats.following_count,
-                  joined_date: currentProfile.created_at,
-                }}
-              />
-            </View>
-          )}
-
-          {gamificationSummary && (
-            <>
-              <View style={[styles.gamificationCard, shellBackground]}>
-                <View style={styles.gamificationHeader}>
-                  <Ionicons name="trophy-outline" size={18} color={colors.tint} />
-                  <ThemedText style={styles.gamificationTitle}>
-                    {t('profile.gamificationTitle')}
-                  </ThemedText>
-                </View>
-
-                <View style={styles.gamificationLevelRow}>
-                  <ThemedText style={styles.levelLabel}>
-                    {t('profile.level')} {gamificationSummary.progress.level}
-                  </ThemedText>
-                  <ThemedText style={[styles.levelXpText, { color: colors.textSecondary }]}>
-                    {gamificationSummary.progress.xp_in_level}/{gamificationSummary.progress.xp_for_next_level} XP
-                  </ThemedText>
-                </View>
-
-                <View style={[styles.progressTrack, { backgroundColor: colors.border }]}>
-                  <View
-                    style={[
-                      styles.progressFill,
-                      {
-                        backgroundColor: colors.tint,
-                        width: `${Math.min(
-                          100,
-                          Math.round(
-                            (gamificationSummary.progress.xp_in_level /
-                              Math.max(gamificationSummary.progress.xp_for_next_level, 1)) *
-                              100
-                          )
-                        )}%`,
-                      },
-                    ]}
-                  />
-                </View>
-
-                <View style={styles.gamificationStatsRow}>
-                  <View style={styles.gamificationMetric}>
-                    <ThemedText style={styles.metricValue}>{gamificationSummary.progress.xp_total}</ThemedText>
-                    <ThemedText style={[styles.metricLabel, { color: colors.textSecondary }]}>
-                      {t('profile.totalXp')}
-                    </ThemedText>
-                  </View>
-                  <View style={styles.gamificationMetric}>
-                    <ThemedText style={styles.metricValue}>{gamificationSummary.progress.watering_streak}</ThemedText>
-                    <ThemedText style={[styles.metricLabel, { color: colors.textSecondary }]}>
-                      {t('profile.wateringStreak')}
-                    </ThemedText>
-                  </View>
-                  <View style={styles.gamificationMetric}>
-                    <ThemedText style={styles.metricValue}>{gamificationSummary.badges.length}</ThemedText>
-                    <ThemedText style={[styles.metricLabel, { color: colors.textSecondary }]}>
-                      {t('profile.badges')}
-                    </ThemedText>
-                  </View>
-                </View>
-
-                <TouchableOpacity
-                  style={[styles.viewAllButton, { backgroundColor: colors.tint }]}
-                  onPress={() => router.push('/gamification')}
-                >
-                  <ThemedText style={styles.viewAllButtonText}>
-                    {t('profile.viewFullProfile')}
-                  </ThemedText>
-                  <Ionicons name="chevron-forward" size={16} color="#fff" />
-                </TouchableOpacity>
-              </View>
-
-              <View style={[styles.gamificationSectionCard, shellBackground]}>
-                <View style={styles.sectionHeaderRow}>
-                  <ThemedText style={styles.sectionTitle}>{t('profile.badges')}</ThemedText>
-                  <ThemedText style={[styles.sectionCount, { color: colors.textSecondary }]}>
-                    {gamificationSummary.badges.length}
-                  </ThemedText>
-                </View>
-                {gamificationSummary.badges.length > 0 ? (
-                  <View style={styles.badgesList}>
-                    {gamificationSummary.badges.map((badge) => {
-                      const badgeCopy = getBadgeCopy(t, badge.badge_key, badge.title, badge.description);
-                      return (
-                        <View
-                          key={badge.badge_key}
-                          style={[
-                            styles.badgeCard,
-                            { backgroundColor: colors.surfaceGlass, borderColor: colors.border },
-                          ]}
-                        >
-                          <View style={[styles.badgeIconWrap, { backgroundColor: colors.surfaceStrong }]}>
-                            <Ionicons name="ribbon-outline" size={16} color={colors.tint} />
-                          </View>
-                          <View style={styles.badgeCopy}>
-                            <ThemedText style={styles.badgeTitle}>{badgeCopy.title}</ThemedText>
-                            <ThemedText style={[styles.badgeDescription, { color: colors.textSecondary }]}>
-                              {badgeCopy.description}
-                            </ThemedText>
-                          </View>
-                        </View>
-                      );
-                    })}
-                  </View>
-                ) : (
-                  <ThemedText style={[styles.emptySectionText, { color: colors.textSecondary }]}>
-                    {t('profile.noBadgesYet')}
-                  </ThemedText>
-                )}
-              </View>
-
-              <View style={[styles.gamificationSectionCard, shellBackground]}>
-                <View style={styles.sectionHeaderRow}>
-                  <ThemedText style={styles.sectionTitle}>{t('profile.dailyChallenges')}</ThemedText>
-                  <ThemedText style={[styles.sectionCount, { color: colors.textSecondary }]}>
-                    {gamificationSummary.daily_challenges.filter((challenge) => challenge.completed).length}/
-                    {gamificationSummary.daily_challenges.length}
-                  </ThemedText>
-                </View>
-                {gamificationSummary.daily_challenges.length > 0 ? (
-                  <View style={styles.challengeList}>
-                    {gamificationSummary.daily_challenges.map((challenge) => {
-                      const challengeCopy = getChallengeCopy(t, challenge.challenge_key);
-                      const progress = Math.min(challenge.target_count, challenge.progress_count);
-                      const progressPct = Math.round((progress / Math.max(challenge.target_count, 1)) * 100);
-
-                      return (
-                        <View
-                          key={challenge.challenge_key}
-                          style={[
-                            styles.challengeCard,
-                            { backgroundColor: colors.surfaceGlass, borderColor: colors.border },
-                          ]}
-                        >
-                          <View style={styles.challengeHeader}>
-                            <View style={styles.challengeCopy}>
-                              <ThemedText style={styles.challengeTitle}>{challengeCopy.title}</ThemedText>
-                              <ThemedText style={[styles.challengeDescription, { color: colors.textSecondary }]}>
-                                {challengeCopy.description}
-                              </ThemedText>
-                            </View>
-                            <View
-                              style={[
-                                styles.challengeRewardChip,
-                                {
-                                  backgroundColor: challenge.completed ? colors.tint : colors.surfaceStrong,
-                                },
-                              ]}
-                            >
-                              <ThemedText
-                                style={[
-                                  styles.challengeRewardText,
-                                  { color: challenge.completed ? '#fff' : colors.tint },
-                                ]}
-                              >
-                                +{challenge.xp_reward} XP
-                              </ThemedText>
-                            </View>
-                          </View>
-
-                          <View style={styles.challengeProgressRow}>
-                            <ThemedText style={[styles.challengeProgressText, { color: colors.textSecondary }]}>
-                              {t('profile.challengeProgress', {
-                                current: progress,
-                                target: challenge.target_count,
-                              })}
-                            </ThemedText>
-                            <ThemedText style={[styles.challengeProgressText, { color: colors.textSecondary }]}>
-                              {progressPct}%
-                            </ThemedText>
-                          </View>
-                          <View style={[styles.progressTrack, styles.challengeTrack, { backgroundColor: colors.border }]}>
-                            <View
-                              style={[
-                                styles.progressFill,
-                                {
-                                  backgroundColor: challenge.completed ? colors.tint : colors.textSecondary,
-                                  width: `${progressPct}%`,
-                                },
-                              ]}
-                            />
-                          </View>
-                        </View>
-                      );
-                    })}
-                  </View>
-                ) : (
-                  <ThemedText style={[styles.emptySectionText, { color: colors.textSecondary }]}>
-                    {t('profile.noChallengesToday')}
-                  </ThemedText>
-                )}
-              </View>
-
-              <View style={[styles.gamificationSectionCard, shellBackground]}>
-                <View style={styles.sectionHeaderRow}>
-                  <ThemedText style={styles.sectionTitle}>{t('profile.recentActivity')}</ThemedText>
-                </View>
-                {gamificationSummary.recent_activity.length > 0 ? (
-                  <View style={styles.activityList}>
-                    {gamificationSummary.recent_activity.map((activity, index) => (
-                      <View
-                        key={`${activity.created_at}:${activity.event_type}:${index}`}
-                        style={[
-                          styles.activityRow,
-                          {
-                            borderBottomColor: colors.border,
-                            borderBottomWidth:
-                              index === gamificationSummary.recent_activity.length - 1 ? 0 : StyleSheet.hairlineWidth,
-                          },
-                        ]}
-                      >
-                        <View style={[styles.activityIconWrap, { backgroundColor: colors.surfaceStrong }]}>
-                          <Ionicons name="flash-outline" size={14} color={colors.tint} />
-                        </View>
-                        <View style={styles.activityCopy}>
-                          <ThemedText style={styles.activityTitle}>
-                            {getEventCopy(t, activity.event_type)}
-                          </ThemedText>
-                          <ThemedText style={[styles.activityMeta, { color: colors.textSecondary }]}>
-                            {new Date(activity.created_at).toLocaleString()}
-                          </ThemedText>
-                        </View>
-                        <ThemedText style={[styles.activityXp, { color: colors.tint }]}>
-                          +{activity.xp_awarded}
-                        </ThemedText>
-                      </View>
-                    ))}
-                  </View>
-                ) : (
-                  <ThemedText style={[styles.emptySectionText, { color: colors.textSecondary }]}>
-                    {t('profile.noRecentActivity')}
-                  </ThemedText>
-                )}
-              </View>
-            </>
-          )}
-
-          {!gamificationSummary && isGamificationLoading && (
-            <View style={[styles.gamificationCard, shellBackground]}>
-              <View style={styles.gamificationLoadingRow}>
-                <ActivityIndicator size="small" color={colors.tint} />
-                <ThemedText style={[styles.gamificationLoadingText, { color: colors.textSecondary }]}>
-                  {t('common.loading')}
-                </ThemedText>
-              </View>
-            </View>
-          )}
-
-          {/* Tab Toggle */}
-          <View style={[styles.tabContainer, { backgroundColor: colors.surfaceGlass }]}>
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                activeTab === 'plants' && { backgroundColor: colors.tint },
-              ]}
-              onPress={() => setActiveTab('plants')}
-            >
-              <Ionicons
-                name="leaf-outline"
-                size={18}
-                color={activeTab === 'plants' ? '#fff' : colors.textSecondary}
-              />
-              <ThemedText
-                style={[
-                  styles.tabText,
-                  activeTab === 'plants' && styles.activeTabText,
-                ]}
-              >
-                {t('profile.plantsTab')}
-              </ThemedText>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.tab,
-                activeTab === 'liked' && { backgroundColor: colors.tint },
-              ]}
-              onPress={() => setActiveTab('liked')}
-            >
-              <Ionicons
-                name="heart-outline"
-                size={18}
-                color={activeTab === 'liked' ? '#fff' : colors.textSecondary}
-              />
-              <ThemedText
-                style={[
-                  styles.tabText,
-                  activeTab === 'liked' && styles.activeTabText,
-                ]}
-              >
-                {t('profile.likedTab')}
-              </ThemedText>
-            </TouchableOpacity>
-          </View>
-
-          {/* Tab Content */}
-          <View style={styles.tabContent}>
-            {activeTab === 'plants' ? (
-              <View style={[styles.plantsPlaceholder, shellBackground]}>
-                <Ionicons name="leaf-outline" size={48} color={colors.tabIconDefault} />
-                <ThemedText style={[styles.placeholderText, { color: colors.textSecondary }]}>
-                  {t('profile.noPlantsHint')}
-                </ThemedText>
-              </View>
-            ) : (
-              currentProfile && <LikedPostsTab userId={currentProfile.id} />
-            )}
-          </View>
-        </ScrollView>
-
-        {currentProfile && (
-          <ProfileEditModal
-            visible={showEditModal}
-            onClose={() => setShowEditModal(false)}
-            currentProfile={currentProfile}
-          />
         )}
-      </ThemedView>
+
+        {plants.length === 0 && (
+          <View style={[styles.emptyCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <MaterialIcons name="local-florist" size={48} color={colors.textMuted} />
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+              {t('profile.noPlantsHint', { defaultValue: 'No plants yet' })}
+            </Text>
+            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
+              Start identifying plants to build your garden
+            </Text>
+            <Button variant="primary" size="md" onPress={() => router.push('/camera')}>
+              {t('camera.title', { defaultValue: 'Identify Plant' })}
+            </Button>
+          </View>
+        )}
+
+        {/* Badges Section */}
+        {gamificationSummary && gamificationSummary.badges.length > 0 && (
+          <View style={styles.section}>
+            <View style={styles.sectionHeaderRow}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('profile.badges')}</Text>
+              <Text style={[styles.sectionCount, { color: colors.textSecondary }]}>
+                {gamificationSummary.badges.length}
+              </Text>
+            </View>
+            <View style={styles.badgesList}>
+              {gamificationSummary.badges.map((badge) => (
+                <View key={badge.badge_key} style={[styles.badgeCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+                  <View style={[styles.badgeIcon, { backgroundColor: colors.tintGlass }]}>
+                    <MaterialIcons name="military-tech" size={16} color={colors.tint} />
+                  </View>
+                  <Text style={[styles.badgeTitle, { color: colors.text }]} numberOfLines={1}>
+                    {t(`gamification.badges.${badge.badge_key}.title`, { defaultValue: badge.title ?? badge.badge_key })}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+        )}
+
+        <View style={{ height: 100 }} />
+      </ScrollView>
+
+      {currentProfile && (
+        <ProfileEditModal
+          visible={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          currentProfile={currentProfile}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screenShell: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
+  container: { flex: 1 },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  scroll: { flex: 1, paddingHorizontal: 20, paddingTop: 12 },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 24,
-    paddingBottom: 120,
-  },
-  centerContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  stateCard: {
-    width: '100%',
-    maxWidth: 360,
-    borderRadius: 24,
-    borderWidth: 1,
-    padding: 24,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    elevation: 3,
-  },
-  headerBlock: {
-    width: '100%',
-    marginBottom: 16,
-    gap: 6,
-  },
-  eyebrow: {
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+    marginBottom: 20,
   },
   screenTitle: {
-    fontSize: 32,
+    fontSize: 30,
     fontWeight: '800',
     letterSpacing: -0.5,
   },
-  profileCard: {
-    width: '100%',
-    borderRadius: 28,
-    borderWidth: 1,
-    padding: 24,
+  cameraButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#13ec8e',
     alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    elevation: 3,
+    justifyContent: 'center',
+    shadowColor: '#13ec8e',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  avatarSection: {
-    marginBottom: 16,
-  },
-  displayName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  compactProgressWrapper: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  bio: {
-    fontSize: 16,
-    textAlign: 'center',
+  statsRow: {
+    flexDirection: 'row',
+    gap: 12,
     marginBottom: 20,
-    paddingHorizontal: 20,
-    lineHeight: 22,
   },
-  editButton: {
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 20,
-    marginBottom: 24,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  statsSection: {
-    width: '100%',
-  },
-  statsCard: {
-    width: '100%',
-    borderRadius: 24,
+  statCard: {
+    flex: 1,
+    borderRadius: 18,
+    padding: 18,
+    alignItems: 'center',
     borderWidth: 1,
-    padding: 16,
   },
-  gamificationCard: {
-    width: '100%',
-    borderRadius: 24,
+  statValue: {
+    fontSize: 28,
+    fontWeight: '800',
+  },
+  statLabel: {
+    fontSize: 13,
+    marginTop: 4,
+    fontWeight: '500',
+  },
+  userCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 18,
+    padding: 14,
     borderWidth: 1,
-    padding: 16,
-    marginTop: 12,
     marginBottom: 16,
+    gap: 12,
   },
-  gamificationSectionCard: {
-    width: '100%',
-    borderRadius: 24,
-    borderWidth: 1,
+  userInfo: { flex: 1 },
+  userName: { fontSize: 16, fontWeight: '600' },
+  userBio: { fontSize: 13, marginTop: 2 },
+  levelCard: {
+    borderRadius: 18,
     padding: 16,
-    marginBottom: 16,
+    borderWidth: 1,
+    marginBottom: 20,
   },
-  gamificationHeader: {
+  levelHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 10,
+    marginBottom: 12,
   },
-  gamificationTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  gamificationLevelRow: {
+  levelLabel: { fontSize: 15, fontWeight: '700' },
+  levelXp: { fontSize: 13, fontWeight: '600', marginLeft: 'auto' },
+  levelStats: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  levelLabel: {
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  levelXpText: {
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  progressTrack: {
-    width: '100%',
-    height: 8,
-    borderRadius: 999,
-    overflow: 'hidden',
-    marginBottom: 14,
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 999,
-  },
-  gamificationStatsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 12,
-  },
-  gamificationMetric: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  metricValue: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  metricLabel: {
-    fontSize: 11,
-    textAlign: 'center',
-    marginTop: 2,
-  },
-  viewAllButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 12,
     marginTop: 12,
-    gap: 6,
   },
-  viewAllButtonText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  gamificationLoadingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  gamificationLoadingText: {
-    fontSize: 13,
+  levelStat: { alignItems: 'center' },
+  levelStatValue: { fontSize: 18, fontWeight: '700' },
+  levelStatLabel: { fontSize: 11, marginTop: 2 },
+  section: {
+    marginBottom: 20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 12,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
   sectionCount: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
   },
+  plantsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  plantCard: {
+    width: '47%',
+    borderRadius: 18,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  plantImageContainer: {
+    height: 140,
+    position: 'relative',
+  },
+  plantImage: {
+    width: '100%',
+    height: '100%',
+  },
+  plantImagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sightingBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plantCardContent: {
+    padding: 10,
+    paddingRight: 4,
+  },
+  plantName: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  plantSubtitle: {
+    fontSize: 12,
+  },
+  waterButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(19, 236, 142, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seeAllButton: {
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginTop: 12,
+  },
+  seeAllText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  emptyCard: {
+    borderRadius: 20,
+    padding: 32,
+    alignItems: 'center',
+    borderWidth: 1,
+    marginBottom: 20,
+  },
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 20,
+  },
   badgesList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
   badgeCard: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    gap: 8,
+    padding: 10,
+    borderRadius: 14,
     borderWidth: 1,
-    borderRadius: 18,
-    padding: 12,
+    width: '47%',
   },
-  badgeIconWrap: {
+  badgeIcon: {
     width: 32,
     height: 32,
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
-  },
-  badgeCopy: {
-    flex: 1,
   },
   badgeTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 2,
-  },
-  badgeDescription: {
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  challengeList: {
-    gap: 12,
-  },
-  challengeCard: {
-    borderWidth: 1,
-    borderRadius: 18,
-    padding: 12,
-  },
-  challengeHeader: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 12,
-    marginBottom: 10,
-  },
-  challengeCopy: {
-    flex: 1,
-  },
-  challengeTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 2,
-  },
-  challengeDescription: {
-    fontSize: 12,
-    lineHeight: 18,
-  },
-  challengeRewardChip: {
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-  },
-  challengeRewardText: {
-    color: '#fff',
-    fontSize: 11,
-    fontWeight: '800',
-  },
-  challengeProgressRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  challengeProgressText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  challengeTrack: {
-    marginBottom: 0,
-  },
-  activityList: {
-    gap: 0,
-  },
-  activityRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  activityIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  activityCopy: {
-    flex: 1,
-  },
-  activityTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  activityMeta: {
-    fontSize: 12,
-    marginTop: 2,
-  },
-  activityXp: {
     fontSize: 13,
-    fontWeight: '800',
-    marginLeft: 12,
-  },
-  emptySectionText: {
-    fontSize: 13,
-    lineHeight: 20,
-  },
-  signInPrompt: {
-    fontSize: 18,
-    textAlign: 'center',
-    marginTop: 16,
-  },
-  loadingText: {
-    marginTop: 16,
-    fontSize: 16,
-  },
-  errorText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 16,
-    marginBottom: 20,
-  },
-  retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  retryButtonText: {
-    color: '#fff',
-    fontSize: 16,
     fontWeight: '600',
-  },
-  tabContainer: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    borderRadius: 12,
-    padding: 4,
-  },
-  tab: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 10,
-    borderRadius: 10,
-    gap: 6,
-  },
-  tabText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  activeTabText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  tabContent: {
-    flex: 1,
-    minHeight: 300,
-  },
-  plantsPlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 40,
-    borderRadius: 24,
-    marginHorizontal: 16,
-  },
-  placeholderText: {
-    marginTop: 16,
-    fontSize: 15,
-    textAlign: 'center',
   },
 });

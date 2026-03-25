@@ -1259,18 +1259,6 @@ export default function HomeScreen() {
         <AtmosphericBackdrop variant="home" />
         <SafeAreaView style={styles.safeArea}>
           {homeMode === 'today' ? renderTodayScreen() : renderCollectionScreen()}
-
-          <Animated.View style={[styles.fab, { backgroundColor: colors.fab, transform: [{ scale: fabScale }] }]}>
-            <TouchableOpacity
-              style={styles.fabTouch}
-              onPress={() => router.push('/camera' as const)}
-              activeOpacity={0.85}
-              accessibilityRole="button"
-              accessibilityLabel={t('camera.title')}
-            >
-              <Ionicons name="add" size={32} color="#fff" />
-            </TouchableOpacity>
-          </Animated.View>
         </SafeAreaView>
       </View>
       <BannerAdWrapper />
@@ -1810,14 +1798,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#f5f9f5',
+    backgroundColor: 'rgba(19,236,142,0.15)',
     borderRadius: 18,
     paddingVertical: 16,
     paddingHorizontal: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(19,236,142,0.3)',
   },
   emptyHeroCtaText: {
     fontSize: 16,
     fontWeight: '800',
+    color: '#13ec8e',
   },
   emptyGuideCard: {
     borderWidth: 1,

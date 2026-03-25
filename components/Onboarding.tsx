@@ -11,20 +11,11 @@ import {
   Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useOnboardingStore } from '@/stores/onboardingStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-interface OnboardingScreen {
-  icon: string;
-  ionicon: keyof typeof Ionicons.glyphMap;
-  iconColor: string;
-  bgGradientStart: string;
-  title: string;
-  description: string;
-}
 
 export default function Onboarding() {
   const { t } = useTranslation();
@@ -32,7 +23,6 @@ export default function Onboarding() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // Entrance animation
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
 
@@ -43,30 +33,27 @@ export default function Onboarding() {
     ]).start();
   }, [currentIndex]);
 
-  const screens: OnboardingScreen[] = [
+  const screens = [
     {
-      icon: '',
-      ionicon: 'leaf',
-      iconColor: '#16A34A',
-      bgGradientStart: '#e8f5e9',
-      title: t('onboarding.screen1.title'),
-      description: t('onboarding.screen1.description'),
+      icon: 'eco' as const,
+      title: t('onboarding.screen1.title', { defaultValue: 'Discover Nature\'s Secrets' }),
+      description: t('onboarding.screen1.description', {
+        defaultValue: 'Instantly identify plants, diagnose diseases, and curate your personal digital garden with tailored care guides.',
+      }),
     },
     {
-      icon: '',
-      ionicon: 'camera',
-      iconColor: '#2563EB',
-      bgGradientStart: '#e3f2fd',
-      title: t('onboarding.screen2.title'),
-      description: t('onboarding.screen2.description'),
+      icon: 'photo-camera' as const,
+      title: t('onboarding.screen2.title', { defaultValue: 'AI-Powered Identification' }),
+      description: t('onboarding.screen2.description', {
+        defaultValue: 'Point your camera at any plant and get instant, accurate identification powered by advanced AI technology.',
+      }),
     },
     {
-      icon: '',
-      ionicon: 'heart',
-      iconColor: '#DC2626',
-      bgGradientStart: '#fce4ec',
-      title: t('onboarding.screen3.title'),
-      description: t('onboarding.screen3.description'),
+      icon: 'favorite' as const,
+      title: t('onboarding.screen3.title', { defaultValue: 'Nurture Your Garden' }),
+      description: t('onboarding.screen3.description', {
+        defaultValue: 'Track watering schedules, monitor health, and receive personalized care tips for every plant in your collection.',
+      }),
     },
   ];
 
@@ -99,7 +86,7 @@ export default function Onboarding() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {!isLastScreen && (
         <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
           <Text style={styles.skipText}>{t('onboarding.skip')}</Text>
@@ -116,10 +103,14 @@ export default function Onboarding() {
         style={styles.scrollView}
       >
         {screens.map((screen, index) => (
-          <View key={index} style={styles.screen}>
-            <View style={[styles.iconCircle, { backgroundColor: screen.bgGradientStart }]}>
-              <Ionicons name={screen.ionicon} size={64} color={screen.iconColor} />
+          <SafeAreaView key={index} style={styles.screen}>
+            <View style={styles.iconContainer}>
+              <View style={styles.iconGlow} />
+              <View style={styles.iconCircle}>
+                <MaterialIcons name={screen.icon} size={56} color="#13ec8e" />
+              </View>
             </View>
+
             {index === currentIndex ? (
               <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
                 <Text style={styles.title}>{screen.title}</Text>
@@ -131,46 +122,54 @@ export default function Onboarding() {
                 <Text style={styles.description}>{screen.description}</Text>
               </View>
             )}
-          </View>
+          </SafeAreaView>
         ))}
       </ScrollView>
 
-      <View style={styles.dotsContainer}>
-        {screens.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              index === currentIndex ? styles.dotActive : styles.dotInactive,
-            ]}
-          />
-        ))}
-      </View>
+      <View style={styles.bottomSection}>
+        <View style={styles.dotsContainer}>
+          {screens.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                index === currentIndex ? styles.dotActive : styles.dotInactive,
+              ]}
+            />
+          ))}
+        </View>
 
-      <TouchableOpacity style={styles.nextButton} onPress={handleNext} activeOpacity={0.85}>
-        <Text style={styles.nextButtonText}>
-          {isLastScreen ? t('onboarding.getStarted') : t('onboarding.next')}
-        </Text>
-        {!isLastScreen && <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 6 }} />}
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity
+          style={styles.nextButton}
+          onPress={handleNext}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.nextButtonText}>
+            {isLastScreen ? t('onboarding.getStarted') : t('onboarding.next', { defaultValue: 'Continue' })}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAF7',
-    alignItems: 'center',
+    backgroundColor: '#0d1117',
   },
   skipButton: {
-    alignSelf: 'flex-end',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    position: 'absolute',
+    top: 56,
+    right: 20,
+    zIndex: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   skipText: {
-    fontSize: 16,
-    color: '#6B7280',
+    fontSize: 15,
+    color: '#8b949e',
+    fontWeight: '500',
   },
   scrollView: { flex: 1 },
   screen: {
@@ -180,60 +179,80 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 32,
   },
-  iconCircle: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+  iconContainer: {
+    marginBottom: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 40,
+  },
+  iconGlow: {
+    position: 'absolute',
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    backgroundColor: 'rgba(19, 236, 142, 0.08)',
+  },
+  iconCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(19, 236, 142, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(19, 236, 142, 0.2)',
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#1A1A1A',
+    color: '#f0f6fc',
     textAlign: 'center',
     marginBottom: 16,
+    letterSpacing: -0.5,
   },
   description: {
-    fontSize: 17,
-    color: '#4B5563',
+    fontSize: 16,
+    color: '#8b949e',
     textAlign: 'center',
-    lineHeight: 26,
+    lineHeight: 24,
+    paddingHorizontal: 8,
+  },
+  bottomSection: {
+    paddingBottom: 48,
+    alignItems: 'center',
   },
   dotsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 28,
     gap: 8,
   },
   dot: {
-    height: 8,
-    borderRadius: 4,
+    height: 6,
+    borderRadius: 3,
   },
   dotActive: {
-    backgroundColor: '#16A34A',
+    backgroundColor: '#13ec8e',
     width: 24,
   },
   dotInactive: {
-    backgroundColor: '#D1D5DB',
-    width: 8,
+    backgroundColor: '#30363d',
+    width: 6,
   },
   nextButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#16A34A',
-    borderRadius: 14,
+    backgroundColor: '#13ec8e',
+    borderRadius: 16,
     paddingVertical: 16,
-    paddingHorizontal: 48,
-    marginBottom: 32,
-    minWidth: 200,
+    paddingHorizontal: 56,
+    shadowColor: '#13ec8e',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 6,
   },
   nextButtonText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    color: '#0d1117',
+    fontSize: 17,
+    fontWeight: '700',
   },
 });

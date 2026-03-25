@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert, Modal, ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import { Link, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { Text } from '@/components/Themed';
 import { BannerAdWrapper } from '@/components/BannerAdWrapper';
@@ -43,8 +43,6 @@ export default function SettingsScreen() {
 
   React.useEffect(() => {
     NotificationService.checkPermission().then(setPermissionStatus);
-
-    // Load migration flag if authenticated
     if (isAuthenticated) {
       getMigrationFlag().then(setMigrationFlag);
     }
@@ -128,280 +126,193 @@ export default function SettingsScreen() {
   return (
     <>
       <ScrollView style={[styles.container, { backgroundColor: colors.background }]} showsVerticalScrollIndicator={false}>
-        <Text style={[styles.title, { color: colors.text }]}>{t('settings.title')}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
 
-        {/* Pro Status */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.upgrade', { defaultValue: 'Pro Status' })}</Text>
-          <View style={styles.proStatusRow}>
-            <View style={[styles.proBadge, isPro ? { backgroundColor: '#ffd700', borderColor: '#ffb300' } : { backgroundColor: colors.chipBg, borderColor: colors.chipBorder }]}>
-              <Ionicons name={isPro ? 'diamond' : 'diamond-outline'} size={16} color={isPro ? '#fff' : colors.textSecondary} />
-              <Text style={[styles.proBadgeText, { color: isPro ? '#fff' : colors.textSecondary }]}>
-                {isPro ? 'Pro' : 'Free'}
+        {/* Profile Card */}
+        <View style={[styles.profileCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <View style={styles.profileHeader}>
+            <View style={[styles.avatar, { backgroundColor: colors.tintGlass, borderColor: colors.border }]}>
+              <MaterialIcons name="eco" size={28} color={colors.tint} />
+            </View>
+            <View style={styles.profileInfo}>
+              <Text style={[styles.profileName, { color: colors.text }]}>
+                {isAuthenticated && user ? user.email?.split('@')[0] || 'Plant Lover' : 'Guest'}
+              </Text>
+              <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
+                {isAuthenticated && user ? user.email : 'Sign in to unlock all features'}
               </Text>
             </View>
+            {isAuthenticated && user && (
+              <TouchableOpacity style={styles.editButton} accessibilityRole="button">
+                <MaterialIcons name="edit" size={18} color={colors.textSecondary} />
+              </TouchableOpacity>
+            )}
           </View>
-          {isPro && (
-            <View style={[styles.proThankYou, { backgroundColor: colors.chipActiveBg }]}>
-              <Ionicons name="heart" size={16} color="#e91e63" />
-              <Text style={[styles.proThankYouText, { color: colors.tint }]}>{t('pro.proThankYou')}</Text>
+
+          {/* Pro Badge */}
+          <View style={[styles.proRow, { backgroundColor: isPro ? colors.tintGlass : colors.surfaceStrong }]}>
+            <MaterialIcons name="workspace-premium" size={20} color={isPro ? colors.tint : colors.textSecondary} />
+            <View style={styles.proInfo}>
+              <Text style={[styles.proLabel, { color: isPro ? colors.tint : colors.text }]}>
+                {isPro ? 'Botanico Pro' : 'Free Plan'}
+              </Text>
+              <Text style={[styles.proDesc, { color: colors.textSecondary }]}>
+                {isPro ? 'Unlimited identifications' : 'Limited scans per day'}
+              </Text>
             </View>
-          )}
-          {!isPro && (
-            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.tint }]} onPress={() => setShowProUpgradeModal(true)} accessibilityRole="button">
-              <Ionicons name="diamond-outline" size={20} color="#fff" />
-              <Text style={styles.actionButtonText}>{t('pro.upgradeForMore')}</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity style={[styles.secondaryButton, { backgroundColor: colors.chipBg }]} onPress={handleRestorePurchases} disabled={restoreLoading} accessibilityRole="button">
-            <Ionicons name="refresh-outline" size={18} color={colors.textSecondary} />
-            <Text style={[styles.secondaryButtonText, { color: colors.textSecondary }]}>
-              {restoreLoading ? t('common.loading') : t('pro.restorePurchases')}
-            </Text>
-          </TouchableOpacity>
+            {!isPro && (
+              <TouchableOpacity style={[styles.upgradeChip, { backgroundColor: colors.tint }]} onPress={() => setShowProUpgradeModal(true)} accessibilityRole="button">
+                <Text style={styles.upgradeChipText}>Upgrade Now</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         {/* Account */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>Account</Text>
-
-          {/* Loading indicator */}
-          {isLoading && (
-            <View style={[styles.row, { justifyContent: 'center' }]}>
-              <Text style={[styles.statusText, { color: colors.textSecondary }]}>Signing in...</Text>
-            </View>
-          )}
-
-          {/* Error display */}
-          {error && !isLoading && (
-            <View style={[styles.errorContainer, { backgroundColor: `${colors.danger}15` }]}>
-              <Ionicons name="alert-circle" size={16} color={colors.danger} />
-              <Text style={[styles.errorText, { color: colors.danger, flex: 1 }]}>{error}</Text>
-              <TouchableOpacity onPress={() => setAuthModalVisible(true)}>
-                <Text style={[styles.errorLink, { color: colors.danger }]}>Retry</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Account</Text>
 
           {isAuthenticated && user ? (
             <>
-              {/* User info */}
-              <View style={[styles.row, { paddingVertical: 16 }]}>
-                <Ionicons name="person" size={20} color={colors.tint} />
-                <View style={{ marginLeft: 12, flex: 1 }}>
-                  <Text style={[styles.rowLabel, { color: colors.text }]}>{user.email}</Text>
-                  <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>Signed in</Text>
-                </View>
-              </View>
+              <TouchableOpacity style={styles.menuRow} accessibilityRole="button">
+                <MaterialIcons name="person" size={22} color={colors.tint} />
+                <Text style={[styles.menuLabel, { color: colors.text }]}>Edit Profile</Text>
+                <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
 
-              {/* Migration section */}
+              <TouchableOpacity style={styles.menuRow} accessibilityRole="button">
+                <MaterialIcons name="lock" size={22} color={colors.tint} />
+                <Text style={[styles.menuLabel, { color: colors.text }]}>Privacy & Security</Text>
+                <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+
               {!migrationFlag && plants.length > 0 && (
                 <TouchableOpacity
-                  style={[styles.secondaryButton, { backgroundColor: colors.chipBg }]}
+                  style={styles.menuRow}
                   onPress={() => setMigrationVisible(true)}
                   accessibilityRole="button"
-                  accessibilityLabel="Sync your plants to the cloud"
                 >
-                  <Ionicons name="cloud-upload-outline" size={18} color={colors.tint} />
-                  <Text style={[styles.secondaryButtonText, { color: colors.tint }]}>Sync Your Plants</Text>
+                  <MaterialIcons name="cloud-upload" size={22} color={colors.tint} />
+                  <Text style={[styles.menuLabel, { color: colors.text }]}>Sync Your Plants</Text>
+                  <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
                 </TouchableOpacity>
               )}
 
               {migrationFlag && (
-                <View style={[styles.row, { paddingVertical: 12 }]}>
-                  <Ionicons name="cloud-done" size={18} color={colors.success} />
-                  <View style={{ marginLeft: 12, flex: 1 }}>
-                    <Text style={[styles.rowLabel, { color: colors.text }]}>Last synced</Text>
-                    <Text style={[styles.statusText, { color: colors.textSecondary, fontSize: 13 }]}>
+                <View style={styles.menuRow}>
+                  <MaterialIcons name="cloud-done" size={22} color={colors.success} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.menuLabel, { color: colors.text }]}>Last synced</Text>
+                    <Text style={[styles.syncDate, { color: colors.textSecondary }]}>
                       {new Date(migrationFlag.timestamp).toLocaleDateString()}
                     </Text>
                   </View>
                 </View>
               )}
 
-              {/* Debug: Reset migration button (dev only) */}
-              {__DEV__ && migrationFlag && (
-                <TouchableOpacity
-                  style={[styles.secondaryButton, { backgroundColor: colors.chipBg, marginTop: 8 }]}
-                  onPress={async () => {
-                    await clearMigrationFlag();
-                    setMigrationFlag(null);
-                    Alert.alert('Dev', 'Migration flag cleared. You can sync again.');
-                  }}
-                  accessibilityRole="button"
-                >
-                  <Ionicons name="refresh-outline" size={18} color={colors.warning} />
-                  <Text style={[styles.secondaryButtonText, { color: colors.warning }]}>Reset Sync (Dev)</Text>
-                </TouchableOpacity>
-              )}
-
-              {/* Sign out button */}
-              <TouchableOpacity
-                style={[styles.secondaryButton, { backgroundColor: colors.chipBg }]}
-                onPress={handleSignOut}
-                accessibilityRole="button"
-                accessibilityLabel="Sign out"
-              >
-                <Ionicons name="log-out-outline" size={18} color={colors.danger} />
-                <Text style={[styles.secondaryButtonText, { color: colors.danger }]}>Sign Out</Text>
+              <TouchableOpacity style={[styles.signOutRow]} onPress={handleSignOut} accessibilityRole="button">
+                <MaterialIcons name="logout" size={22} color={colors.danger} />
+                <Text style={[styles.menuLabel, { color: colors.danger }]}>Log Out</Text>
               </TouchableOpacity>
-
-              {/* Debug section (dev only) */}
-              {__DEV__ && (
-                <View style={[styles.debugSection, { backgroundColor: colors.chipBg, marginTop: 12 }]}>
-                  <Text style={[styles.debugTitle, { color: colors.textMuted }]}>Auth State (Dev)</Text>
-                  <Text style={[styles.debugText, { color: colors.textSecondary }]}>
-                    Signed in as: {user?.email}
-                  </Text>
-                </View>
-              )}
             </>
           ) : (
-            <>
-              {/* Sign in button */}
-              <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: colors.tint }]}
-                onPress={() => setAuthModalVisible(true)}
-                accessibilityRole="button"
-                accessibilityLabel="Sign in or create account"
-              >
-                <Ionicons name="log-in-outline" size={20} color="#fff" />
-                <Text style={styles.actionButtonText}>Sign In / Create Account</Text>
-              </TouchableOpacity>
-              <Text style={[styles.hintText, { color: colors.textMuted }]}>
-                Sign in to access community features
-              </Text>
-            </>
+            <TouchableOpacity
+              style={[styles.signInButton, { backgroundColor: colors.tint }]}
+              onPress={() => setAuthModalVisible(true)}
+              accessibilityRole="button"
+            >
+              <MaterialIcons name="login" size={20} color="#0d1117" />
+              <Text style={styles.signInButtonText}>Sign In</Text>
+            </TouchableOpacity>
           )}
         </View>
 
-        {/* General */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.general')}</Text>
+        {/* Preferences */}
+        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Preferences</Text>
 
-          {/* Language */}
-          <Text style={[styles.rowLabel, { color: colors.text }]}>{t('settings.language')}</Text>
-          <View style={[styles.languageSwitcher, { borderColor: colors.border }]}>
+          <View style={styles.menuRow}>
+            <MaterialIcons name="notifications" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Push Notifications</Text>
+            <Switch
+              value={notificationEnabled}
+              onValueChange={handleNotificationToggle}
+              trackColor={{ false: colors.border, true: colors.tint }}
+              thumbColor={notificationEnabled ? colors.tint : colors.textMuted}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.menuRow} accessibilityRole="button">
+            <MaterialIcons name="straighten" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Units</Text>
+            <Text style={[styles.menuValue, { color: colors.textSecondary }]}>Metric</Text>
+            <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+
+          <View style={styles.menuRow}>
+            <MaterialIcons name="dark-mode" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Dark Mode</Text>
+            <Switch
+              value={colorScheme === 'dark'}
+              onValueChange={handleColorSchemeToggle}
+              trackColor={{ false: colors.border, true: colors.tint }}
+              thumbColor={colorScheme === 'dark' ? colors.tint : colors.textMuted}
+            />
+          </View>
+
+          <View style={[styles.langRow, { borderColor: colors.border }]}>
+            <MaterialIcons name="language" size={22} color={colors.tint} />
             <TouchableOpacity
-              style={[styles.languageButton, styles.languageButtonLeft, { borderRightColor: colors.border }, language === 'en' && { backgroundColor: colors.tint }]}
+              style={[styles.langButton, language === 'en' && { backgroundColor: colors.tint }]}
               onPress={() => handleLanguageChange('en')}
               accessibilityRole="button"
               accessibilityState={{ selected: language === 'en' }}
             >
-              <Text style={[styles.languageButtonText, { color: language === 'en' ? '#fff' : colors.text }]}>English</Text>
+              <Text style={[styles.langText, language === 'en' && { color: '#0d1117' }]}>EN</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.languageButton, styles.languageButtonRight, { borderLeftColor: colors.border }, language === 'it' && { backgroundColor: colors.tint }]}
+              style={[styles.langButton, language === 'it' && { backgroundColor: colors.tint }]}
               onPress={() => handleLanguageChange('it')}
               accessibilityRole="button"
               accessibilityState={{ selected: language === 'it' }}
             >
-              <Text style={[styles.languageButtonText, { color: language === 'it' ? '#fff' : colors.text }]}>Italiano</Text>
+              <Text style={[styles.langText, language === 'it' && { color: '#0d1117' }]}>IT</Text>
             </TouchableOpacity>
           </View>
-
-          {/* Dark Mode */}
-          <View style={styles.row}>
-            <Text style={[styles.rowLabel, { color: colors.text }]}>{t('settings.darkMode')}</Text>
-            <Switch
-              value={colorScheme === 'dark'}
-              onValueChange={handleColorSchemeToggle}
-              trackColor={{ false: colors.chipBorder, true: colors.tint }}
-              thumbColor={colorScheme === 'dark' ? colors.success : colors.chipBg}
-            />
-          </View>
         </View>
 
-        {/* Notifications */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.notifications')}</Text>
+        {/* Support & About */}
+        <View style={[styles.section, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Support & About</Text>
 
-          <View style={styles.row}>
-            <Text style={[styles.rowLabel, { color: colors.text }]}>Status</Text>
-            <Text style={[styles.statusText, permissionStatus === 'granted' ? { color: colors.success } : permissionStatus === 'denied' ? { color: colors.danger } : { color: colors.textMuted }]}>
-              {permissionStatus === 'granted' ? 'Enabled' : permissionStatus === 'denied' ? 'Disabled' : 'Undetermined'}
-            </Text>
-          </View>
-
-          {permissionStatus !== 'undetermined' && (
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: colors.text }]}>Enable Notifications</Text>
-              <Switch
-                value={notificationEnabled}
-                onValueChange={handleNotificationToggle}
-                trackColor={{ false: colors.chipBorder, true: colors.tint }}
-                thumbColor={notificationEnabled ? colors.success : colors.chipBg}
-              />
-            </View>
-          )}
-
-          {permissionStatus === 'undetermined' && (
-            <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.tint }]} onPress={handleRequestPermission}>
-              <Text style={styles.actionButtonText}>{t('watering.enableNotifications')}</Text>
-            </TouchableOpacity>
-          )}
-
-          {permissionStatus === 'denied' && (
-            <Text style={[styles.hintText, { color: colors.textMuted }]}>
-              Enable in system settings to receive watering reminders.
-            </Text>
-          )}
-
-          {permissionStatus === 'granted' && (
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: colors.text }]}>{t('watering.notificationTime')}</Text>
-              <TouchableOpacity style={[styles.timeButton, { backgroundColor: colors.chipBg }]} onPress={() => setShowTimePicker(true)}>
-                <Text style={[styles.timeText, { color: colors.tint }]}>{notificationTime}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-
-        {/* Statistics & Calendar links */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.statistics')}</Text>
-          <TouchableOpacity
-            style={styles.linkRow}
-            onPress={() => router.push('/statistics' as const)}
-            accessibilityRole="button"
-          >
-            <View style={styles.linkRowInner}>
-              <Ionicons name="bar-chart-outline" size={20} color={colors.tint} />
-              <Text style={[styles.linkText, { color: colors.text }]}>{t('settings.viewStats')}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+          <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/statistics' as const)} accessibilityRole="button">
+            <MaterialIcons name="bar-chart" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Statistics</Text>
+            <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.linkRow}
-            onPress={() => router.push('/calendar' as const)}
-            accessibilityRole="button"
-          >
-            <View style={styles.linkRowInner}>
-              <Ionicons name="calendar-outline" size={20} color={colors.tint} />
-              <Text style={[styles.linkText, { color: colors.text }]}>{t('calendar.title')}</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
-          </TouchableOpacity>
-        </View>
 
-        {/* Legal & Info */}
-        <View style={[styles.sectionCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.sectionHeader, { color: colors.textMuted }]}>{t('settings.legalInfo')}</Text>
+          <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/calendar' as const)} accessibilityRole="button">
+            <MaterialIcons name="calendar-month" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Calendar</Text>
+            <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuRow} accessibilityRole="button">
+            <MaterialIcons name="help" size={22} color={colors.tint} />
+            <Text style={[styles.menuLabel, { color: colors.text }]}>Help Center</Text>
+            <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
+          </TouchableOpacity>
+
           <Link href="/privacy" asChild>
-            <TouchableOpacity style={styles.linkRow} accessibilityRole="link">
-              <View style={styles.linkRowInner}>
-                <Ionicons name="shield-outline" size={20} color={colors.tint} />
-                <Text style={[styles.linkText, { color: colors.text }]}>{t('settings.privacy')}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+            <TouchableOpacity style={styles.menuRow} accessibilityRole="link">
+              <MaterialIcons name="description" size={22} color={colors.tint} />
+              <Text style={[styles.menuLabel, { color: colors.text }]}>Terms of Service</Text>
+              <MaterialIcons name="chevron-right" size={20} color={colors.textMuted} />
             </TouchableOpacity>
           </Link>
         </View>
 
-        {/* Attribution */}
-        <View style={styles.attributionContainer}>
-          <Text style={[styles.attribution, { color: colors.textMuted }]}>{t('settings.attribution')}</Text>
-        </View>
+        <Text style={[styles.version, { color: colors.textMuted }]}>Botanico v2.4.1</Text>
 
         {__DEV__ && (
           <TouchableOpacity style={[styles.devButton, { borderColor: colors.warning }]} onPress={handleResetLimit}>
@@ -412,7 +323,6 @@ export default function SettingsScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Time picker modal */}
       <Modal visible={showTimePicker} transparent animationType="slide" onRequestClose={() => setShowTimePicker(false)}>
         <View style={styles.timePickerModal}>
           <View style={[styles.timePickerContent, { backgroundColor: colors.surface }]}>
@@ -421,14 +331,14 @@ export default function SettingsScreen() {
               {['06:00', '07:00', '08:00', '09:00', '10:00', '18:00', '19:00', '20:00'].map((time) => (
                 <TouchableOpacity
                   key={time}
-                  style={[styles.timeOption, { borderColor: colors.chipBorder, backgroundColor: notificationTime === time ? colors.tint : colors.surface }]}
+                  style={[styles.timeOption, { borderColor: colors.border, backgroundColor: notificationTime === time ? colors.tint : colors.surface }]}
                   onPress={() => { handleTimeChange(time); setShowTimePicker(false); }}
                 >
-                  <Text style={[styles.timeOptionText, { color: notificationTime === time ? '#fff' : colors.textSecondary }]}>{time}</Text>
+                  <Text style={[styles.timeOptionText, { color: notificationTime === time ? '#0d1117' : colors.textSecondary }]}>{time}</Text>
                 </TouchableOpacity>
               ))}
             </View>
-            <TouchableOpacity style={[styles.timePickerCancel, { backgroundColor: colors.chipBg }]} onPress={() => setShowTimePicker(false)}>
+            <TouchableOpacity style={[styles.timePickerCancel, { backgroundColor: colors.surfaceStrong }]} onPress={() => setShowTimePicker(false)}>
               <Text style={[styles.timePickerCancelText, { color: colors.textSecondary }]}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -436,181 +346,177 @@ export default function SettingsScreen() {
       </Modal>
 
       <ProUpgradeModal visible={showProUpgradeModal} onClose={() => setShowProUpgradeModal(false)} triggerReason="manual" />
-
-      {/* Auth Modal */}
       <AuthModal
         visible={authModalVisible}
         onClose={() => setAuthModalVisible(false)}
         onSignedIn={async () => {
-          // Refresh migration flag after sign-in
           const flag = await getMigrationFlag();
           setMigrationFlag(flag);
         }}
       />
-
-      {/* Migration Screen */}
       <MigrationScreen
         visible={migrationVisible}
         onComplete={async () => {
           setMigrationVisible(false);
-          // Refresh migration flag after completion
           const flag = await getMigrationFlag();
           setMigrationFlag(flag);
         }}
         onSkip={() => setMigrationVisible(false)}
       />
-
       <BannerAdWrapper />
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, padding: 20, paddingTop: 12 },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    marginTop: 8,
+    fontSize: 30,
+    fontWeight: '800',
+    marginBottom: 20,
+    letterSpacing: -0.5,
   },
-  sectionCard: {
-    borderRadius: 14,
-    padding: 16,
+  profileCard: {
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+  },
+  profileHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 16,
   },
-  sectionHeader: {
-    fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: 12,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  rowLabel: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  statusText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  languageSwitcher: {
-    flexDirection: 'row',
-    borderRadius: 8,
-    overflow: 'hidden',
-    borderWidth: 1,
-    marginTop: 8,
-  },
-  languageButton: {
-    flex: 1,
-    paddingVertical: 10,
+  avatar: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    borderWidth: 1,
+    marginRight: 14,
   },
-  languageButtonLeft: { borderRightWidth: 0.5 },
-  languageButtonRight: { borderLeftWidth: 0.5 },
-  languageButtonText: {
-    fontSize: 15,
-    fontWeight: '500',
+  profileInfo: {
+    flex: 1,
   },
-  proStatusRow: {
-    flexDirection: 'row',
-    marginBottom: 12,
+  profileName: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 2,
   },
-  proBadge: {
+  profileEmail: {
+    fontSize: 13,
+  },
+  editButton: {
+    padding: 8,
+  },
+  proRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    borderWidth: 1,
+    borderRadius: 14,
+    padding: 14,
+    gap: 12,
   },
-  proBadgeText: {
+  proInfo: {
+    flex: 1,
+  },
+  proLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  proDesc: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  upgradeChip: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  upgradeChipText: {
+    color: '#0d1117',
     fontSize: 13,
     fontWeight: '700',
   },
-  proThankYou: {
+  section: {
+    borderRadius: 20,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  menuRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginBottom: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 4,
+    gap: 12,
   },
-  proThankYouText: {
+  menuLabel: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  menuValue: {
     fontSize: 14,
-    fontWeight: '600',
+    marginRight: 4,
   },
-  actionButton: {
+  syncDate: {
+    fontSize: 12,
+    marginTop: 1,
+  },
+  signOutRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 4,
+    gap: 12,
+    marginTop: 4,
+  },
+  signInButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
     paddingVertical: 14,
-    borderRadius: 10,
-    marginBottom: 8,
+    borderRadius: 14,
   },
-  actionButtonText: {
+  signInButtonText: {
+    color: '#0d1117',
     fontSize: 16,
     fontWeight: '700',
-    color: '#fff',
   },
-  secondaryButton: {
+  langRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-    borderRadius: 10,
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  hintText: {
-    fontSize: 13,
-    fontStyle: 'italic',
+    paddingVertical: 14,
+    paddingHorizontal: 4,
+    gap: 12,
+    borderWidth: 1,
+    borderRadius: 12,
     marginTop: 4,
   },
-  timeButton: {
-    paddingHorizontal: 16,
+  langButton: {
+    paddingHorizontal: 20,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: 10,
+    backgroundColor: '#21262d',
   },
-  timeText: {
-    fontSize: 15,
+  langText: {
+    fontSize: 14,
     fontWeight: '600',
+    color: '#8b949e',
   },
-  linkRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-  },
-  linkRowInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  linkText: {
-    fontSize: 15,
-    fontWeight: '500',
-  },
-  attributionContainer: {
-    alignItems: 'center',
-    paddingVertical: 16,
-  },
-  attribution: {
-    fontSize: 13,
+  version: {
     textAlign: 'center',
+    fontSize: 13,
+    paddingVertical: 12,
   },
   devButton: {
     marginTop: 8,
@@ -620,15 +526,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   devButtonText: { fontSize: 14 },
-  // Time picker modal
   timePickerModal: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'flex-end',
   },
   timePickerContent: {
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 24,
     paddingBottom: 32,
   },
@@ -647,7 +552,7 @@ const styles = StyleSheet.create({
   timeOption: {
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
     minWidth: 70,
     alignItems: 'center',
@@ -657,45 +562,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   timePickerCancel: {
-    paddingVertical: 12,
+    paddingVertical: 14,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: 14,
   },
   timePickerCancelText: {
     fontSize: 15,
     fontWeight: '600',
-  },
-  errorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  errorText: {
-    fontSize: 13,
-    flex: 1,
-  },
-  errorLink: {
-    fontSize: 13,
-    fontWeight: '600',
-    textDecorationLine: 'underline',
-  },
-  debugSection: {
-    padding: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  debugTitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
-    marginBottom: 4,
-  },
-  debugText: {
-    fontSize: 12,
   },
 });
