@@ -1290,13 +1290,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120,
+    paddingBottom: Platform.OS === 'web' ? 80 : 120,
   },
   todayContent: {
-    paddingBottom: 120,
+    paddingBottom: Platform.OS === 'web' ? 80 : 120,
   },
   collectionContent: {
-    paddingBottom: 120,
+    paddingBottom: Platform.OS === 'web' ? 80 : 120,
   },
   sightingsListContent: {
     paddingHorizontal: 16,
@@ -1312,7 +1312,7 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'web' ? 10 : 20,
     paddingBottom: 8,
   },
   greeting: {
@@ -1330,14 +1330,14 @@ const styles = StyleSheet.create({
   modeSwitcher: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    marginBottom: 18,
+    marginBottom: Platform.OS === 'web' ? 10 : 18,
     borderRadius: 22,
     borderWidth: 1,
     padding: 4,
   },
   modeButton: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: Platform.OS === 'web' ? 8 : 12,
     borderRadius: 18,
     alignItems: 'center',
   },
@@ -1359,8 +1359,8 @@ const styles = StyleSheet.create({
   },
   heroCard: {
     borderRadius: 24,
-    padding: 18,
-    gap: 16,
+    padding: Platform.OS === 'web' ? 14 : 18,
+    gap: Platform.OS === 'web' ? 12 : 16,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
@@ -1370,15 +1370,15 @@ const styles = StyleSheet.create({
   },
   emptyHeroCard: {
     paddingTop: 22,
-    minHeight: 330,
+    minHeight: Platform.OS === 'web' ? 260 : 330,
     justifyContent: 'space-between',
   },
   todayHero: {
     marginHorizontal: 16,
-    marginBottom: 20,
+    marginBottom: Platform.OS === 'web' ? 12 : 20,
     borderRadius: 28,
-    padding: 18,
-    gap: 16,
+    padding: Platform.OS === 'web' ? 14 : 18,
+    gap: Platform.OS === 'web' ? 12 : 16,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
@@ -1530,7 +1530,7 @@ const styles = StyleSheet.create({
   },
   sectionBlock: {
     paddingHorizontal: 16,
-    marginBottom: 18,
+    marginBottom: Platform.OS === 'web' ? 10 : 18,
     gap: 12,
   },
   sectionHeaderRow: {

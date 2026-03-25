@@ -4,7 +4,12 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
-import 'react-native-reanimated';
+import { Platform } from 'react-native';
+
+// Only load react-native-reanimated on mobile (not web)
+if (Platform.OS !== 'web') {
+  require('react-native-reanimated');
+}
 
 import { useColorScheme } from '@/components/useColorScheme';
 import { initI18n } from '@/i18n';
@@ -27,6 +32,29 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+// On web, preload Ionicons font to prevent "square" fallback icons.
+// @expo/vector-icons loads the font via JS injection with font-display: auto,
+// which causes icons to render as empty squares until the font loads.
+// We inject font-display: swap to ensure invisible-to-visible transition.
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @font-face {
+      font-family: "Ionicons";
+      src: url("/assets/node_modules/@expo/vector-icons/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf") format("truetype");
+      font-display: swap;
+    }
+    /* Modern system font stack for web */
+    *, *::before, *::after {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji' !important;
+    }
+    h1, h2, h3, .screenTitle {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
